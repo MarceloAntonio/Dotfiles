@@ -1,34 +1,74 @@
+// NOTE:
+// This configuration assumes the following extensions are installed:
+// - Catppuccin Theme
+// - Catppuccin Icons
+//      Launch VS Code Quick Open (Ctrl+P), paste the following command, and press enter.
+//      ext install Catppuccin.catppuccin-vsc-pack
+
+// - JetBrains Mono font installed on the system 
+//     Arch - sudo pacman -S ttf-jetbrains-mono
+//     Windows - https://www.jetbrains.com/lp/mono/
+
 {
-  "liveServer.settings.donotVerifyTags": true,
-  "editor.wordWrap": "on",
-  "editor.tabSize": 2,
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": true,
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
+  // ==============================
+  // THEME
+  // ==============================
+  "workbench.colorTheme": "Catppuccin Mocha",
+
+  // ==============================
+  // ICONS
+  // ==============================
+  "workbench.iconTheme": "catppuccin-mocha",
+
+  // ==============================
+  // FILES
+  // ==============================
   "files.autoSave": "afterDelay",
-  "explorer.compactFolders": false,
-  "workbench.editor.enablePreview": false,
-  "workbench.iconTheme": "catppuccin-macchiato",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.enable": true,
-  "prettier.singleQuote": false,
-  "prettier.tabWidth": 2,
-  "prettier.semi": false,
-  "terminal.integrated.fontSize": 16,
-  "terminal.integrated.profiles.windows": {
-    "Git Bash": { "source": "Git Bash" }
-  },
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
-  "explorer.confirmDragAndDrop": false,
-  "workbench.colorTheme": "Catppuccin Macchiato",
-  "[cpp]": { "editor.defaultFormatter": "ms-vscode.cpptools" },
-  "workbench.productIconTheme": "bongocat",
-  "symbols.hidesExplorerArrows": false,
-  "editor.fontFamily": "'JetBrains Mono'",
-  "redhat.telemetry.enabled": true,
-  "security.workspace.trust.untrustedFiles": "open",
+
+  // ==============================
+  // FONT
+  // ==============================
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.8,
+
+  // ==============================
+  // EDITOR GUIDES
+  // ==============================
+  "editor.rulers": [80, 120],
+
+  // ==============================
+  // WINDOW
+  // ==============================
+  "window.zoomLevel": 0,
+
+  // ==============================
+  // CURSOR & ANIMATIONS
+  // ==============================
+  "editor.renderLineHighlight": "gutter",
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
-  "editor.fontSize": 14
+
+  // ==============================
+  // EDITOR UI (MINIMALISM)
+  // ==============================
+  "workbench.editor.labelFormat": "short",
+  "breadcrumbs.enabled": false,
+  "editor.minimap.enabled": false,
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "workbench.statusBar.visible": false,
+
+  // ==============================
+  // EXPLORER
+  // ==============================
+  "explorer.compactFolders": false,
+
+  // ==============================
+  // WORKBENCH LAYOUT
+  // ==============================
+  "workbench.activityBar.location": "top",
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "compact",
+  "chat.commandCenter.enabled": false
 }
