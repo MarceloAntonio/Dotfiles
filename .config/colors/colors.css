@@ -1,10 +1,9 @@
-@define-color background #1e1e2e;
-@define-color foreground #cdd6f4;
-@define-color select     #585b70;
-
-@define-color pink       #f5c2e7;
-@define-color purple     #cba6f7;
-@define-color red        #f38ba8;
+@define-color background #131313;
+@define-color foreground #FFFFFF;
+@define-color select     #9d9d9d;
+@define-color pink       #B8B8B8;
+@define-color purple     #B8B8B8;
+@define-color red        #FCFCFC;
 @define-color orange     #fab387;
 @define-color yellow     #f9e2af;
 @define-color green      #a6e3a1;
