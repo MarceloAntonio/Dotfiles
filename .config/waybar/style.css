@@ -1,36 +1,96 @@
+/* @import "$HOME/.config/colors/colors.css" */
+@import "../colors/colors.css";
+
 * {
-    font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 14px;
-    border: none;
-    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    font-weight: bold;
+    background-color: transparent;
+    border-radius: 5px;
     min-height: 0;
 }
 
-window#waybar {
-    background-color: transparent;
+window,
+tooltip {
+    background-color: @background;
 }
 
-.modules-center {
-
-    background-color: #17153B;
-    border: 2px solid #2E236C;
-    border-radius: 10px;
-    padding: 4px 15px;
-    margin-top: 5px;
+#waybar {
+    background: alpha(@background, 0.6);
+    border-radius: 0;
 }
 
-
-#tray, #pulseaudio, #battery, #clock {
-    color: #cdd6f4;
-    font-weight: bold;
-    margin: 0px 8px;
+#workspaces {
+    margin: 1px 0;
 }
 
-
-#battery.warning {
-    color: #f9e2af; /* Amarelo */
+#workspaces button {
+    color: @foreground;
+    border: none;
+    padding: 0 5px;
+}
+#workspaces button:hover {
+    color: @pink;
+    transition: none;
+    border-bottom: 1px solid @pink;
+    padding: 0 8px;
 }
 
-#battery.critical {
-    color: #f38ba8; /* Vermelho */
+#workspaces button.active {
+    color: @pink;
+    border: 2px solid @pink;
+    padding: 0 8px;
+    margin: 0 2px;
+}
+
+#workspaces button.urgent {
+    background-color: @red;
+    padding: 0 8px;
+}
+
+#custom-power,
+#tray,
+#bluetooth,
+#network,
+#battery,
+#pulseaudio,
+#clock {
+    color: @foreground;
+    margin: 1px 0;
+    padding: 0 10px;
+}
+
+#custom-power:hover,
+#bluetooth:hover,
+#network:hover,
+#battery:hover,
+#pulseaudio:hover,
+#clock:hover {
+    background-color: alpha(@select, 0.6);
+}
+
+#bluetooth {
+    color: @purple;
+}
+
+#network {
+    color: @purple;
+}
+
+#battery {
+    color: @purple;
+}
+
+#pulseaudio {
+    color: @purple;
+}
+
+#clock {
+    margin-right: 10px;
+    color: @purple;
+}
+
+#custom-power {
+    margin-left: 10px;
+    padding: 0px 10px 0 15px;
 }
