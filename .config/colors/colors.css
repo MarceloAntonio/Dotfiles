@@ -1,6 +1,21 @@
 @define-color background #131313;
 @define-color foreground #FFFFFF;
-@define-color select     #9d9d9d;
+
+/* Seleção */
+@define-color select_bg  #FFFFFF;
+@define-color select_fg  #131313;
+
+/* Cursor */
+@define-color cursor     #9D9D9D;
+@define-color cursor_text #101010;
+
+/* Tabs */
+@define-color active_tab_bg   #535353;
+@define-color active_tab_fg   #131313;
+@define-color inactive_tab_bg #131313;
+@define-color inactive_tab_fg #535353;
+
+/* Cores principais */
 @define-color pink       #B8B8B8;
 @define-color purple     #B8B8B8;
 @define-color red        #FCFCFC;
@@ -9,3 +24,23 @@
 @define-color green      #a6e3a1;
 @define-color blue       #89b4fa;
 @define-color gray       #45475a;
+
+/* ANSI - base */
+@define-color color0  #1A1A1A;
+@define-color color1  #FCFCFC;
+@define-color color2  #FCFCFC;
+@define-color color3  #FCFCFC;
+@define-color color4  #B8B8B8;
+@define-color color5  #B8B8B8;
+@define-color color6  #B8B8B8;
+@define-color color7  #FCFCFC;
+
+/* ANSI - bright */
+@define-color color8  #636363;
+@define-color color9  #D6D6D6;
+@define-color color10 #D6D6D6;
+@define-color color11 #D6D6D6;
+@define-color color12 #B8B8B8;
+@define-color color13 #B8B8B8;
+@define-color color14 #B8B8B8;
+@define-color color15 #D6D6D6;
