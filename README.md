@@ -15,14 +15,15 @@ Built with a focus on simplicity, Clean Code, and maintainability. Every configu
 This environment strips away visual noise to keep you focused:
 
 * **OS:** Arch Linux
-* **Window Manager:** [Hyprland](https://hyprland.org/) (Custom animations, gaps, blur, and modular configs)
-* **Status Bar:** Waybar (Minimal floating pill layout)
-* **Terminal:** Kitty (Opacity 0.8, JetBrainsMono Nerd Font)
-* **Launcher:** Rofi (Custom minimal theme)
+* **Window Manager:** [Hyprland](https://hyprland.org/) 
+* **Status Bar:** Waybar 
+* **Terminal:** Kitty 
+* **Launcher:** Rofi 
 * **Browser:** Firefox
-* **Wallpaper:** Hyprpaper
-* **Editor:** Code OSS / VSCode (Catppuccin Mocha theme, ultra-minimal UI)
-* **Fetch:** Fastfetch (Custom layout with Chihiro logo)
+* **Wallpaper Manager:** awww 
+* **Login Manager:** SDDM
+* **Editor:** Code OSS / VSCode 
+* **Fetch:** Fastfetch
 
 ## Essential Keybindings
 
@@ -37,6 +38,7 @@ The main modifier key is set to `SUPER` (Windows key). Here are the primary shor
 | **Close Window** | `SUPER + Q` |
 | **Toggle Floating** | `SUPER + V` |
 | **Toggle Split** | `SUPER + J` |
+| **Change Wallpaper** | `SUPER + W` |
 | **Screenshot** | `SUPER + SHIFT + S` |
 | **Exit / Shutdown** | `SUPER + M` |
 
@@ -60,7 +62,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> **Note:** The script automatically creates a backup of your existing configurations at `~/BKP.config` before making any changes. It also installs the necessary dependencies via `pacman`.
+> **Note:** The script automatically creates a backup of your existing configurations at `~/BKP.config` before making any changes. It also installs the necessary dependencies via `pacman` and `yay`, configures the SDDM theme, and sets ZSH as the default shell.
 
 ## Structure
 
@@ -73,12 +75,14 @@ Dotfiles/
 │   ├── fastfetch/   # Terminal system info & logos
 │   ├── hypr/        # Hyprland configs
 │   │   ├── configs/ # Modular files (monitors, keybinds, rules, etc.)
-│   │   └── hyprpaper.conf
+│   │   └── scripts/ # Hyprland scripts (e.g., change-wallpaper.sh)
 │   ├── kitty/       # Terminal emulator settings
 │   ├── rofi/        # App launcher styling
 │   ├── vscode/      # Minimal workspace settings (settings.json)
 │   └── waybar/      # Minimal floating status bar config
+├── scripts/         # Installation utilities (e.g., sddm-setup.sh)
 ├── Wallpapers/      # Desktop backgrounds
+├── .zshrc           # Zsh shell configuration
 ├── install.sh       # Automated setup script
 └── README.md
 ```

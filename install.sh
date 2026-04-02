@@ -107,8 +107,7 @@ run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
 # ========================
 # 4. SDDM
 # ========================
-run_step "Installing SDDM Astronaut Theme" bash -c "curl -fsSL https://raw.githubusercontent.com/keyitdev/sddm-astronaut-theme/master/setup.sh | bash"
-
+run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
 # ========================
 # 5. BACKUP
 # ========================
@@ -161,9 +160,9 @@ EOF
 # ========================
 run_step "Copying wallpapers" bash -c "
     if [ -d $DOTFILES_DIR/Wallpapers ]; then
-        DEST=\$HOME/Pictures
-        [ -d \$HOME/Imagens ] && DEST=\$HOME/Imagens
-        cp -a $DOTFILES_DIR/Wallpapers \$DEST/
+        DEST=\$HOME/Pictures/Wallpaper
+        mkdir -p \$DEST
+        cp -a $DOTFILES_DIR/Wallpapers/* \$DEST/
     fi
 "
 
