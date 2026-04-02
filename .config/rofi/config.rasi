@@ -1,7 +1,7 @@
 configuration {
     scroll-method: 1;
     scrollbar: true;
-    show-icons: true;
+    show-icons: false;
     display-run: "Run ";
     display-drun: "Open ";
     display-emoji: "Emoji ";
@@ -63,7 +63,7 @@ element-text, element-icon {
 }
 
 #inputbar {
-    children:   [ prompt, textbox-prompt-colon, entry ];
+    children:   [ entry ];
     spacing:       0;
     padding:       15px;
     border:        3px;
@@ -81,6 +81,7 @@ element-text, element-icon {
     text-color: @foreground;
 }
 #entry {
+    placeholder: "looking for something..?";
     spacing:    0;
     text-color: @foreground;
 }
