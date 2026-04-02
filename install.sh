@@ -66,7 +66,7 @@ PACMAN_DEPS=(
     grim slurp wl-clipboard dolphin code hyprpaper
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
-    papirus-icon-theme breeze-gtk base-devel git
+    papirus-icon-theme breeze-gtk base-devel git imagemagick blueman 
 )
 
 AUR_DEPS=(
