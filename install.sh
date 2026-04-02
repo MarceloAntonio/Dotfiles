@@ -65,7 +65,7 @@ PACMAN_DEPS=(
     network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
     grim slurp wl-clipboard dolphin code hyprpaper
     polkit-kde-agent brightnessctl playerctl
-    awww hyprlock zsh breeze-icons
+    awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
 )
 
 AUR_DEPS=(
@@ -179,4 +179,4 @@ echo "   ✔ INSTALLATION COMPLETED"
 echo "========================================"
 echo -e "${RESET}"
 
-echo -e "${CYAN}Reboot recomendado ⚡${RESET}"
+echo -e "${CYAN}Reboot recommended ⚡${RESET}"
