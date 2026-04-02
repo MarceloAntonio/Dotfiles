@@ -64,8 +64,9 @@ PACMAN_DEPS=(
     hyprland firefox kitty rofi-wayland fastfetch waybar
     network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
     grim slurp wl-clipboard dolphin code hyprpaper
-    polkit-kde-agent brightnessctl playerctl
+    polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
+    papirus-icon-theme breeze-gtk base-devel git
 )
 
 AUR_DEPS=(
@@ -137,22 +138,52 @@ run_step "Installing .zshrc" bash -c "
 # ========================
 run_step "Applying themes" bash -c "
     mkdir -p ~/.icons/default
-
     cat > ~/.icons/default/index.theme <<EOF
 [Icon Theme]
-Inherits=Bibata-Modern-Classic
+Inherits=Bibata-Original-Ice
 EOF
 
+    
     mkdir -p ~/.config/gtk-3.0
-
     cat > ~/.config/gtk-3.0/settings.ini <<EOF
 [Settings]
-gtk-cursor-theme-name=Bibata-Modern-Classic
-gtk-icon-theme-name=Breeze-Dark
+gtk-theme-name=Adwaita
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Inter Display 11
+gtk-cursor-theme-name=Bibata-Original-Ice
+gtk-cursor-theme-size=24
+gtk-toolbar-style=GTK_TOOLBAR_ICONS
+gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=0
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=rgb
+gtk-application-prefer-dark-theme=1
 EOF
 
+    
     mkdir -p ~/.config/gtk-4.0
-    cp ~/.config/gtk-3.0/settings.ini ~/.config/gtk-4.0/settings.ini
+    cat > ~/.config/gtk-4.0/settings.ini <<EOF
+[Settings]
+gtk-theme-name=Adwaita
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Inter Display 11
+gtk-cursor-theme-name=Bibata-Original-Ice
+gtk-cursor-theme-size=24
+gtk-application-prefer-dark-theme=1
+EOF
+
+    
+    gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Original-Ice'
+    gsettings set org.gnome.desktop.interface cursor-size 24
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+    gsettings set org.gnome.desktop.interface font-name 'Inter Display 11'
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 "
 
 # ========================
@@ -179,4 +210,4 @@ echo "   ✔ INSTALLATION COMPLETED"
 echo "========================================"
 echo -e "${RESET}"
 
-echo -e "${CYAN}Reboot recommended ⚡${RESET}"
+echo -e "${CYAN}Reboot recommended${RESET}"
