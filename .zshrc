@@ -1,7 +1,11 @@
-# Pokémon aleatório
+
 if [[ $- == *i* ]]; then
   fastfetch	
+
+  #To Install pokemon-colorscripts:
+  #yay -S pokemon-colorscripts-git
   #pokemon-colorscripts -r -s --no-title
+  
 fi
 
 # Plugins
