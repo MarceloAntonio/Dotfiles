@@ -66,11 +66,12 @@ PACMAN_DEPS=(
     grim slurp wl-clipboard dolphin code hyprpaper
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
-    papirus-icon-theme breeze-gtk base-devel git imagemagick blueman 
+    papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
+    python python-pip tk python-pillow eza
 )
 
 AUR_DEPS=(
-    bibata-cursor-theme
+    bibata-cursor-theme zsh-you-should-use zsh-history-substring-search
 )
 
 echo -e "${CYAN}"
@@ -187,7 +188,18 @@ EOF
 "
 
 # ========================
-# 8. WALLPAPER
+# 8. THEME CHANGER
+# ========================
+run_step "Instalando e configurando o Theme Changer" bash -c "
+    # Dá permissão de execução para o script
+    chmod +x scripts/Install_theme_changer.sh
+    
+    # Executa o script
+    ./scripts/Install_theme_changer.sh
+"
+
+# ========================
+# 9. WALLPAPER
 # ========================
 run_step "Copying wallpapers" bash -c "
     if [ -d $DOTFILES_DIR/Wallpapers ]; then
@@ -198,7 +210,7 @@ run_step "Copying wallpapers" bash -c "
 "
 
 # ========================
-# 9. ZSH DEFAULT
+# 10. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     chsh -s \$(which zsh)
