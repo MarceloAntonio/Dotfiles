@@ -67,7 +67,7 @@ PACMAN_DEPS=(
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
     papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
-    python python-pip tk python-pillow eza
+    python python-pip tk python-pillow eza nvim
 )
 
 AUR_DEPS=(
@@ -208,6 +208,14 @@ run_step "Copying wallpapers" bash -c "
         cp -a $DOTFILES_DIR/Wallpapers/* \$DEST/
     fi
 "
+
+# ========================
+# 9. LAZYVIM
+# ========================
+run_step "Installing LazyVim" bash -c "git clone https://github.com/LazyVim/starter ~/.config/nvim"
+
+run_step "Cleaning cache" bash -c "rm -rf ~/.config/nvim/.git"
+
 
 # ========================
 # 10. ZSH DEFAULT
