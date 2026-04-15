@@ -69,9 +69,9 @@ fi
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#555555'
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-# Aceita sugestão com Ctrl+Space ou →
+# Aceita sugestão com Ctrl+Space ou Alt+Enter
 bindkey '^ ' autosuggest-accept
-bindkey '^[[C' autosuggest-accept
+bindkey '^[^M' autosuggest-accept
 
 
 # ─────────────────────────────────────────────
