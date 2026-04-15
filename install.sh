@@ -63,11 +63,11 @@ run_step() {
 PACMAN_DEPS=(
     hyprland firefox kitty rofi-wayland fastfetch waybar
     network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
-    grim slurp wl-clipboard dolphin code hyprpaper
+    grim slurp wl-clipboard nemo code hyprpaper
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
     papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
-    python python-pip tk python-pillow eza nvim
+    python python-pip tk python-pillow eza nvim imv
 )
 
 AUR_DEPS=(
@@ -216,6 +216,38 @@ run_step "Installing LazyVim" bash -c "git clone https://github.com/LazyVim/star
 
 run_step "Cleaning cache" bash -c "rm -rf ~/.config/nvim/.git"
 
+run_step "Configuring LazyVim Theme (Mocha + Transparency)" bash -c "
+mkdir -p ~/.config/nvim/lua/plugins && \
+cat << 'EOF' > ~/.config/nvim/lua/plugins/catppuccin.lua
+return {
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    opts = {
+      flavour = 'mocha',
+      transparent_background = true,
+      integrations = {
+        telescope = true,
+        mason = true,
+        neotree = true,
+        which_key = true,
+        navic = { enabled = true },
+        mini = true,
+      },
+    },
+  },
+  {
+    'LazyVim/LazyVim',
+    opts = {
+      colorscheme = 'catppuccin-mocha',
+    },
+  },
+}
+EOF
+"
+
+run_step "Pre-installing LazyVim plugins" bash -c "nvim --headless +Lazy! sync +qa"
 
 # ========================
 # 10. ZSH DEFAULT
