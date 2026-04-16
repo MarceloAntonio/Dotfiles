@@ -141,17 +141,16 @@ run_step "Applying themes" bash -c "
     mkdir -p ~/.icons/default
     cat > ~/.icons/default/index.theme <<EOF
 [Icon Theme]
-Inherits=McMojave-cursors-dark
+Inherits=mcmojave-cursors
 EOF
 
-    
     mkdir -p ~/.config/gtk-3.0
     cat > ~/.config/gtk-3.0/settings.ini <<EOF
 [Settings]
 gtk-theme-name=Adwaita
 gtk-icon-theme-name=Papirus-Dark
 gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=McMojave-cursors-dark
+gtk-cursor-theme-name=mcmojave-cursors
 gtk-cursor-theme-size=24
 gtk-toolbar-style=GTK_TOOLBAR_ICONS
 gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
@@ -166,20 +165,18 @@ gtk-xft-rgba=rgb
 gtk-application-prefer-dark-theme=1
 EOF
 
-    
     mkdir -p ~/.config/gtk-4.0
     cat > ~/.config/gtk-4.0/settings.ini <<EOF
 [Settings]
 gtk-theme-name=Adwaita
 gtk-icon-theme-name=Papirus-Dark
 gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=McMojave-cursors-dark
+gtk-cursor-theme-name=mcmojave-cursors
 gtk-cursor-theme-size=24
 gtk-application-prefer-dark-theme=1
 EOF
 
-    
-    gsettings set org.gnome.desktop.interface cursor-theme 'McMojave-cursors-dark'
+    gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors'
     gsettings set org.gnome.desktop.interface cursor-size 24
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
