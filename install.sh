@@ -63,7 +63,7 @@ run_step() {
 PACMAN_DEPS=(
     hyprland firefox kitty rofi-wayland fastfetch waybar
     network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
-    grim slurp wl-clipboard nemo code hyprpaper
+    grim slurp wl-clipboard nemo hyprpaper
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
     papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
@@ -71,7 +71,7 @@ PACMAN_DEPS=(
 )
 
 AUR_DEPS=(
-    bibata-cursor-theme zsh-you-should-use zsh-history-substring-search
+    zsh-you-should-use zsh-history-substring-search mcmojave-cursors
 )
 
 echo -e "${CYAN}"
@@ -141,7 +141,7 @@ run_step "Applying themes" bash -c "
     mkdir -p ~/.icons/default
     cat > ~/.icons/default/index.theme <<EOF
 [Icon Theme]
-Inherits=Bibata-Original-Ice
+Inherits=McMojave-cursors-dark
 EOF
 
     
@@ -151,7 +151,7 @@ EOF
 gtk-theme-name=Adwaita
 gtk-icon-theme-name=Papirus-Dark
 gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=Bibata-Original-Ice
+gtk-cursor-theme-name=McMojave-cursors-dark
 gtk-cursor-theme-size=24
 gtk-toolbar-style=GTK_TOOLBAR_ICONS
 gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
@@ -173,13 +173,13 @@ EOF
 gtk-theme-name=Adwaita
 gtk-icon-theme-name=Papirus-Dark
 gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=Bibata-Original-Ice
+gtk-cursor-theme-name=McMojave-cursors-dark
 gtk-cursor-theme-size=24
 gtk-application-prefer-dark-theme=1
 EOF
 
     
-    gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Original-Ice'
+    gsettings set org.gnome.desktop.interface cursor-theme 'McMojave-cursors-dark'
     gsettings set org.gnome.desktop.interface cursor-size 24
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
@@ -210,7 +210,7 @@ run_step "Copying wallpapers" bash -c "
 "
 
 # ========================
-# 9. LAZYVIM
+# 10. LAZYVIM
 # ========================
 run_step "Installing LazyVim" bash -c "git clone https://github.com/LazyVim/starter ~/.config/nvim"
 
@@ -250,7 +250,7 @@ EOF
 run_step "Pre-installing LazyVim plugins" bash -c "nvim --headless +Lazy! sync +qa"
 
 # ========================
-# 10. ZSH DEFAULT
+# 11. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     chsh -s \$(which zsh)

@@ -4,9 +4,9 @@
     "modules-right": ["tray", "bluetooth" , "pulseaudio", "battery" ],
 
     "custom/power": {
-        "format" : "⭘ ",
+        "format" : "󰣇 ",
         "tooltip": false,
-        "on-click": "wlogout -b 5",
+        "on-click": "hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"
     },
 
     "hyprland/workspaces": {
@@ -14,28 +14,20 @@
         "all-outputs": true,
         "warp-on-scroll": false,
         "format": "{name}",
-        "cursor": true,
+        "cursor": true
     },
 
     "tray": {
         "icon-size": 20,
         "spacing": 10,
-        "cursor": true,
+        "cursor": true
     },
 
     "bluetooth": {
         "format": " 󰂯 ",
         "format-disabled": " 󰂲 ",
         "format-connected": " 󰂱 ",
-        "on-click": "blueman-manager",
-    },
-
-    "network": {
-        "format-wifi": "  {essid}",
-        "format-ethernet": "  Ethernet",
-        "format-linked": "  Linked (No IP)",
-        "format-disconnected": "  Disconnected",
-        "tooltip": false,
+        "on-click": "blueman-manager"
     },
 
     "battery": {
@@ -51,7 +43,7 @@
         "format-alt": "{icon} {capacity}%",
         "format-icons": [" ", " ", " ", " ", " "],
         "tooltip-format": "{time}",
-        "cursor": false,
+        "cursor": false
     },
 
 
@@ -63,10 +55,10 @@
         "format-icons": {
             "headphone": " ",
             "headset": " ",
-            "default": [" "],
+            "default": [" "]
         },
         "scroll-step": 5,
-        "on-click": "pavucontrol",
+        "on-click": "pavucontrol"
     },
 
     "clock": {
