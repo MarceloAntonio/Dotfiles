@@ -67,11 +67,11 @@ PACMAN_DEPS=(
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
     papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
-    python python-pip tk python-pillow eza nvim imv
+    python python-pip tk python-pillow eza nvim imv pipewire pipewire-pulse wireplumber
 )
 
 AUR_DEPS=(
-    zsh-you-should-use zsh-history-substring-search mcmojave-cursors
+    zsh-you-should-use zsh-history-substring-search mcmojave-cursors 
 )
 
 echo -e "${CYAN}"
