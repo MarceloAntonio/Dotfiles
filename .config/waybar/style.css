@@ -32,8 +32,6 @@ tooltip {
 #workspaces button:hover {
     color: @pink;
     transition: none;
-    border-bottom: 1px solid @pink;
-    padding: 0 8px;
 }
 
 #workspaces button.active {

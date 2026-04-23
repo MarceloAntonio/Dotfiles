@@ -1,8 +1,6 @@
 # ~/dotfiles
 
-A minimal, focused desktop environment built on Hyprland with a fully monochromatic system theme
-and Catppuccin Mocha for the editor. Fastfetch is customized with image support — swap the image
-to whatever you like.
+My Dotfiles have a monochromatic theme, except for the editor which has a catpuccin mocha theme. The compositor is Hyprland. I created an installation script, so if you want the Dotfile, just follow the instructions below. I've also included some wallpapers in the Wallpapers folder if you need them.
 
 ---
 
@@ -17,10 +15,10 @@ to whatever you like.
 | Launcher       | Rofi          |
 | Browser        | Firefox       |
 | File Manager   | Nemo          |
-| Wallpaper      | swww          |
+| Wallpaper      | awww          |
 | Login Manager  | SDDM          |
 | Screen Lock    | Hyprlock      |
-| Editor         | Neovim        |
+| Editor         | Lazyvim        |
 | Fetch          | Fastfetch     |
 
 ---
@@ -62,66 +60,15 @@ The modifier key is `SUPER` (Windows key).
 > **Note:** The script backs up your existing configs to `~/BKP.config` before applying any
 > changes. It installs dependencies via `pacman` and `yay`, applies the SDDM theme, and sets
 > ZSH as your default shell.
-
 ---
-
-## Structure
-
-```text
-~/dotfiles
-├── .config/
-│   ├── colors/
-│   │   ├── colors.css
-│   │   └── colors.rasi
-│   ├── fastfetch/
-│   │   ├── icons/
-│   │   │   ├── Chihiro.png
-│   │   │   ├── Cinna.png
-│   │   │   ├── Miku.png
-│   │   │   ├── Nerv.png
-│   │   │   ├── Tomoko.png
-│   │   │   └── Tomoko2.png
-│   │   └── config.jsonc
-│   ├── gtk-3.0/
-│   │   └── settings.ini
-│   ├── gtk-4.0/
-│   │   └── settings.ini
-│   ├── hypr/
-│   │   ├── configs/
-│   │   │   ├── animations.conf
-│   │   │   ├── autostart.conf
-│   │   │   ├── keybinds.conf
-│   │   │   ├── monitors.conf
-│   │   │   ├── programs.conf
-│   │   │   └── windowrules.conf
-│   │   ├── scripts/
-│   │   │   └── change-wallpaper.sh
-│   │   ├── hyprland.conf
-│   │   └── hyprlock.conf
-│   ├── kitty/
-│   │   ├── kitty.conf
-│   │   └── theme.conf
-│   ├── rofi/
-│   │   └── config.rasi
-│   ├── vscode/
-│   │   └── settings.json
-│   └── waybar/
-│       ├── config
-│       └── style.css
-├── scripts/
-│   ├── install_theme_changer.sh
-│   ├── sddm-setup.sh
-│   └── theme_changer.py
-├── Wallpapers/
-├── .zshrc
-├── install.sh
-└── README.md
-```
 
 ## Theme Changer *(work in progress)*
 
-A utility that reads the `wallpaper/` folder and syncs the selected wallpaper to both SDDM
-and swww in one step. Currently functional but slow — keyboard navigation is not yet supported.
+The theme changer is a program written in Python where you can change your Hyprland and SDDM wallpapers, and the Fastfetch icon. It's still under development, so it's not 100% perfect yet. I intend to migrate it to Rofi.
+
+---
+## Wallpapers
+To see the available wallpapers, just click [here](./Wallpapers/WALLPAPERS.md).
 
 ---
 
