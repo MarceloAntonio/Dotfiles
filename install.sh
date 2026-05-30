@@ -1,6 +1,14 @@
 #!/bin/bash
 
 # ========================
+# ROOT CHECK
+# ========================
+if [[ $EUID -eq 0 ]]; then
+    echo -e "\033[1;31m✖ Do not run this script as root (sudo). The script will prompt for your password when needed.\033[0m"
+    exit 1
+fi
+
+# ========================
 # CONFIG
 # ========================
 set -e
@@ -23,33 +31,16 @@ RESET="\033[0m"
 # ========================
 # UTILS
 # ========================
-log() {
-    echo -e "${BLUE}[$1]${RESET} $2"
-}
-
-success() {
-    echo -e "${GREEN}✔ $1${RESET}"
-}
-
-warn() {
-    echo -e "${YELLOW}⚠ $1${RESET}"
-}
-
-error() {
-    echo -e "${RED}✖ $1${RESET}"
-}
-
-progress() {
-    echo -e "${CYAN}➜ $1...${RESET}"
-    sleep 0.5
-}
+log() { echo -e "${BLUE}[$1]${RESET} $2"; }
+success() { echo -e "${GREEN}✔ $1${RESET}"; }
+warn() { echo -e "${YELLOW}⚠ $1${RESET}"; }
+error() { echo -e "${RED}✖ $1${RESET}"; }
+progress() { echo -e "${CYAN}➜ $1...${RESET}"; sleep 0.5; }
 
 run_step() {
     DESC="$1"
     shift
-
     progress "$DESC"
-
     if "$@"; then
         success "$DESC"
     else
@@ -110,29 +101,34 @@ run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
 # 4. SDDM
 # ========================
 run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
-# ========================
-# 5. BACKUP
-# ========================
-run_step "Backing up configs" bash -c "
-    mkdir -p $BACKUP_DIR
-    mkdir -p $CONFIG_DIR
-    for item in $CONFIG_DIR/*; do
-        mv \$item $BACKUP_DIR/ 2>/dev/null
-    done
-"
 
 # ========================
-# 6. DOTFILES
+# 5. BACKUP & 6. DOTFILES
 # ========================
-run_step "Installing dotfiles" bash -c "
-    for dir in $DOTFILES_DIR/.config/*; do
-        cp -a \$dir $CONFIG_DIR/
+run_step "Backing up and installing configs" bash -c '
+    mkdir -p "'$BACKUP_DIR'"
+    mkdir -p "'$CONFIG_DIR'"
+    
+    # Iterate only over the items that exist in your dotfiles
+    for dir in "'$DOTFILES_DIR'"/.config/*; do
+        item_name=$(basename "$dir")
+        
+        # If the folder already exists in the system, back it up
+        if [ -e "'$CONFIG_DIR'/$item_name" ]; then
+            mv "'$CONFIG_DIR'/$item_name" "'$BACKUP_DIR'/" 2>/dev/null
+        fi
+        
+        # Copy the new dotfile
+        cp -a "$dir" "'$CONFIG_DIR'/"
     done
-"
+'
 
-run_step "Installing .zshrc" bash -c "
-    [ -f $DOTFILES_DIR/.zshrc ] && cp $DOTFILES_DIR/.zshrc $HOME/
-"
+run_step "Installing .zshrc" bash -c '
+    if [ -f "'$DOTFILES_DIR'/.zshrc" ]; then
+        [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "'$BACKUP_DIR'/"
+        cp "'$DOTFILES_DIR'/.zshrc" "$HOME/"
+    fi
+'
 
 # ========================
 # 7. THEMES
@@ -176,22 +172,23 @@ gtk-cursor-theme-size=24
 gtk-application-prefer-dark-theme=1
 EOF
 
-    gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors'
-    gsettings set org.gnome.desktop.interface cursor-size 24
-    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
-    gsettings set org.gnome.desktop.interface font-name 'Inter Display 11'
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    # Added '|| true' to prevent failures if run outside a graphical interface (TTY)
+    gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors' || true
+    gsettings set org.gnome.desktop.interface cursor-size 24 || true
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
+    gsettings set org.gnome.desktop.interface font-name 'Inter Display 11' || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
 "
 
 # ========================
 # 8. THEME CHANGER
 # ========================
-run_step "Instalando e configurando o Theme Changer" bash -c "
-    # Dá permissão de execução para o script
+run_step "Installing Theme Changer" bash -c "
+    # Grant execution permissions to the script
     chmod +x scripts/Install_theme_changer.sh
     
-    # Executa o script
+    # Run the script
     ./scripts/Install_theme_changer.sh
 "
 
@@ -258,5 +255,4 @@ echo "========================================"
 echo "   ✔ INSTALLATION COMPLETED"
 echo "========================================"
 echo -e "${RESET}"
-
 echo -e "${CYAN}Reboot recommended${RESET}"
