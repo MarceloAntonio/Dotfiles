@@ -95,4 +95,4 @@ element-text {
     placeholder: "Escolha um wallpaper...";
     spacing:    0;
     text-color: @foreground;
-}  
+}
