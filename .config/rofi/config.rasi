@@ -1,7 +1,7 @@
 configuration {
     scroll-method: 1;
-    scrollbar: true;
-    show-icons: false;
+    scrollbar: false;
+    show-icons: true;
     display-run: "Run ";
     display-drun: "Open ";
     display-emoji: "Emoji ";
@@ -12,14 +12,14 @@ configuration {
 @import "~/.config/colors/colors.rasi"
 
 * {
-    font: "JetbrainsMono Nerd Font 15";
+    font: "Inter SemiBold 11";
 }
 
 #window {
+    border: 0px;
+    border-radius: 12px;
+    transparency: "real";
     background-color: @background;
-    border:           3;
-    border-radius:    6;
-    border-color:     @bordercolor;
     padding:          15;
     width:            600px;
 }
@@ -48,16 +48,22 @@ configuration {
     background-color: @selected-background;
     text-color:       @foreground;
 }
-element-text, element-icon {
-    size:             45px;
+
+element-icon {
+    size: 32px;
+    vertical-align: 0.5;
+}
+
+element-text {
+    vertical-align: 0.5;
     background-color: inherit;
-    text-color:       inherit;
+    text-color: inherit;
 }
 
 #scrollbar {
-    width:        2px ;
+    width:        0px ;
     border:       0;
-    handle-width: 8px ;
+    handle-width: 0px ;
     padding:      0;
     handle-color: @select;
 }
@@ -66,7 +72,7 @@ element-text, element-icon {
     children:   [ entry ];
     spacing:       0;
     padding:       15px;
-    border:        3px;
+    border:        0px;
     border-radius: 6px;
     border-color:  @bordercolor;
 }
