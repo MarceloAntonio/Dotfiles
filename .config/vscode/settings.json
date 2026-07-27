@@ -78,6 +78,7 @@
     "editor.defaultFormatter": "vscode.html-language-features"
   },
   "prettier.useEditorConfig": false,
-  "editor.wordWrap": "on"
+  "editor.wordWrap": "on",
+  "chat.titleBar.signIn.enabled": false,
+  "chat.titleBar.openInAgentsWindow.enabled": false
 }
-

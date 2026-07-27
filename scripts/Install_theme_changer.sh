@@ -1,28 +1,13 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="$SCRIPT_DIR/theme-changer"
-BIN="theme-changer"
-DEST="/usr/local/bin/$BIN"
+SRC="$SCRIPT_DIR/theme-changer.sh"
+DEST="/usr/local/bin/theme-changer"
 DESKTOP="$HOME/.local/share/applications/theme-changer.desktop"
 
-echo "==> Compilando theme-changer..."
+echo "==> Instalando theme-changer (rofi)..."
 
-# Verifica dependências
-if ! pkg-config --exists gtk4; then
-    echo "    [ERRO] gtk4 não encontrado. Instale com: sudo pacman -S gtk4"
-    exit 1
-fi
-
-# Compila
-make -C "$SRC_DIR" clean all
-if [ $? -ne 0 ]; then
-    echo "    [ERRO] Falha na compilação."
-    exit 1
-fi
-echo "    [ok] Compilado"
-
-# Instala binário
-sudo install -Dm755 "$SRC_DIR/$BIN" "$DEST"
+# Instala o script
+sudo install -Dm755 "$SRC" "$DEST"
 echo "    [ok] $DEST"
 
 # Cria .desktop
