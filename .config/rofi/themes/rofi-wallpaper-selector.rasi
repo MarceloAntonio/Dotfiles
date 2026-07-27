@@ -1,5 +1,5 @@
 configuration {
-    scroll-method: 1;
+    scroll-method: 0;
     scrollbar: false;
     show-icons: true;
     drun-display-format: "{name}";
@@ -23,6 +23,7 @@ configuration {
 #listview {
     columns:      3;
     lines:        2;
+    flow:         horizontal;
     fixed-height: 0;
     cycle:        true;
     dynamic:      true;

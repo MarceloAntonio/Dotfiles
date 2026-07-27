@@ -87,7 +87,7 @@ element-text {
     text-color: @foreground;
 }
 #entry {
-    placeholder: "looking for something..?";
+    placeholder: "Looking for something..?";
     spacing:    0;
     text-color: @foreground;
 }
