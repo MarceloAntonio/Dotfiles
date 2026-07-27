@@ -20,6 +20,7 @@ tooltip {
     border-radius: 0;
 }
 
+/* ── Workspaces ── */
 #workspaces {
     margin: 1px 0;
 }
@@ -27,69 +28,136 @@ tooltip {
 #workspaces button {
     color: @foreground;
     border: none;
-    padding: 0 5px;
+    padding: 0;
+    margin: 0 4px;
+    min-width: 26px;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.68);
 }
-#workspaces button:hover {
-    color: @pink;
-    transition: none;
+
+#workspaces button:hover,
+#workspaces button.active:hover {
+    color: #ffffff;
+    background-color: rgba(60, 60, 60, 0.7);
+    min-width: 26px;
+    box-shadow: none;
+    text-shadow: none;
 }
 
 #workspaces button.active {
-    color: @pink;
-    border: 2px solid @pink;
-    padding: 0 8px;
-    margin: 0 2px;
+    color: @background;
+    background-color: @pink;
+    padding: 0;
+    min-width: 26px;
 }
 
 #workspaces button.urgent {
+    color: @background;
     background-color: @red;
-    padding: 0 8px;
+    padding: 0;
+    min-width: 26px;
 }
 
+/* ── Modules Base ── */
+#custom-arch,
 #custom-power,
+#custom-reboot,
+#custom-logout,
+#custom-lock,
 #tray,
-#bluetooth,
+#clock,
+#custom-system-icon,
 #network,
-#battery,
+#bluetooth,
 #pulseaudio,
-#clock {
+#battery {
     color: @foreground;
-    margin: 1px 0;
+    margin: 0px 0;
     padding: 0 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-#custom-power:hover,
-#bluetooth:hover,
-#network:hover,
-#battery:hover,
-#pulseaudio:hover,
-#clock:hover {
+#clock:hover,
+#custom-system-icon:hover,
+#battery:hover {
     background-color: alpha(@select, 0.6);
 }
 
-#bluetooth {
-    color: @purple;
-}
-
-#network {
-    color: @purple;
-}
-
-#battery {
-    color: @purple;
-}
-
-#pulseaudio {
-    color: @purple;
-}
-
+/* ── Specific Colors ── */
 #clock {
     margin-right: 10px;
-    color: @purple;
 }
 
-#custom-power {
+#custom-arch {
     font-size: 18px;
     margin-left: 10px;
-    padding: 0px 10px 0 15px;
+    margin-right: 10px;
+    padding: 0 14px 0 13px;
+}
+
+#custom-arch:hover,
+#network:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#custom-power:hover,
+#custom-reboot:hover,
+#custom-logout:hover,
+#custom-lock:hover {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+/* ── Taskbar ── */
+#taskbar button {
+    padding: 0 5px;
+    margin: 1px 2px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#taskbar button:hover {
+    background-color: alpha(@select, 0.6);
+}
+
+#taskbar button.active {
+    background-color: alpha(@select, 0.4);
+}
+
+/* ── Power Menu Group ── */
+#group-power {
+    background-color: alpha(@select, 0.2);
+    border-radius: 12px;
+    margin: 1px 25px 1px 0;
+    padding: 0 5px;
+}
+
+#custom-power,
+#custom-reboot,
+#custom-logout,
+#custom-lock {
+    font-size: 16px;
+    padding: 0 8px;
+    margin: 0;
+}
+
+
+
+/* ── System Drawer ── */
+#group-system {
+    background-color: alpha(@select, 0.2);
+    border-radius: 12px;
+    margin: 1px 10px 1px 0;
+    padding: 0 2px;
+}
+
+#custom-system-icon {
+    padding: 0 12px;
+}
+
+#network,
+#bluetooth,
+#pulseaudio,
+#battery {
+    padding: 0 6px;
 }

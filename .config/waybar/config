@@ -1,12 +1,67 @@
 {
-    "modules-left": ["custom/power", "hyprland/workspaces"],
+    "modules-left": ["custom/arch", "hyprland/workspaces", "wlr/taskbar"],
     "modules-center": ["clock"],
-    "modules-right": ["tray", "bluetooth" , "pulseaudio", "battery" ],
+    "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "group/power"],
+
+    "custom/arch": {
+        "format" : "󰣇",
+        "tooltip": false,
+        "on-click": "rofi -show drun"
+    },
+
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 18,
+        "icon-theme": "WhiteSur-dark",
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "app_ids-mapping": {
+            "firefoxdeveloperedition": "firefox-developer-edition"
+        }
+    },
+
+    "group/power": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/power",
+            "custom/reboot",
+            "custom/lock",
+            "custom/logout"
+        ]
+    },
 
     "custom/power": {
-        "format" : "󰣇 ",
-        "tooltip": false,
-        "on-click": "hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "Desligar",
+        "on-click": "shutdown now"
+    },
+
+    "custom/reboot": {
+        "format": "󰜉",
+        "tooltip": true,
+        "tooltip-format": "Reiniciar",
+        "on-click": "reboot"
+    },
+
+    "custom/lock": {
+        "format": "󰍁",
+        "tooltip": true,
+        "tooltip-format": "Bloquear",
+        "on-click": "swaylock"
+    },
+
+    "custom/logout": {
+        "format": "󰗼",
+        "tooltip": true,
+        "tooltip-format": "Sair",
+        "on-click": "hyprctl dispatch exit"
     },
 
     "hyprland/workspaces": {
@@ -23,10 +78,18 @@
         "cursor": true
     },
 
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "󰈀  {ipaddr}",
+        "format-disconnected": "󰤮 ",
+        "tooltip-format": "{ipaddr} via {gwaddr}",
+        "on-click": "nm-connection-editor"
+    },
+
     "bluetooth": {
-        "format": " 󰂯 ",
-        "format-disabled": " 󰂲 ",
-        "format-connected": " 󰂱 ",
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱",
         "on-click": "blueman-manager"
     },
 
@@ -45,7 +108,6 @@
         "tooltip-format": "{time}",
         "cursor": false
     },
-
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
