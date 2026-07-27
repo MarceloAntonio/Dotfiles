@@ -54,15 +54,15 @@ run_step() {
 PACMAN_DEPS=(
     hyprland firefox kitty rofi-wayland fastfetch waybar
     network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
-    grim slurp wl-clipboard nemo hyprpaper
+    grim slurp wl-clipboard nautilus hyprpaper
     polkit-kde-agent brightnessctl playerctl inter-font 
     awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
-    papirus-icon-theme breeze-gtk base-devel git imagemagick blueman
+    breeze-gtk base-devel git imagemagick blueman
     python python-pip tk python-pillow eza nvim imv pipewire pipewire-pulse wireplumber
 )
 
 AUR_DEPS=(
-    zsh-you-should-use zsh-history-substring-search mcmojave-cursors 
+    zsh-you-should-use zsh-history-substring-search mcmojave-cursors
 )
 
 echo -e "${CYAN}"
@@ -133,6 +133,14 @@ run_step "Installing .zshrc" bash -c '
 # ========================
 # 7. THEMES
 # ========================
+run_step "Installing WhiteSur Icon Theme" bash -c '
+    rm -rf /tmp/WhiteSur-icon-theme
+    git clone https://github.com/vinceliuice/WhiteSur-icon-theme.git /tmp/WhiteSur-icon-theme
+    cd /tmp/WhiteSur-icon-theme
+    ./install.sh -a
+    rm -rf /tmp/WhiteSur-icon-theme
+'
+
 run_step "Applying themes" bash -c "
     mkdir -p ~/.icons/default
     cat > ~/.icons/default/index.theme <<EOF
@@ -144,7 +152,7 @@ EOF
     cat > ~/.config/gtk-3.0/settings.ini <<EOF
 [Settings]
 gtk-theme-name=Adwaita
-gtk-icon-theme-name=Papirus-Dark
+gtk-icon-theme-name=WhiteSur-dark
 gtk-font-name=Inter Display 11
 gtk-cursor-theme-name=mcmojave-cursors
 gtk-cursor-theme-size=24
@@ -165,7 +173,7 @@ EOF
     cat > ~/.config/gtk-4.0/settings.ini <<EOF
 [Settings]
 gtk-theme-name=Adwaita
-gtk-icon-theme-name=Papirus-Dark
+gtk-icon-theme-name=WhiteSur-dark
 gtk-font-name=Inter Display 11
 gtk-cursor-theme-name=mcmojave-cursors
 gtk-cursor-theme-size=24
@@ -175,7 +183,7 @@ EOF
     # Added '|| true' to prevent failures if run outside a graphical interface (TTY)
     gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors' || true
     gsettings set org.gnome.desktop.interface cursor-size 24 || true
-    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' || true
+    gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark' || true
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
     gsettings set org.gnome.desktop.interface font-name 'Inter Display 11' || true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
@@ -244,7 +252,23 @@ EOF
 run_step "Pre-installing LazyVim plugins" bash -c "nvim --headless +Lazy! sync +qa"
 
 # ========================
-# 11. ZSH DEFAULT
+# 11. CODE OSS
+# ========================
+run_step "Installing Code OSS settings" bash -c '
+    DEST="$HOME/.config/Code - OSS/User"
+    mkdir -p "$DEST"
+    if [ -f "'"$DOTFILES_DIR"'/.config/vscode/settings.json" ]; then
+        cp "'"$DOTFILES_DIR"'/.config/vscode/settings.json" "$DEST/settings.json"
+    fi
+'
+
+run_step "Installing Code OSS extensions" bash -c '
+    code --install-extension esbenp.prettier-vscode
+    code --install-extension Catppuccin.catppuccin-vsc-pack
+'
+
+# ========================
+# 12. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     chsh -s \$(which zsh)
