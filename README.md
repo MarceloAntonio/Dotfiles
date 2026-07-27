@@ -1,6 +1,6 @@
 # ~/dotfiles
 
-My Dotfiles have a monochromatic theme, except for the editor which has a catpuccin mocha theme. The compositor is Hyprland. I created an installation script, so if you want the Dotfile, just follow the instructions below. I've also included some wallpapers in the Wallpapers folder if you need them.
+These dotfiles use a monochromatic theme, except for the editor which uses Catppuccin Mocha. The compositor is Hyprland. An installation script is included. Wallpapers are available in the Wallpapers folder.
 
 ---
 
@@ -14,11 +14,11 @@ My Dotfiles have a monochromatic theme, except for the editor which has a catpuc
 | Terminal       | Kitty         |
 | Launcher       | Rofi          |
 | Browser        | Firefox       |
-| File Manager   | Nemo          |
+| File Manager   | Nautilus      |
 | Wallpaper      | awww          |
 | Login Manager  | SDDM          |
 | Screen Lock    | Hyprlock      |
-| Editor         | Lazyvim        |
+| Editor         | Code - OSS / LazyVim |
 | Fetch          | Fastfetch     |
 
 ---
@@ -34,9 +34,10 @@ The modifier key is `SUPER` (Windows key).
 | Open browser      | `SUPER + B`           |
 | Open file manager | `SUPER + E`           |
 | Close window      | `SUPER + Q`           |
-| Toggle floating   | `SUPER + V`           |
+| Toggle floating   | `SUPER + Z`           |
 | Toggle split      | `SUPER + J`           |
 | Change wallpaper  | `SUPER + W`           |
+| Theme changer     | `SUPER + T`           |
 | Screenshot        | `SUPER + SHIFT + S`   |
 | Exit / shutdown   | `SUPER + M`           |
 
@@ -57,18 +58,16 @@ The modifier key is `SUPER` (Windows key).
    ./install.sh
    ```
 
-> **Note:** The script backs up your existing configs to `~/BKP.config` before applying any
-> changes. It installs dependencies via `pacman` and `yay`, applies the SDDM theme, and sets
-> ZSH as your default shell.
+> **Note:** The script backs up your existing configs to `~/BKP.config` before applying changes. It installs dependencies via `pacman` and `yay`, applies the SDDM theme, sets up Code - OSS, and sets ZSH as your default shell.
 ---
 
-## Theme Changer *(work in progress)*
+## Theme Changer
 
-The theme changer is a program written in Python where you can change your Hyprland and SDDM wallpapers, and the Fastfetch icon. It's still under development, so it's not 100% perfect yet. I intend to migrate it to Rofi.
+You can change your Hyprland wallpaper, SDDM background, and Fastfetch icon using the built in Theme Changer. It runs entirely through Rofi.
 
 ---
 ## Wallpapers
-To see the available wallpapers, just click [here](./Wallpapers/WALLPAPERS.md).
+To see the available wallpapers, click [here](./Wallpapers/WALLPAPERS.md).
 
 ---
 
