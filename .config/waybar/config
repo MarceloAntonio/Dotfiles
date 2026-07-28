@@ -79,7 +79,7 @@
     },
 
     "network": {
-        "format-wifi": "  {essid}",
+        "format-wifi": " ",
         "format-ethernet": "󰈀  {ipaddr}",
         "format-disconnected": "󰤮 ",
         "tooltip-format": "{ipaddr} via {gwaddr}",

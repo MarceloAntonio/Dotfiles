@@ -148,6 +148,91 @@ def print_header():
     print()
 
 
+def interactive_selection(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]:
+    import tty
+    import termios
+    import select
+
+    def get_key():
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+            if ch == '\x1b':
+                r, _, _ = select.select([sys.stdin], [], [], 0.1)
+                if r:
+                    ch2 = sys.stdin.read(1)
+                    if ch2 == '[':
+                        ch3 = sys.stdin.read(1)
+                        return '\x1b[' + ch3
+            return ch
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+    selected = [True] * len(changes)
+    cursor_idx = 0
+
+    print("\n  Selecione os arquivos para backup:")
+    print(colored("  (Setas/j/k para mover, Espaço para alternar, Enter para confirmar, 'a' todos, 'n' nenhum, 'q' sair)", Colors.DIM))
+    print()
+    
+    # Hide cursor
+    sys.stdout.write("\033[?25l")
+    sys.stdout.flush()
+
+    try:
+        while True:
+            # Draw the list
+            for i, (src, dst) in enumerate(changes):
+                rel = dst.relative_to(DOTFILES_DIR)
+                mark = colored("x", Colors.GREEN) if selected[i] else " "
+                
+                if i == cursor_idx:
+                    pointer = colored(">", Colors.CYAN)
+                    line_color = Colors.BOLD
+                else:
+                    pointer = " "
+                    line_color = ""
+                
+                # Use clear line escape sequence \033[K
+                line = f"\r\033[K    {pointer} [{mark}] {colored(str(rel), line_color)}"
+                sys.stdout.write(line + "\n")
+            
+            sys.stdout.flush()
+            
+            # Wait for key
+            key = get_key()
+            
+            # Move cursor up to overwrite the list
+            sys.stdout.write(f"\033[{len(changes)}A")
+            
+            if key in ('\x1b[A', 'k'): # Up
+                cursor_idx = max(0, cursor_idx - 1)
+            elif key in ('\x1b[B', 'j'): # Down
+                cursor_idx = min(len(changes) - 1, cursor_idx + 1)
+            elif key == ' ': # Space
+                selected[cursor_idx] = not selected[cursor_idx]
+            elif key == '\r' or key == '\n': # Enter
+                sys.stdout.write(f"\033[{len(changes)}B") # Move cursor down
+                break
+            elif key == 'a':
+                selected = [True] * len(changes)
+            elif key == 'n':
+                selected = [False] * len(changes)
+            elif key == '\x03' or key == 'q': # Ctrl+C or q
+                sys.stdout.write(f"\033[{len(changes)}B") # Move cursor down
+                sys.stdout.write("\033[?25h") # Show cursor
+                print(colored("\n  Cancelado.", Colors.DIM))
+                sys.exit(0)
+                
+    finally:
+        sys.stdout.write("\033[?25h")
+        sys.stdout.flush()
+
+    return [changes[i] for i in range(len(changes)) if selected[i]]
+
+
 def main():
     parser = argparse.ArgumentParser(description="Backup automático dos dotfiles")
     parser.add_argument("--auto", action="store_true", help="Modo automático (sem confirmação)")
@@ -170,28 +255,31 @@ def main():
         print()
         sys.exit(0)
 
-    # Mostrar mudanças
-    print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças:\n")
-
-    for src, dst in changes:
-        rel = dst.relative_to(DOTFILES_DIR)
-        print(f"    {colored('•', Colors.CYAN)} {rel}")
-
-    print()
-
-    if args.dry:
-        print(colored("  [Dry Run] Arquivos que seriam copiados:\n", Colors.YELLOW))
-        copy_files(changes, dry_run=True)
+    if args.auto or args.dry:
+        # Mostrar mudanças
+        print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças:\n")
+    
+        for src, dst in changes:
+            rel = dst.relative_to(DOTFILES_DIR)
+            print(f"    {colored('•', Colors.CYAN)} {rel}")
+    
         print()
-        sys.exit(0)
-
-    # Confirmação
-    if not args.auto:
-        resp = input(colored("  Deseja prosseguir com o backup? [S/n] ", Colors.BOLD))
-        if resp.strip().lower() in ("n", "não", "nao", "no"):
-            print(colored("  Cancelado.", Colors.DIM))
+    
+        if args.dry:
+            print(colored("  [Dry Run] Arquivos que seriam copiados:\n", Colors.YELLOW))
+            copy_files(changes, dry_run=True)
+            print()
             sys.exit(0)
-        print()
+    else:
+        # Modo interativo com seleção
+        print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças encontrados.")
+        
+        changes = interactive_selection(changes)
+        
+        if not changes:
+            print(colored("\n  Nenhum arquivo selecionado. Cancelado.", Colors.DIM))
+            print()
+            sys.exit(0)
 
     # Copiar arquivos
     print(colored("  Copiando arquivos...\n", Colors.BLUE))
