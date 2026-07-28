@@ -58,8 +58,15 @@ tooltip {
     min-width: 26px;
 }
 
+
+#custom-arch{
+    color: @foreground;
+    margin: 0px 3px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
 /* ── Modules Base ── */
-#custom-arch,
+
 #custom-power,
 #custom-reboot,
 #custom-logout,
@@ -72,8 +79,8 @@ tooltip {
 #pulseaudio,
 #battery {
     color: @foreground;
-    margin: 0px 0;
-    padding: 0 10px;
+    margin: 0px 3px;
+    padding: 0 3px;
     border-radius: 8px;
     transition: all 0.2s ease;
 }
@@ -90,10 +97,9 @@ tooltip {
 }
 
 #custom-arch {
-    font-size: 18px;
+    font-size: 20px;
     margin-left: 10px;
-    margin-right: 10px;
-    padding: 0 14px 0 13px;
+    padding: 0 15px 0 12px;
 }
 
 #custom-arch:hover,
@@ -128,17 +134,23 @@ tooltip {
 #group-power {
     background-color: alpha(@select, 0.2);
     border-radius: 12px;
-    margin: 1px 25px 1px 0;
     padding: 0 5px;
 }
+#custom-power{
+    font-size: 13px;
+    margin-right: 10px;
+    padding: 0 9px 0 7px;
+}
 
-#custom-power,
+
+
 #custom-reboot,
 #custom-logout,
 #custom-lock {
-    font-size: 16px;
+    
+    font-size: 13px;
     padding: 0 8px;
-    margin: 0;
+    margin: 0px 3px;
 }
 
 
