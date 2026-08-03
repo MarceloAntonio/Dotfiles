@@ -17,7 +17,7 @@ ROFI_THEME="$HOME/.config/rofi/themes/rofi-wallpaper-selector.rasi"
 
 # ── Rofi ───────────────────────────────────────────────
 rofi_pick() {
-    rofi -dmenu -i -show-icons -p "$1" -theme "$ROFI_THEME"
+    rofi -dmenu -i -show-icons -p "$1" -config "$ROFI_THEME"
 }
 
 list_images() {
@@ -73,7 +73,7 @@ apply_sddm() {
 }
 
 # ── Main ───────────────────────────────────────────────
-MENU=$(printf "  Fastfetch Logo\n  Wallpaper\n  SDDM Background" | rofi -dmenu -i -p "  Theme Changer" -theme "$ROFI_THEME")
+MENU=$(printf "  Fastfetch Logo\n  Wallpaper\n  SDDM Background" | rofi -dmenu -i -p "  Theme Changer" -config "$ROFI_THEME")
 
 [ -z "$MENU" ] && exit 0
 

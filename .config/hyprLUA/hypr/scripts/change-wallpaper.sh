@@ -18,7 +18,7 @@ fi
 # Rofi Menu
 # O printf passa o nome do arquivo e o ícone (o próprio arquivo) para o rofi
 CHOICE=$(find "$WALL_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) -printf "%f\0icon\037%p\n" | \
-         rofi -dmenu -i -show-icons -p "  Wallpaper" -theme "$THEME_PATH")
+         rofi -dmenu -i -show-icons -p "Wallpaper" -config "$THEME_PATH")
 
 if [ -n "$CHOICE" ]; then
     FULL_PATH="$WALL_DIR/$CHOICE"

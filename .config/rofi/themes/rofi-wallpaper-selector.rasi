@@ -1,3 +1,9 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║   L I Q U I D   G L A S S   —   W A L L P A P E R         ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+@import "~/.config/colors/colors.rasi"
+
 configuration {
     scroll-method: 0;
     scrollbar: false;
@@ -5,95 +11,133 @@ configuration {
     drun-display-format: "{name}";
 }
 
-@import "~/.config/colors/colors.rasi"
-
 * {
     font: "Inter SemiBold 11";
+
+    /* ── Liquid Glass tokens ── */
+    glass-bg:           rgba( 19,  19,  19, 0.55 );
+    glass-bg-element:   rgba(255, 255, 255, 0.04 );
+    glass-bg-hover:     rgba(255, 255, 255, 0.10 );
+    glass-bg-selected:  rgba(255, 255, 255, 0.12 );
+    glass-border:       rgba(255, 255, 255, 0.10 );
+    glass-border-hover: rgba(255, 255, 255, 0.18 );
+    text-primary:       #FFFFFF;
+    text-muted:         rgba(255, 255, 255, 0.55);
 }
 
+/* ── Window ── */
 #window {
-    border: 0px;
-    border-radius: 12px;
-    transparency: "real";
-    background-color: @background;
-    padding:          15;
-    width:            850px;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    16px;
+    transparency:     "real";
+    background-color: @glass-bg;
+    padding:          16px;
+    width:            880px;
 }
 
+/* ── Main box ── */
+#mainbox {
+    background-color: transparent;
+    spacing:          12px;
+}
+
+/* ── List ── */
 #listview {
-    columns:      3;
-    lines:        2;
-    flow:         horizontal;
-    fixed-height: 0;
-    cycle:        true;
-    dynamic:      true;
-    fixed-columns: true;
-    border:       0px;
-    spacing:      2px;
-    padding:      2px 0px 0px;
+    columns:          3;
+    lines:            2;
+    flow:             horizontal;
+    fixed-height:     0;
+    cycle:            true;
+    dynamic:          true;
+    fixed-columns:    true;
+    border:           0px;
+    spacing:          6px;
+    padding:          4px 0px 0px;
+    background-color: transparent;
 }
 
+/* ── Elements ── */
 #element {
-    orientation:   vertical;
-    border:        0;
-    border-radius: 8px;
-    padding:       3px;
+    orientation:      vertical;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    12px;
+    padding:          8px;
+    background-color: @glass-bg-element;
+    transition:       200;
 }
+
 #element.normal.normal {
-    background-color: @background;
-    text-color:       @foreground;
+    background-color: @glass-bg-element;
+    text-color:       @text-primary;
 }
+
 #element.alternate.normal {
-    background-color: @background;
-    text-color:       @foreground;
+    background-color: @glass-bg-element;
+    text-color:       @text-primary;
 }
+
 #element.selected.normal {
-    background-color: @selected-background;
-    text-color:       @foreground;
+    background-color: @glass-bg-selected;
+    border-color:     @glass-border-hover;
+    text-color:       @text-primary;
 }
 
 element-icon {
-    size: 180px;
-    horizontal-align: 0.5;
-    vertical-align: 0.5;
-    background-color: inherit;
+    size:              180px;
+    horizontal-align:  0.5;
+    vertical-align:    0.5;
+    background-color:  inherit;
+    border-radius:     8px;
 }
 
 element-text {
-    horizontal-align: 0.5;
-    vertical-align: 0.5;
-    background-color: inherit;
-    text-color: inherit;
+    horizontal-align:  0.5;
+    vertical-align:    0.5;
+    background-color:  transparent;
+    text-color:        inherit;
+    margin:            6px 0 0 0;
 }
 
+/* ── Scrollbar (hidden) ── */
 #scrollbar {
-    width:        0px;
-    border:       0;
-    handle-width: 0px;
-    padding:      0;
-    handle-color: @select;
+    width:            0px;
+    border:           0;
+    handle-width:     0px;
+    padding:          0;
+    handle-color:     @glass-border;
 }
 
+/* ── Input bar ── */
 #inputbar {
-    children:      [ entry ];
-    spacing:       0;
-    padding:       15px;
-    border:        0px;
-    border-radius: 6px;
-    border-color:  @bordercolor;
+    children:         [ entry ];
+    spacing:          0;
+    padding:          12px 16px;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    12px;
+    background-color: @glass-bg-element;
 }
+
 #prompt {
-    spacing:    0;
-    text-color: @foreground;
+    spacing:          0;
+    text-color:       @text-muted;
+    background-color: transparent;
 }
+
 #textbox-prompt-colon {
-    expand:     false;
-    str:        ">";
-    margin:     0px 0.3em 0em 0em;
-    text-color: @foreground;
+    expand:           false;
+    str:              ">";
+    margin:           0px 0.3em 0em 0em;
+    text-color:       @text-muted;
+    background-color: transparent;
 }
+
 #entry {
-    placeholder: "Escolha um wallpaper...";
-    spacing:    0;
-    text-color: @foreground;
+    placeholder:       "Escolha um wallpaper...";
+    placeholder-color: @text-muted;
+    spacing:           0;
+    text-color:        @text-primary;
+    background-color:  transparent;
 }

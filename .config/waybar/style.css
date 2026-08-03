@@ -1,175 +1,246 @@
-/* @import "$HOME/.config/colors/colors.css" */
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║            L I Q U I D   G L A S S   —   W A Y B A R       ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
 @import "../colors/colors.css";
 
+/* ── Reset ── */
 * {
     font-family: "JetBrainsMono Nerd Font";
     font-size: 13px;
     font-weight: bold;
     background-color: transparent;
-    border-radius: 5px;
+    border: none;
+    border-radius: 0;
     min-height: 0;
 }
 
-window,
+/* ── Tooltip ── */
 tooltip {
-    background-color: @background;
+    background: alpha(@foreground, 0.06);
+    border: 1px solid alpha(@foreground, 0.10);
+    border-radius: 10px;
+    margin: 4px 3px;
+    padding: 0 10px;
+    box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),0 1px 3px alpha(#000000, 0.2);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+tooltip label {
+    color: @foreground;
+}
+
+/* ── Bar ── */
 #waybar {
-    background: alpha(@background, 0.6);
-    border-radius: 0;
-}
-
-/* ── Workspaces ── */
-#workspaces {
-    margin: 1px 0;
-}
-
-#workspaces button {
-    color: @foreground;
+    background: transparent;
     border: none;
-    padding: 0;
-    margin: 0 4px;
-    min-width: 26px;
-    border-radius: 6px;
-    transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.68);
-}
-
-#workspaces button:hover,
-#workspaces button.active:hover {
-    color: #ffffff;
-    background-color: rgba(60, 60, 60, 0.7);
-    min-width: 26px;
+    border-radius: 0;
     box-shadow: none;
-    text-shadow: none;
 }
 
-#workspaces button.active {
-    color: @background;
-    background-color: @pink;
-    padding: 0;
-    min-width: 26px;
-}
-
-#workspaces button.urgent {
-    color: @background;
-    background-color: @red;
-    padding: 0;
-    min-width: 26px;
-}
-
-
-#custom-arch{
-    color: @foreground;
-    margin: 0px 3px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-/* ── Modules Base ── */
-
+/* ── Glass Pill — base para todos os módulos ── */
+#custom-arch,
+#custom-notification,
 #custom-power,
 #custom-reboot,
 #custom-logout,
 #custom-lock,
 #tray,
 #clock,
-#custom-system-icon,
 #network,
 #bluetooth,
 #pulseaudio,
 #battery {
     color: @foreground;
-    margin: 0px 3px;
-    padding: 0 3px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    background: alpha(@foreground, 0.06);
+    border: 1px solid alpha(@foreground, 0.10);
+    border-radius: 10px;
+    margin: 4px 3px;
+    padding: 0 10px;
+    box-shadow: inset 0 1px 0 alpha(@foreground, 0.05);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#clock:hover,
-#custom-system-icon:hover,
-#battery:hover {
-    background-color: alpha(@select, 0.6);
-}
-
-/* ── Specific Colors ── */
-#clock {
-    margin-right: 10px;
-}
-
-#custom-arch {
-    font-size: 20px;
-    margin-left: 10px;
-    padding: 0 15px 0 12px;
-}
-
+/* ── Hover glow ── */
 #custom-arch:hover,
+#custom-notification:hover,
 #network:hover,
 #bluetooth:hover,
 #pulseaudio:hover,
+#battery:hover,
+#clock:hover,
 #custom-power:hover,
 #custom-reboot:hover,
 #custom-logout:hover,
 #custom-lock:hover {
-    color: #000000;
-    background-color: #ffffff;
+    background: alpha(@foreground, 0.14);
+    border-color: alpha(@foreground, 0.20);
+    box-shadow: inset 0 1px 0 alpha(@foreground, 0.08);
+    color: @foreground;
+}
+
+/* ── Arch button ── */
+#custom-arch {
+    font-size: 19px;
+    margin-left: 6px;
+    padding: 0 12px;
+    background: alpha(@foreground, 0.08);
+    border-color: alpha(@foreground, 0.14);
+}
+
+/* ── Workspaces ── */
+#workspaces {
+    background: alpha(@foreground, 0.04);
+    border: 1px solid alpha(@foreground, 0.08);
+    border-radius: 10px;
+    margin: 4px 3px;
+    padding: 0 2px;
+    box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
+}
+
+#workspaces button {
+    color: alpha(@foreground, 0.5);
+    border: none;
+    padding: 0;
+    margin: 2px 2px;
+    min-width: 26px;
+    border-radius: 8px;
+    background: transparent;
+    
+}
+
+#workspaces button:hover {
+    color: @foreground;
+    background: alpha(@foreground, 0.10);
+    min-width: 26px;
+    box-shadow: none;
+    text-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button.active {
+    color: @foreground;
+    background: alpha(@foreground, 0.10);
+    padding: 0;
+    min-width: 26px;
+    border-radius: 8px;
+    border-radius: 8px;
+}
+
+#workspaces button.urgent {
+    color: @foreground;
+    background: alpha(@red, 0.9);
+    padding: 0;
+    min-width: 26px;
+}
+
+/* ── Clock ── */
+#clock {
+    padding: 0 16px;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    background: alpha(@foreground, 0.05);
+    border-color: alpha(@foreground, 0.08);
+}
+
+/* ── Notification ── */
+#custom-notification {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+/* ── Tray ── */
+#tray {
+    padding: 0 8px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* ── Network / Bluetooth / PulseAudio / Battery ── */
+#network {
+    font-size: 14px;
+    padding: 0 12px;
+    min-width: 28px;
+}
+
+#bluetooth {
+    font-size: 14px;
+    padding: 0 12px;
+    min-width: 28px;
+}
+
+#pulseaudio {
+    font-size: 14px;
+    padding: 0 12px;
+    min-width: 28px;
+}
+
+#battery {
+    font-size: 14px;
+    padding: 0 12px;
+    min-width: 28px;
+}
+
+
+
+@keyframes glass-pulse {
+    from {
+        box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),
+                    0 0 6px alpha(@red, 0.2);
+    }
+    to {
+        box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),
+                    0 0 16px alpha(@red, 0.35);
+    }
 }
 
 /* ── Taskbar ── */
 #taskbar button {
     padding: 0 5px;
-    margin: 1px 2px;
-    border-radius: 8px;
+    margin: 4px 2px;
+    border-radius: 10px;
+    background: alpha(@foreground, 0.06);
+    border: 1px solid alpha(@foreground, 0.08);
     transition: all 0.2s ease;
 }
 
 #taskbar button:hover {
-    background-color: alpha(@select, 0.6);
+    background: alpha(@foreground, 0.12);
+    border-color: alpha(@foreground, 0.16);
 }
 
 #taskbar button.active {
-    background-color: alpha(@select, 0.4);
+    background: alpha(@foreground, 0.15);
+    border-color: alpha(@foreground, 0.20);
+    box-shadow: 0 0 8px alpha(@foreground, 0.06);
 }
 
 /* ── Power Menu Group ── */
 #group-power {
-    background-color: alpha(@select, 0.2);
+    background: alpha(@foreground, 0.04);
+    border: 1px solid alpha(@foreground, 0.08);
     border-radius: 12px;
-    padding: 0 5px;
+    margin: 4px 6px 4px 3px;
+    padding: 0 2px;
+    box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
 }
+
 #custom-power{
-    font-size: 13px;
-    margin-right: 10px;
-    padding: 0 9px 0 7px;
+    font-size: 14px;
+    padding: 0 8px 0 7px;
+    margin: 2px;
 }
-
-
 
 #custom-reboot,
 #custom-logout,
 #custom-lock {
-    
-    font-size: 13px;
-    padding: 0 8px;
-    margin: 0px 3px;
-}
-
-
-
-/* ── System Drawer ── */
-#group-system {
-    background-color: alpha(@select, 0.2);
-    border-radius: 12px;
-    margin: 1px 10px 1px 0;
-    padding: 0 2px;
-}
-
-#custom-system-icon {
-    padding: 0 12px;
-}
-
-#network,
-#bluetooth,
-#pulseaudio,
-#battery {
-    padding: 0 6px;
+    font-size: 14px;
+    padding: 0 10px;
+    margin: 2px;
 }
