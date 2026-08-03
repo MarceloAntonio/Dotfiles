@@ -100,7 +100,13 @@ run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
 # ========================
 # 4. SDDM
 # ========================
-run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
+echo -ne "${YELLOW}⚠ Deseja instalar o tema SDDM Astronaut e substituir o atual? (s/N): ${RESET}"
+read -r change_sddm
+if [[ "$change_sddm" =~ ^[SsYy]$ ]]; then
+    run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
+else
+    success "Mantendo o tema SDDM atual"
+fi
 
 # ========================
 # 5. BACKUP & 6. DOTFILES
@@ -109,18 +115,31 @@ run_step "Backing up and installing configs" bash -c '
     mkdir -p "'$BACKUP_DIR'"
     mkdir -p "'$CONFIG_DIR'"
     
-    # Iterate only over the items that exist in your dotfiles
-    for dir in "'$DOTFILES_DIR'"/.config/*; do
-        item_name=$(basename "$dir")
+    if [ -d "'$DOTFILES_DIR'"/.config ]; then
+        cd "'$DOTFILES_DIR'"/.config || exit 1
         
-        # If the folder already exists in the system, back it up
-        if [ -e "'$CONFIG_DIR'/$item_name" ]; then
-            mv "'$CONFIG_DIR'/$item_name" "'$BACKUP_DIR'/" 2>/dev/null
-        fi
+        # Create directory structures
+        find . -type d | while IFS= read -r dir; do
+            rel_path="${dir#./}"
+            [ -n "$rel_path" ] && mkdir -p "'$CONFIG_DIR'/$rel_path"
+        done
         
-        # Copy the new dotfile
-        cp -a "$dir" "'$CONFIG_DIR'/"
-    done
+        # Back up and copy files individually
+        find . -type f -o -type l | while IFS= read -r file; do
+            rel_path="${file#./}"
+            target_path="'$CONFIG_DIR'/$rel_path"
+            backup_path="'$BACKUP_DIR'/$rel_path"
+            
+            # If the target file already exists in the system, back it up
+            if [ -e "$target_path" ]; then
+                mkdir -p "$(dirname "$backup_path")"
+                mv "$target_path" "$backup_path" 2>/dev/null
+            fi
+            
+            # Copy the new dotfile
+            cp -a "$file" "$target_path"
+        done
+    fi
 '
 
 run_step "Installing .zshrc" bash -c '
