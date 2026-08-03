@@ -11,7 +11,7 @@
   "modules": [
     {
       "type": "command",
-      "key": "  ",
+      "key": "  ",
       "keyColor": "blue",
       "text": "echo сука блять"
     },
@@ -26,7 +26,7 @@
     },
     {
       "type": "os",
-      "key": "  󰣇 OS",
+      "key": "   OS",
       "format": "{2}",
       "keyColor": "red"
     },
@@ -49,12 +49,12 @@
     },
     {
       "type": "terminal",
-      "key": "   Terminal",
+      "key": "   Terminal",
       "keyColor": "yellow"
     },
     {
       "type": "wm",
-      "key": "  󱗃 WM",
+      "key": "  󰖲 WM",
       "format": "{2}",
       "keyColor": "yellow"
     },
@@ -65,7 +65,7 @@
     "break",
     {
       "type": "title",
-      "key": "  ",
+      "key": "  ",
       "format": "{6} {7} {8}"
     },
     {
@@ -92,7 +92,7 @@
     },
     {
       "type": "memory",
-      "key": "   Memory ",
+      "key": "    Memory ",
       "keyColor": "magenta"
     },
     {
