@@ -1,7 +1,15 @@
 {
+    "layer": "top",
+    "position": "top",
+    "height": 38,
+    "margin-top": 2,
+    "margin-left": 10,
+    "margin-right": 10,
+    "spacing": 0,
+
     "modules-left": ["custom/arch", "hyprland/workspaces", "wlr/taskbar"],
     "modules-center": ["clock"],
-    "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "group/power"],
+    "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notification", "group/power"],
 
     "custom/arch": {
         "format" : "󰣇",
@@ -21,6 +29,28 @@
         }
     },
 
+    "custom/notification": {
+        "tooltip": true,
+        "tooltip-format": "Notificações",
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "󰂚",
+            "none": "󰂜",
+            "dnd-notification": "󰂛",
+            "dnd-none": "󰪑",
+            "inhibited-notification": "󰂚",
+            "inhibited-none": "󰂜",
+            "dnd-inhibited-notification": "󰂛",
+            "dnd-inhibited-none": "󰪑"
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
     "group/power": {
         "orientation": "inherit",
         "drawer": {
@@ -37,7 +67,7 @@
     },
 
     "custom/power": {
-        "format": "",
+        "format": " 󰤆 ",
         "tooltip": true,
         "tooltip-format": "Desligar",
         "on-click": "shutdown now"

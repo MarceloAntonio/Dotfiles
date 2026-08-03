@@ -1,93 +1,158 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║        L I Q U I D   G L A S S   —   R O F I               ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+@import "~/.config/colors/colors.rasi"
+
 configuration {
     scroll-method: 1;
     scrollbar: false;
     show-icons: true;
-    display-run: "Run ";
-    display-drun: "Open ";
-    display-emoji: "Emoji ";
+    display-run: "  Run";
+    display-drun: "  Apps";
+    display-emoji: "  Emoji";
     drun-display-format: "{icon} {name}";
     modi: "run,drun";
 }
 
-@import "~/.config/colors/colors.rasi"
-
 * {
     font: "Inter SemiBold 11";
+
+    /* ── Liquid Glass tokens ── */
+    glass-bg:           rgba( 19,  19,  19, 0.55 );
+    glass-bg-element:   rgba(255, 255, 255, 0.04 );
+    glass-bg-hover:     rgba(255, 255, 255, 0.10 );
+    glass-bg-selected:  rgba(255, 255, 255, 0.12 );
+    glass-border:       rgba(255, 255, 255, 0.10 );
+    glass-border-hover: rgba(255, 255, 255, 0.18 );
+    text-primary:       #FFFFFF;
+    text-muted:         rgba(255, 255, 255, 0.55);
 }
 
+/* ── Window ── */
 #window {
-    border: 0px;
-    border-radius: 12px;
-    transparency: "real";
-    background-color: @background;
-    padding:          15;
-    width:            600px;
-}
-#listview {
-    lines:        6;
-    fixed-height: 0;
-    border:       0px;
-    spacing:      2px ;
-    padding:      2px 0px 0px ;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    16px;
+    transparency:     "real";
+    background-color: @glass-bg;
+    padding:          16px;
+    width:            620px;
 }
 
+/* ── Main box ── */
+#mainbox {
+    background-color: transparent;
+    spacing:          12px;
+}
+
+/* ── Input bar ── */
+#inputbar {
+    children:         [ entry ];
+    spacing:          0;
+    padding:          12px 16px;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    12px;
+    background-color: @glass-bg-element;
+}
+
+#prompt {
+    spacing:          0;
+    text-color:       @text-muted;
+    background-color: transparent;
+}
+
+#textbox-prompt-colon {
+    expand:           false;
+    str:              ">";
+    margin:           0px 0.3em 0em 0em;
+    text-color:       @text-muted;
+    background-color: transparent;
+}
+
+#entry {
+    placeholder:       "Pesquisar...";
+    placeholder-color: @text-muted;
+    spacing:           0;
+    text-color:        @text-primary;
+    
+}
+
+/* ── List ── */
+#listview {
+    lines:            7;
+    fixed-height:     0;
+    border:           0px;
+    spacing:          4px;
+    padding:          4px 0px 0px;
+    background-color: transparent;
+}
+
+/* ── Elements ── */
 #element {
-    border:        0;
-    border-radius: 8px;
-    padding:       3px;
+    border:           1px solid;
+    border-color:     transparent;
+    border-radius:    10px;
+    padding:          6px 10px;
+    background-color: @glass-bg-element;
+    transition:       200;
 }
+
 #element.normal.normal {
-    background-color: @background;
-    text-color:       @foreground;
+    background-color: @glass-bg-element;
+    text-color:       @text-primary;
 }
+
 #element.alternate.normal {
-    background-color: @background;
-    text-color:       @foreground;
+    background-color: @glass-bg-element;
+    text-color:       @text-primary;
 }
+
 #element.selected.normal {
-    background-color: @selected-background;
-    text-color:       @foreground;
+    background-color: @glass-bg-selected;
+    border-color:     @glass-border-hover;
+    text-color:       @text-primary;
+}
+
+#element.normal.active {
+    background-color: @glass-bg-hover;
+    text-color:       @text-primary;
+}
+
+#element.selected.active {
+    background-color: @glass-bg-selected;
+    border-color:     @glass-border-hover;
+    text-color:       @text-primary;
 }
 
 element-icon {
-    size: 32px;
-    vertical-align: 0.5;
+    size:             32px;
+    vertical-align:   0.5;
+    
 }
 
 element-text {
-    vertical-align: 0.5;
-    background-color: inherit;
-    text-color: inherit;
+    vertical-align:   0.5;
+    text-color:       inherit;
 }
 
+/* ── Scrollbar (hidden) ── */
 #scrollbar {
-    width:        0px ;
-    border:       0;
-    handle-width: 0px ;
-    padding:      0;
-    handle-color: @select;
+    width:            0px;
+    border:           0;
+    handle-width:     0px;
+    padding:          0;
+    handle-color:     @glass-border;
 }
 
-#inputbar {
-    children:   [ entry ];
-    spacing:       0;
-    padding:       15px;
-    border:        0px;
-    border-radius: 6px;
-    border-color:  @bordercolor;
+/* ── Message / Error ── */
+#message {
+    background-color: transparent;
+    border:           0;
 }
-#prompt {
-    spacing:    0;
-    text-color: @foreground;
-}
-#textbox-prompt-colon {
-    expand:     false;
-    str:        ">";
-    margin:     0px 0.3em 0em 0em ;
-    text-color: @foreground;
-}
-#entry {
-    placeholder: "Looking for something..?";
-    spacing:    0;
-    text-color: @foreground;
+
+#textbox {
+    text-color:       @text-muted;
+    background-color: transparent;
 }
