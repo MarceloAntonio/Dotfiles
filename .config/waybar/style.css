@@ -62,6 +62,7 @@ tooltip label {
 }
 
 /* ── Hover glow ── */
+#tray:hover,
 #custom-arch:hover,
 #custom-notification:hover,
 #network:hover,
@@ -83,7 +84,7 @@ tooltip label {
 #custom-arch {
     font-size: 19px;
     margin-left: 6px;
-    padding: 0 12px;
+    padding: 0 12px 0 10;
     background: alpha(@foreground, 0.08);
     border-color: alpha(@foreground, 0.14);
 }
