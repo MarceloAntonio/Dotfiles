@@ -1,0 +1,130 @@
+/* ── Ocultar completamente todo o Header do Orbit (Tabs, Logo, etc) ── */
+/* Já que você usa o SwayNC para abrir as abas direto, escondemos o topo todo */
+.orbit-header {
+    opacity: 0;
+    /* Puxa tudo que está abaixo do header para cima, engolindo o espaço dele */
+    margin-bottom: -150px; 
+    /* Remove a interação para não clicar invisível */
+    pointer-events: none;
+}
+
+window.background,
+window,
+.orbit-panel {
+    background-color: rgba(19, 19, 19, 0.15);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ── 2. Cabeçalho (Headerbar) e Rodapé (Actionbar/Footer) ── */
+headerbar,
+actionbar,
+.orbit-footer,
+.footer{
+    background: none;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    /* ZERANDO A ALTURA E MARGENS PARA MATAR O BURACO: */
+    min-height: 0px; 
+    padding: 0px;
+    margin: 0px;
+}
+
+/* ── 3. Botões e Ações (Header e Rodapé) ── */
+button,
+.orbit-button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    padding: 8px 12px;
+    font-size: 12px; /* Fonte levemente maior para os botões Connect/Disconnect/Details */
+    transition: all 0.2s ease;
+}
+
+button:hover,
+.orbit-button:hover {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+
+button:active, 
+button:checked,
+.orbit-button:active,
+.orbit-tab:checked {
+    /* Cor de destaque quando ativado */
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ── 4. Lista Principal (Redes e Dispositivos) ── */
+.orbit-scrolled,
+listview, 
+list {
+    background: transparent;
+    border: none;
+    padding: 4px;
+    min-height: 450px; /* Aumenta a altura da lista de WiFis/Dispositivos */
+}
+
+row,
+.orbit-network-row {
+    background: transparent;
+    border-radius: 10px; /* Bordas arredondadas nos itens da lista */
+    margin: 2px 4px;
+    padding: 6px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+row:hover,
+.orbit-network-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+row:selected {
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* ── 5. Switches (Toggles) ── */
+switch {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+}
+
+switch:checked {
+    /* Accent color (#535353 ou translúcido) ao ativar */
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+switch slider {
+    background: rgb(255, 255, 255);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ── 6. Entradas de Texto (Search / Senhas Wi-Fi) ── */
+entry {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
+    color: rgb(255, 255, 255);
+    padding: 8px;
+    font-size: 16px; /* Fonte maior no campo de busca/senhas */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+entry:focus {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+}

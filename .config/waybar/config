@@ -9,7 +9,7 @@
 
     "modules-left": ["custom/arch", "hyprland/workspaces", "wlr/taskbar"],
     "modules-center": ["clock"],
-    "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notification", "group/power"],
+    "modules-right": ["network", "bluetooth", "pulseaudio", "battery", "custom/notification", "group/power"],
 
     "custom/arch": {
         "format" : "󰣇",
@@ -102,25 +102,23 @@
         "cursor": true
     },
 
-    "tray": {
-        "icon-size": 20,
-        "spacing": 10,
-        "cursor": true
-    },
+
 
     "network": {
         "format-wifi": " ",
         "format-ethernet": "󰈀  {ipaddr}",
         "format-disconnected": "󰤮 ",
         "tooltip-format": "{ipaddr} via {gwaddr}",
-        "on-click": "nm-connection-editor"
+        "on-click": "orbit toggle --tab wifi",
+        "on-click-right": "nmcli radio wifi toggle"
     },
 
     "bluetooth": {
         "format": "󰂯",
         "format-disabled": "󰂲",
         "format-connected": "󰂱",
-        "on-click": "blueman-manager"
+        "on-click": "orbit toggle --tab bluetooth",
+        "on-click-right": "rfkill toggle bluetooth"
     },
 
     "battery": {

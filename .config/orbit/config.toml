@@ -1,0 +1,14 @@
+# Window position on screen
+position = "top-right"
+
+# Margins (in pixels) from screen edges
+margin_top = 10
+margin_bottom = 10
+margin_left = 10
+margin_right = 10
+
+# Animation
+window_transition = "slidedown"
+window_transition_duration = 200
+stack_transition = "slidehorizontal"
+stack_transition_duration = 200

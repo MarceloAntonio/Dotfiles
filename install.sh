@@ -4,8 +4,8 @@
 # ROOT CHECK
 # ========================
 if [[ $EUID -eq 0 ]]; then
-    echo -e "\033[1;31m✖ Do not run this script as root (sudo). The script will prompt for your password when needed.\033[0m"
-    exit 1
+  echo -e "\033[1;31m✖ Do not run this script as root (sudo). The script will prompt for your password when needed.\033[0m"
+  exit 1
 fi
 
 # ========================
@@ -35,34 +35,37 @@ log() { echo -e "${BLUE}[$1]${RESET} $2"; }
 success() { echo -e "${GREEN}✔ $1${RESET}"; }
 warn() { echo -e "${YELLOW}⚠ $1${RESET}"; }
 error() { echo -e "${RED}✖ $1${RESET}"; }
-progress() { echo -e "${CYAN}➜ $1...${RESET}"; sleep 0.5; }
+progress() {
+  echo -e "${CYAN}➜ $1...${RESET}"
+  sleep 0.5
+}
 
 run_step() {
-    DESC="$1"
-    shift
-    progress "$DESC"
-    if "$@"; then
-        success "$DESC"
-    else
-        error "$DESC failed"
-    fi
+  DESC="$1"
+  shift
+  progress "$DESC"
+  if "$@"; then
+    success "$DESC"
+  else
+    error "$DESC failed"
+  fi
 }
 
 # ========================
 # PACKAGES
 # ========================
 PACMAN_DEPS=(
-    hyprland firefox kitty rofi-wayland fastfetch waybar
-    network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
-    grim slurp wl-clipboard nautilus hyprpaper
-    polkit-kde-agent brightnessctl playerctl inter-font 
-    awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
-    breeze-gtk base-devel git imagemagick blueman
-    python python-pip tk python-pillow eza nvim imv pipewire pipewire-pulse wireplumber
+  hyprland firefox kitty rofi-wayland fastfetch waybar
+  network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
+  grim slurp wl-clipboard nautilus hyprpaper
+  polkit-kde-agent brightnessctl playerctl inter-font
+  awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
+  breeze-gtk base-devel git imagemagick blueman
+  python python-pip tk python-pillow eza nvim imv pipewire pipewire-pulse wireplumber swaync
 )
 
 AUR_DEPS=(
-    zsh-you-should-use zsh-history-substring-search mcmojave-cursors
+  zsh-you-should-use zsh-history-substring-search mcmojave-cursors orbit-wifi
 )
 
 echo -e "${CYAN}"
@@ -74,8 +77,8 @@ echo -e "${RESET}"
 # ========================
 # 1. YAY
 # ========================
-if ! command -v yay &> /dev/null; then
-    run_step "Installing yay" bash -c "
+if ! command -v yay &>/dev/null; then
+  run_step "Installing yay" bash -c "
         sudo pacman -S --needed --noconfirm base-devel git &&
         git clone https://aur.archlinux.org/yay.git $INSTALL_DIR &&
         cd $INSTALL_DIR &&
@@ -84,7 +87,7 @@ if ! command -v yay &> /dev/null; then
         rm -rf $INSTALL_DIR
     "
 else
-    warn "yay already installed"
+  warn "yay already installed"
 fi
 
 # ========================
@@ -103,9 +106,9 @@ run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
 echo -ne "${YELLOW}⚠ Deseja instalar o tema SDDM Astronaut e substituir o atual? (s/N): ${RESET}"
 read -r change_sddm
 if [[ "$change_sddm" =~ ^[SsYy]$ ]]; then
-    run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
+  run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
 else
-    success "Mantendo o tema SDDM atual"
+  success "Mantendo o tema SDDM atual"
 fi
 
 # ========================
@@ -287,7 +290,13 @@ run_step "Installing Code OSS extensions" bash -c '
 '
 
 # ========================
-# 12. ZSH DEFAULT
+# 12. ORBIT
+# ========================
+run_step "Setting ZSH as default shell" bash -c "
+    systemctl --user enable --now orbit
+"
+# ========================
+# 13. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     chsh -s \$(which zsh)
