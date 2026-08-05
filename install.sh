@@ -65,7 +65,7 @@ PACMAN_DEPS=(
 )
 
 AUR_DEPS=(
-  zsh-you-should-use zsh-history-substring-search mcmojave-cursors orbit-wifi
+  zsh-you-should-use zsh-history-substring-search mcmojave-cursors
 )
 
 echo -e "${CYAN}"
@@ -99,6 +99,17 @@ run_step "Installing pacman packages" sudo pacman -S --needed --noconfirm "${PAC
 # 3. AUR
 # ========================
 run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
+
+# ========================
+# 3.5 ORBIT FORK
+# ========================
+run_step "Installing Orbit Fork (Binary)" bash -c "
+    rm -rf /tmp/wifi-bar &&
+    git clone https://github.com/MarceloAntonio/wifi-bar.git /tmp/wifi-bar &&
+    cd /tmp/wifi-bar &&
+    makepkg -si --noconfirm &&
+    rm -rf /tmp/wifi-bar
+"
 
 # ========================
 # 4. SDDM
