@@ -101,14 +101,14 @@ run_step "Installing pacman packages" sudo pacman -S --needed --noconfirm "${PAC
 run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
 
 # ========================
-# 3.5 ORBIT FORK
+# 3.5 PULSAR (Network Manager)
 # ========================
-run_step "Installing Orbit Fork (Binary)" bash -c "
-    rm -rf /tmp/wifi-bar &&
-    git clone https://github.com/MarceloAntonio/wifi-bar.git /tmp/wifi-bar &&
-    cd /tmp/wifi-bar &&
+run_step "Installing Pulsar (Binary)" bash -c "
+    rm -rf /tmp/pulsar &&
+    git clone https://github.com/MarceloAntonio/pulsar.git /tmp/pulsar &&
+    cd /tmp/pulsar &&
     makepkg -si --noconfirm &&
-    rm -rf /tmp/wifi-bar
+    rm -rf /tmp/pulsar
 "
 
 # ========================
