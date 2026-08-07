@@ -28,6 +28,8 @@ hl.bind(mainMod .. " + " .. "Z", hl.dsp.window.float())
 
 hl.bind(mainMod .. " + " .. "F", hl.dsp.window.fullscreen_state({ internal = 1, client = -1 }))
 
+hl.bind(mainMod .. " + " .. "M", hl.dsp.window.fullscreen("maximized", "toggle"))
+
 hl.bind(mainMod .. " + " .. "P", hl.dsp.window.pseudo())
 
 hl.bind(mainMod .. " + " .. "J", hl.dsp.layout("togglesplit"))
