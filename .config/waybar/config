@@ -109,7 +109,7 @@
         "format-ethernet": "󰈀  {ipaddr}",
         "format-disconnected": "󰤮 ",
         "tooltip-format": "{ipaddr} via {gwaddr}",
-        "on-click": "orbit toggle --tab wifi",
+        "on-click": "pulsar toggle --tab wifi",
         "on-click-right": "nmcli radio wifi toggle"
     },
 
@@ -117,7 +117,7 @@
         "format": "󰂯",
         "format-disabled": "󰂲",
         "format-connected": "󰂱",
-        "on-click": "orbit toggle --tab bluetooth",
+        "on-click": "pulsar toggle --tab bluetooth",
         "on-click-right": "rfkill toggle bluetooth"
     },
 
