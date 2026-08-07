@@ -162,5 +162,5 @@ PROMPT='
 
 # Added by Antigravity CLI installer
 export PATH="/home/celo/.local/bin:$PATH"
-
+export PATH="$HOME/.cargo/bin:$PATH"
 export PATH=$PATH:/home/celo/.spicetify

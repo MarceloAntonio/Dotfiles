@@ -1,6 +1,6 @@
-/* ── Ocultar completamente todo o Header do Orbit (Tabs, Logo, etc) ── */
+/* ── Ocultar completamente todo o Header do Pulsar (Tabs, Logo, etc) ── */
 /* Já que você usa o SwayNC para abrir as abas direto, escondemos o topo todo */
-.orbit-header {
+.pulsar-header {
     opacity: 0;
     /* Puxa tudo que está abaixo do header para cima, engolindo o espaço dele */
     margin-bottom: -150px; 
@@ -10,7 +10,7 @@
 
 window.background,
 window,
-.orbit-panel {
+.pulsar-panel {
     background-color: rgba(19, 19, 19, 0.15);
     color: rgb(255, 255, 255);
     border: 1px solid rgba(255, 255, 255, 0.10);
@@ -21,7 +21,7 @@ window,
 /* ── 2. Cabeçalho (Headerbar) e Rodapé (Actionbar/Footer) ── */
 headerbar,
 actionbar,
-.orbit-footer,
+.pulsar-footer,
 .footer{
     background: none;
     background-color: transparent;
@@ -35,7 +35,7 @@ actionbar,
 
 /* ── 3. Botões e Ações (Header e Rodapé) ── */
 button,
-.orbit-button {
+.pulsar-button {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 10px;
@@ -47,7 +47,7 @@ button,
 }
 
 button:hover,
-.orbit-button:hover {
+.pulsar-button:hover {
     background: rgba(255, 255, 255, 0.10);
     border-color: rgba(255, 255, 255, 0.18);
 }
@@ -55,8 +55,8 @@ button:hover,
 
 button:active, 
 button:checked,
-.orbit-button:active,
-.orbit-tab:checked {
+.pulsar-button:active,
+.pulsar-tab:checked {
     /* Cor de destaque quando ativado */
     background: rgba(255, 255, 255, 0.14);
     border-color: rgba(255, 255, 255, 0.18);
@@ -64,7 +64,7 @@ button:checked,
 }
 
 /* ── 4. Lista Principal (Redes e Dispositivos) ── */
-.orbit-scrolled,
+.pulsar-scrolled,
 listview, 
 list {
     background: transparent;
@@ -74,7 +74,7 @@ list {
 }
 
 row,
-.orbit-network-row {
+.pulsar-network-row {
     background: transparent;
     border-radius: 10px; /* Bordas arredondadas nos itens da lista */
     margin: 2px 4px;
@@ -84,7 +84,7 @@ row,
 }
 
 row:hover,
-.orbit-network-row:hover {
+.pulsar-network-row:hover {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.10);
 }

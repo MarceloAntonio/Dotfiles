@@ -247,40 +247,6 @@ run_step "Copying wallpapers" bash -c "
 # ========================
 # 10. LAZYVIM
 # ========================
-run_step "Installing LazyVim" bash -c "git clone https://github.com/LazyVim/starter ~/.config/nvim"
-
-run_step "Cleaning cache" bash -c "rm -rf ~/.config/nvim/.git"
-
-run_step "Configuring LazyVim Theme (Mocha + Transparency)" bash -c "
-mkdir -p ~/.config/nvim/lua/plugins && \
-cat << 'EOF' > ~/.config/nvim/lua/plugins/catppuccin.lua
-return {
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    opts = {
-      flavour = 'mocha',
-      transparent_background = true,
-      integrations = {
-        telescope = true,
-        mason = true,
-        neotree = true,
-        which_key = true,
-        navic = { enabled = true },
-        mini = true,
-      },
-    },
-  },
-  {
-    'LazyVim/LazyVim',
-    opts = {
-      colorscheme = 'catppuccin-mocha',
-    },
-  },
-}
-EOF
-"
 
 run_step "Pre-installing LazyVim plugins" bash -c "nvim --headless +Lazy! sync +qa"
 
@@ -301,13 +267,7 @@ run_step "Installing Code OSS extensions" bash -c '
 '
 
 # ========================
-# 12. ORBIT
-# ========================
-run_step "Setting ZSH as default shell" bash -c "
-    systemctl --user enable --now orbit
-"
-# ========================
-# 13. ZSH DEFAULT
+# 12. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     chsh -s \$(which zsh)

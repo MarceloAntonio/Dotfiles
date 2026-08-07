@@ -41,15 +41,15 @@ hl.config({
     general = {
         gaps_in = 3,
         gaps_out = 3,
-        border_size = 2,
+        border_size = 1,
         -- Ativo: cinza médio (teu active_tab_background)
         -- Inativo: quase preto (teu background/base)
         resize_on_border = false,
         allow_tearing = false,
         layout = "dwindle",
         col = {
-            active_border = "0xFF535353",
-            inactive_border = "0xFF1A1A1A",
+            active_border = "rgba(ffffff33)",
+            inactive_border = "rgba(ffffff15)",
         },
     },
 })
