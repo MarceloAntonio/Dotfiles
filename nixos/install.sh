@@ -90,7 +90,7 @@ echo -e "${GREEN}✔ Cursores instalados!${RESET}"
 echo -e "➜ Aplicando configurações do NixOS..."
 # É necessário o sudo para copiar o arquivo e aplicar no sistema
 sudo cp "$DOTFILES_DIR/nixos/configuration.nix" /etc/nixos/
-sudo nixos-rebuild switch
+sudo NIXPKGS_ALLOW_UNFREE=1 nixos-rebuild switch
 
 echo -e "${GREEN}========================================${RESET}"
 echo -e "${GREEN}   ✔ INSTALAÇÃO COMPLETA CONCLUÍDA${RESET}"
