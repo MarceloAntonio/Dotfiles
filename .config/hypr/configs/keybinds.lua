@@ -41,7 +41,7 @@ hl.bind(
 	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit")
 )
 
-hl.bind(mainMod .. " + " .. "SHIFT" .. " + " .. "S", hl.dsp.exec_cmd('grim -g "$(slurp)"-| wl-copy'))
+hl.bind(mainMod .. " + " .. "SHIFT" .. " + " .. "S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 
 hl.bind(mainMod .. " + " .. "W", hl.dsp.exec_cmd("~/.config/hypr/scripts/change-wallpaper.sh"))
 
