@@ -37,8 +37,8 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  # sound.enable = true; # Removed as it's deprecated in favor of hardware.pulseaudio / services.pipewire
-  hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio is deprecated in newer versions.
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -63,7 +63,7 @@
 
   # Fonts
   fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     inter
   ];
 
@@ -74,8 +74,8 @@
     python3 python3Packages.pip nodejs
     
     # Desktop Environment & Wayland stuff
-    waybar rofi-wayland swaynotificationcenter hyprpaper hyprlock
-    networkmanagerapplet pavucontrol libsForQt5.polkit-kde-agent
+    waybar rofi swaynotificationcenter hyprpaper hyprlock
+    networkmanagerapplet pavucontrol kdePackages.polkit-kde-agent-1
     brightnessctl playerctl blueman
     
     # Applications
