@@ -98,8 +98,9 @@
         "disable-scroll": true,
         "all-outputs": true,
         "warp-on-scroll": false,
+        "cursor": true,
         "format": "{name}",
-        "cursor": true
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = {name} })'" 
     },
 
 
