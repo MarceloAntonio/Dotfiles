@@ -13,6 +13,15 @@ fi
 # ========================
 set -e
 
+# Ask for the administrator password upfront
+sudo -v
+# Keep-alive: update existing sudo time stamp until the script has finished
+while true; do
+  sudo -n true
+  sleep 60
+  kill -0 "$$" || exit
+done 2>/dev/null &
+
 BACKUP_DIR="$HOME/BKP.config"
 CONFIG_DIR="$HOME/.config"
 DOTFILES_DIR="$(pwd)"
@@ -61,11 +70,8 @@ PACMAN_DEPS=(
   polkit-kde-agent brightnessctl playerctl inter-font
   awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
   breeze-gtk base-devel git imagemagick blueman
-  python python-pip tk python-pillow eza nvim imv pipewire pipewire-pulse wireplumber swaync
-)
-
-AUR_DEPS=(
-  zsh-you-should-use zsh-history-substring-search mcmojave-cursors
+  python python-pip eza nvim imv pipewire pipewire-pulse wireplumber swaync starship
+  nodejs npm ripgrep fd lazygit unzip code
 )
 
 echo -e "${CYAN}"
@@ -75,30 +81,27 @@ echo "========================================"
 echo -e "${RESET}"
 
 # ========================
-# 1. YAY
-# ========================
-if ! command -v yay &>/dev/null; then
-  run_step "Installing yay" bash -c "
-        sudo pacman -S --needed --noconfirm base-devel git &&
-        git clone https://aur.archlinux.org/yay.git $INSTALL_DIR &&
-        cd $INSTALL_DIR &&
-        makepkg -si --noconfirm &&
-        cd ~ &&
-        rm -rf $INSTALL_DIR
-    "
-else
-  warn "yay already installed"
-fi
-
-# ========================
-# 2. PACMAN
+# 1. PACMAN
 # ========================
 run_step "Installing pacman packages" sudo pacman -S --needed --noconfirm "${PACMAN_DEPS[@]}"
 
 # ========================
-# 3. AUR
+# 3. MANUAL INSTALLS (ZSH Plugins & Cursors)
 # ========================
-run_step "Installing AUR packages" yay -S --needed --noconfirm "${AUR_DEPS[@]}"
+run_step "Installing zsh-history-substring-search" bash -c "
+    mkdir -p ~/.local/share/zsh/plugins
+    if [ ! -d ~/.local/share/zsh/plugins/zsh-history-substring-search ]; then
+        git clone https://github.com/zsh-users/zsh-history-substring-search ~/.local/share/zsh/plugins/zsh-history-substring-search
+    fi
+"
+
+run_step "Installing McMojave-cursors" bash -c "
+    rm -rf /tmp/McMojave-cursors
+    git clone https://github.com/vinceliuice/McMojave-cursors /tmp/McMojave-cursors
+    cd /tmp/McMojave-cursors
+    ./install.sh
+    rm -rf /tmp/McMojave-cursors
+"
 
 # ========================
 # 3.5 PULSAR (Network Manager)
@@ -114,7 +117,7 @@ run_step "Installing Pulsar (Binary)" bash -c "
 # ========================
 # 4. SDDM
 # ========================
-echo -ne "${YELLOW}⚠ Deseja instalar o tema SDDM Astronaut e substituir o atual? (s/N): ${RESET}"
+echo -ne "${YELLOW}⚠ Do you want to install the SDDM Astronaut theme and replace the current one? (Y/N): ${RESET}"
 read -r change_sddm
 if [[ "$change_sddm" =~ ^[SsYy]$ ]]; then
   run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
@@ -270,7 +273,9 @@ run_step "Installing Code OSS extensions" bash -c '
 # 12. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
-    chsh -s \$(which zsh)
+    if [ \"\$SHELL\" != \"\$(which zsh)\" ]; then
+        chsh -s \$(which zsh)
+    fi
 "
 
 echo -e "${GREEN}"
