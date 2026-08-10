@@ -78,12 +78,20 @@ if [ -f "$DOTFILES_DIR/.config/vscode/settings.json" ]; then
     echo -e "${GREEN}✔ VSCode configurado com sucesso!${RESET}"
 fi
 
+# McMojave Cursors
+echo -e "➜ Instalando cursores McMojave..."
+rm -rf /tmp/McMojave-cursors
+git clone https://github.com/vinceliuice/McMojave-cursors /tmp/McMojave-cursors
+cd /tmp/McMojave-cursors
+./install.sh
+rm -rf /tmp/McMojave-cursors
+echo -e "${GREEN}✔ Cursores instalados!${RESET}"
+
+echo -e "➜ Aplicando configurações do NixOS..."
+# É necessário o sudo para copiar o arquivo e aplicar no sistema
+sudo cp "$DOTFILES_DIR/nixos/configuration.nix" /etc/nixos/
+sudo nixos-rebuild switch
+
 echo -e "${GREEN}========================================${RESET}"
-echo -e "${GREEN}   ✔ INSTALAÇÃO DOS DOTFILES CONCLUÍDA${RESET}"
+echo -e "${GREEN}   ✔ INSTALAÇÃO COMPLETA CONCLUÍDA${RESET}"
 echo -e "${GREEN}========================================${RESET}"
-echo ""
-echo -e "${CYAN}Notas importantes para o NixOS:${RESET}"
-echo "1. Os pacotes e serviços de sistema devem ser aplicados usando o configuration.nix fornecido."
-echo "2. Para instalar os cursores e temas, você deve usar o home-manager ou adicioná-los pelo NixOS."
-echo "3. Lembre-se de copiar o ./nixos/configuration.nix para /etc/nixos/ e rodar:"
-echo -e "   ${RED}sudo nixos-rebuild switch${RESET}"

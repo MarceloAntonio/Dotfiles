@@ -87,6 +87,7 @@
     
     # Themes / Icons
     breeze-icons breeze-gtk
+    (whitesur-icon-theme.override { alternativeIcons = true; })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
