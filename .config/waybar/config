@@ -14,7 +14,8 @@
     "custom/arch": {
         "format" : "󰣇",
         "tooltip": false,
-        "on-click": "rofi -show drun"
+        "on-click": "~/.config/hypr/scripts/binds.sh",
+        "on-click-right": "rofi -show drun"
     },
 
     "wlr/taskbar": {
