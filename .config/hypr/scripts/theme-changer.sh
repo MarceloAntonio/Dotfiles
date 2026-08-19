@@ -73,15 +73,20 @@ apply_sddm() {
 }
 
 # ── Main ───────────────────────────────────────────────
-MENU=$(printf "  Fastfetch Logo\n  Wallpaper\n  SDDM Background" | rofi -dmenu -i -p "  Theme Changer" -config "$ROFI_THEME")
+MENU=$(printf "  Fastfetch Logo\0icon\037utilities-terminal\n  Wallpaper\0icon\037preferences-desktop-wallpaper\n  SDDM Wallpaper\0icon\037system-users" | rofi -dmenu -i -show-icons -p "  Theme Changer" -theme-str 'listview { lines: 1; }' -config "$ROFI_THEME")
 
 [ -z "$MENU" ] && exit 0
 
 case "$MENU" in
     *Fastfetch*)
         DIR="$FASTFETCH_ICONS"
-        CHOICE=$(list_images "$DIR" | rofi_pick "  Fastfetch")
-        [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_fastfetch "$DIR/$CHOICE"
+        CHOICE=$( { echo -e "Distro Logo\0icon\x1fcomputer"; list_images "$DIR"; } | rofi_pick "  Fastfetch" )
+        if [ "$CHOICE" = "Distro Logo" ]; then
+            sed -i "s|\"source\"[[:space:]]*:[[:space:]]*\"[^\"]*\"|\"source\": \"auto\"|" "$FASTFETCH_CONFIG"
+            notify-send "Fastfetch ✓" "Logo: Normal (Sem imagem)"
+        elif [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ]; then
+            apply_fastfetch "$DIR/$CHOICE"
+        fi
         ;;
     *Wallpaper*)
         DIR="$WALL_DIR"
