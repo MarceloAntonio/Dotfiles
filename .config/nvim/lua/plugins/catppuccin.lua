@@ -15,11 +15,9 @@ return {
         mini = true,
       },
     },
-  },
-  {
-    'LazyVim/LazyVim',
-    opts = {
-      colorscheme = 'catppuccin-mocha',
-    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
   },
 }
