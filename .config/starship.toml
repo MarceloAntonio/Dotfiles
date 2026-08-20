@@ -10,20 +10,20 @@
 add_newline = true
 
 format = """
-[╭─](bold #636363) $os$directory$git_branch$git_status$c$rust$golang$nodejs$php$java$kotlin$haskell$python$docker_context$fill$cmd_duration$time
-[╰─](bold #636363)$character"""
+[╭─](bold bright-black) $os$directory$git_branch$git_status$c$rust$golang$nodejs$php$java$kotlin$haskell$python$docker_context$fill$cmd_duration$time
+[╰─](bold bright-black)$character"""
 
 [fill]
 symbol = " "
 
 [character]
-success_symbol = "[❯](bold #FFFFFF)"
-error_symbol = "[❯](bold #B8B8B8)"
-vicmd_symbol = "[❮](bold #FFFFFF)"
+success_symbol = "[❯](bold white)"
+error_symbol = "[❯](bold blue)"
+vicmd_symbol = "[❮](bold white)"
 
 [os]
 disabled = false
-style = "bold #FFFFFF"
+style = "bold white"
 format = "[$symbol]($style) "
 
 [os.symbols]
@@ -36,78 +36,78 @@ Fedora = ""
 Linux = "󰌽"
 
 [directory]
-style = "bold #FFFFFF"
+style = "bold white"
 format = "[$path]($style)[$read_only]($read_only_style) "
 read_only = " 󰌾"
-read_only_style = "bold #636363"
+read_only_style = "bold bright-black"
 truncation_length = 3
 truncate_to_repo = false
 
 [git_branch]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $branch]($style) "
 
 [git_status]
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "([$all_status$ahead_behind]($style)) "
 
 [c]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [rust]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [golang]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [nodejs]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [php]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [java]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [kotlin]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [haskell]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [python]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $version]($style) "
 
 [docker_context]
 symbol = ""
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[$symbol $context]($style) "
 
 [cmd_duration]
-style = "bold #636363"
+style = "bold bright-black"
 format = "[󱎫 $duration]($style) "
 
 [time]
 disabled = false
 time_format = "%H:%M"
-style = "bold #B8B8B8"
+style = "bold blue"
 format = "[ $time]($style)"

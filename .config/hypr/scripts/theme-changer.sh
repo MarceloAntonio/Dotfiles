@@ -73,7 +73,7 @@ apply_sddm() {
 }
 
 # ── Main ───────────────────────────────────────────────
-MENU=$(printf "  Fastfetch Logo\0icon\037utilities-terminal\n  Wallpaper\0icon\037preferences-desktop-wallpaper\n  SDDM Wallpaper\0icon\037system-users" | rofi -dmenu -i -show-icons -p "  Theme Changer" -theme-str 'listview { lines: 1; }' -config "$ROFI_THEME")
+MENU=$(printf "  Fastfetch Logo\0icon\037utilities-terminal\n  Wallpaper\0icon\037preferences-desktop-wallpaper\n  SDDM Wallpaper\0icon\037system-users\n  Kitty Theme\0icon\037kitty" | rofi -dmenu -i -show-icons -p "  Theme Changer" -theme-str 'listview { lines: 1; columns: 4; }' -config "$ROFI_THEME")
 
 [ -z "$MENU" ] && exit 0
 
@@ -97,5 +97,14 @@ case "$MENU" in
         DIR="$WALL_DIR"
         CHOICE=$(list_images "$DIR" | rofi_pick "  SDDM")
         [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_sddm "$DIR/$CHOICE"
+        ;;
+    *Kitty*)
+        DIR="$HOME/.config/kitty"
+        CHOICE=$(find "$DIR" -maxdepth 1 -type f -name "*.conf" ! -name "kitty.conf" ! -name "current-theme.conf" -printf "%f\n" | sed 's/\.conf$//' | awk '{print $0"\0icon\037preferences-color"}' | sort | rofi_pick "  Kitty Theme")
+        if [ -n "$CHOICE" ] && [ -f "$DIR/${CHOICE}.conf" ]; then
+            ln -sf "$DIR/${CHOICE}.conf" "$DIR/current-theme.conf"
+            killall -USR1 kitty 2>/dev/null
+            notify-send "Kitty Theme ✓" "$CHOICE"
+        fi
         ;;
 esac
