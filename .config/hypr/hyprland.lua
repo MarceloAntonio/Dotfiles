@@ -38,59 +38,59 @@ hl.env("HYPRCURSOR_THEME", "McMojave-cursors-dark")
 -- ==========================================
 
 hl.config({
-    general = {
-        gaps_in = 3,
-        gaps_out = 3,
-        border_size = 1,
-        -- Ativo: cinza médio (teu active_tab_background)
-        -- Inativo: quase preto (teu background/base)
-        resize_on_border = false,
-        allow_tearing = false,
-        layout = "dwindle",
-        col = {
-            active_border = "rgba(ffffff33)",
-            inactive_border = "rgba(ffffff15)",
-        },
-    },
+	general = {
+		gaps_in = 2,
+		gaps_out = 2,
+		border_size = 0,
+		-- Ativo: cinza médio (teu active_tab_background)
+		-- Inativo: quase preto (teu background/base)
+		resize_on_border = false,
+		allow_tearing = false,
+		layout = "dwindle",
+		col = {
+			active_border = "rgba(ffffff33)",
+			inactive_border = "rgba(ffffff15)",
+		},
+	},
 })
 
 hl.config({
-    decoration = {
-        rounding = 10,
-        rounding_power = 2,
-        active_opacity = 1.0,
-        inactive_opacity = 0.95,
-        -- leve diferença pra destacar janela ativa
-        shadow = {
-            enabled = true,
-            range = 6,
-            render_power = 3,
-            -- sombra escura baseada no background
-            color = "rgba(131313ee)",
-        },
-        blur = {
-            enabled = true,
-            size = 4,
-            passes = 2,
-            vibrancy = 0.1,
-            -- mais neutro (menos colorido)
-        },
-    },
+	decoration = {
+		rounding = 10,
+		rounding_power = 2,
+		active_opacity = 1.0,
+		inactive_opacity = 0.95,
+		-- leve diferença pra destacar janela ativa
+		shadow = {
+			enabled = true,
+			range = 6,
+			render_power = 3,
+			-- sombra escura baseada no background
+			color = "rgba(131313ee)",
+		},
+		blur = {
+			enabled = true,
+			size = 4,
+			passes = 2,
+			vibrancy = 0.1,
+			-- mais neutro (menos colorido)
+		},
+	},
 })
 
 hl.config({
-    master = {
-        new_status = "master",
-    },
+	master = {
+		new_status = "master",
+	},
 })
 
 hl.config({
-    misc = {
-        force_default_wallpaper = 0,
-        disable_hyprland_logo = true,
-        mouse_move_enables_dpms = true,
-        key_press_enables_dpms = true,
-    },
+	misc = {
+		force_default_wallpaper = 0,
+		disable_hyprland_logo = true,
+		mouse_move_enables_dpms = true,
+		key_press_enables_dpms = true,
+	},
 })
 
 -- ==========================================
@@ -100,17 +100,17 @@ hl.config({
 -- ==========================================
 
 hl.config({
-    input = {
-        kb_layout = "br",
-        follow_mouse = 1,
-        sensitivity = 0,
-        touchpad = {
-            natural_scroll = false,
-        },
-    },
+	input = {
+		kb_layout = "br",
+		follow_mouse = 1,
+		sensitivity = 0,
+		touchpad = {
+			natural_scroll = false,
+		},
+	},
 })
 
 hl.device({
-    name = "epic-mouse-v1",
-    sensitivity = -0.5,
+	name = "epic-mouse-v1",
+	sensitivity = -0.5,
 })
