@@ -64,14 +64,43 @@ run_step() {
 # PACKAGES
 # ========================
 PACMAN_DEPS=(
-  hyprland firefox kitty rofi-wayland fastfetch waybar
-  network-manager-applet pavucontrol ttf-jetbrains-mono-nerd
-  grim slurp wl-clipboard nautilus hyprpaper
-  polkit-kde-agent brightnessctl playerctl inter-font
-  awww hyprlock zsh breeze-icons zsh-autosuggestions zsh-syntax-highlighting
-  breeze-gtk base-devel git imagemagick blueman
-  python python-pip eza nvim imv pipewire pipewire-pulse wireplumber swaync starship
-  nodejs npm ripgrep fd lazygit unzip code
+  # Hyprland & Wayland
+  hyprland hyprlock awww
+  xdg-desktop-portal-hyprland
+  polkit-kde-agent
+  qt5-wayland qt6-wayland
+
+  # Terminal & Shell
+  kitty zsh zsh-autosuggestions zsh-syntax-highlighting
+
+  # Barra & Notificações
+  waybar swaync
+
+  # Launcher & Clipboard
+  rofi-wayland cliphist wl-clipboard
+
+  # Apps
+  firefox nautilus pavucontrol code
+
+  # Screenshot & Mídia
+  grim slurp brightnessctl playerctl
+  pipewire pipewire-pulse wireplumber
+
+  # Rede & Bluetooth
+  network-manager-applet blueman
+
+  # Fontes & Temas
+  ttf-jetbrains-mono-nerd inter-font
+  breeze-icons breeze-gtk
+
+  # Neovim & Ferramentas de Dev
+  neovim git base-devel
+  nodejs npm ripgrep fd unzip
+
+  # Utilitários
+  fastfetch eza starship
+  python python-pip imagemagick
+  libnotify
 )
 
 echo -e "${CYAN}"
@@ -248,22 +277,14 @@ run_step "Copying wallpapers" bash -c "
 "
 
 # ========================
-# 10. LAZYVIM
+# 10. NEOVIM PLUGINS
 # ========================
 
-run_step "Pre-installing LazyVim plugins" bash -c "nvim --headless +Lazy! sync +qa"
+run_step "Pre-installing Neovim plugins (lazy.nvim)" bash -c "nvim --headless '+Lazy! sync' +qa"
 
 # ========================
 # 11. CODE OSS
 # ========================
-run_step "Installing Code OSS settings" bash -c '
-    DEST="$HOME/.config/Code - OSS/User"
-    mkdir -p "$DEST"
-    if [ -f "'"$DOTFILES_DIR"'/.config/vscode/settings.json" ]; then
-        cp "'"$DOTFILES_DIR"'/.config/vscode/settings.json" "$DEST/settings.json"
-    fi
-'
-
 run_step "Installing Code OSS extensions" bash -c '
     code --install-extension esbenp.prettier-vscode
     code --install-extension Catppuccin.catppuccin-vsc-pack
