@@ -12,7 +12,9 @@
     "modules-right": ["network", "bluetooth", "pulseaudio", "battery", "custom/notification", "group/power"],
 
     "custom/arch": {
-        "format" : "󰣇",
+        "exec": "~/.config/waybar/scripts/distro-icon.sh",
+        "format": "{}",
+        "interval": 0,
         "tooltip": false,
         "on-click": "~/.config/hypr/scripts/binds.sh",
         "on-click-right": "rofi -show drun"
@@ -68,7 +70,7 @@
     },
 
     "custom/power": {
-        "format": " 󰤆 ",
+        "format": "󰤆",
         "tooltip": true,
         "tooltip-format": "Desligar",
         "on-click": "shutdown now"
@@ -85,7 +87,7 @@
         "format": "󰍁",
         "tooltip": true,
         "tooltip-format": "Bloquear",
-        "on-click": "swaylock"
+        "on-click": "hyprlock"
     },
 
     "custom/logout": {

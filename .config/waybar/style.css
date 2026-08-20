@@ -6,36 +6,38 @@
 
 /* ── Reset ── */
 * {
-    font-family: "JetBrainsMono Nerd Font";
-    font-size: 13px;
-    font-weight: bold;
-    background-color: transparent;
-    border: none;
-    border-radius: 0;
-    min-height: 0;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 13px;
+  font-weight: bold;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
 }
 
 /* ── Tooltip ── */
 tooltip {
-    background: alpha(@foreground, 0.06);
-    border: 1px solid alpha(@foreground, 0.10);
-    border-radius: 10px;
-    margin: 4px 3px;
-    padding: 0 10px;
-    box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),0 1px 3px alpha(#000000, 0.2);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: alpha(@foreground, 0.06);
+  border: 1px solid alpha(@foreground, 0.1);
+  border-radius: 10px;
+  margin: 4px 3px;
+  padding: 0 10px;
+  box-shadow:
+    inset 0 1px 0 alpha(@foreground, 0.05),
+    0 1px 3px alpha(#000000, 0.2);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 tooltip label {
-    color: @foreground;
+  color: @foreground;
 }
 
 /* ── Bar ── */
 #waybar {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* ── Glass Pill — base para todos os módulos ── */
@@ -45,24 +47,22 @@ tooltip label {
 #custom-reboot,
 #custom-logout,
 #custom-lock,
-#tray,
 #clock,
 #network,
 #bluetooth,
 #pulseaudio,
 #battery {
-    color: @foreground;
-    background: alpha(@foreground, 0.06);
-    border: 1px solid alpha(@foreground, 0.10);
-    border-radius: 10px;
-    margin: 4px 3px;
-    padding: 0 10px;
-    box-shadow: inset 0 1px 0 alpha(@foreground, 0.05);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: @foreground;
+  background: alpha(@foreground, 0.06);
+  border: 1px solid alpha(@foreground, 0.1);
+  border-radius: 10px;
+  margin: 4px 3px;
+  padding: 0 10px;
+  box-shadow: inset 0 1px 0 alpha(@foreground, 0.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Hover glow ── */
-#tray:hover,
 #custom-arch:hover,
 #custom-notification:hover,
 #network:hover,
@@ -74,174 +74,162 @@ tooltip label {
 #custom-reboot:hover,
 #custom-logout:hover,
 #custom-lock:hover {
-    background: alpha(@foreground, 0.14);
-    border-color: alpha(@foreground, 0.20);
-    box-shadow: inset 0 1px 0 alpha(@foreground, 0.08);
-    color: @foreground;
+  background: alpha(@foreground, 0.14);
+  border-color: alpha(@foreground, 0.2);
+  box-shadow: inset 0 1px 0 alpha(@foreground, 0.08);
+  color: @foreground;
 }
 
 /* ── Arch button ── */
 #custom-arch {
-    font-size: 19px;
-    margin-left: 6px;
-    padding: 0 12px 0 10;
-    background: alpha(@foreground, 0.08);
-    border-color: alpha(@foreground, 0.14);
+  font-size: 19px;
+  margin-left: 6px;
+  min-width: 18px;
+  padding: 0 10px 0 8px;
+  background: alpha(@foreground, 0.08);
+  border-color: alpha(@foreground, 0.14);
 }
 
 /* ── Workspaces ── */
 #workspaces {
-    background: alpha(@foreground, 0.04);
-    border: 1px solid alpha(@foreground, 0.08);
-    border-radius: 10px;
-    margin: 4px 3px;
-    padding: 0 2px;
-    box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
+  background: alpha(@foreground, 0.04);
+  border: 1px solid alpha(@foreground, 0.08);
+  border-radius: 10px;
+  margin: 4px 3px;
+  padding: 0 2px;
+  box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
 }
 
 #workspaces button {
-    color: alpha(@foreground, 0.5);
-    border: none;
-    padding: 0;
-    margin: 2px 2px;
-    min-width: 26px;
-    border-radius: 8px;
-    background: transparent;
-    
+  color: alpha(@foreground, 0.5);
+  border: none;
+  padding: 0;
+  margin: 2px 2px;
+  min-width: 26px;
+  border-radius: 8px;
+  background: transparent;
 }
 
 #workspaces button:hover {
-    color: @foreground;
-    background: alpha(@foreground, 0.10);
-    min-width: 26px;
-    box-shadow: none;
-    text-shadow: none;
-    text-shadow: none;
+  color: @foreground;
+  background: alpha(@foreground, 0.1);
+  min-width: 26px;
+  box-shadow: none;
+  text-shadow: none;
+  text-shadow: none;
 }
 
 #workspaces button.active {
-    color: @foreground;
-    background: alpha(@foreground, 0.10);
-    padding: 0;
-    min-width: 26px;
-    border-radius: 8px;
-    border-radius: 8px;
+  color: @foreground;
+  background: alpha(@foreground, 0.1);
+  padding: 0;
+  min-width: 26px;
+  border-radius: 8px;
+  border-radius: 8px;
 }
 
 #workspaces button.urgent {
-    color: @foreground;
-    background: alpha(@red, 0.9);
-    padding: 0;
-    min-width: 26px;
+  color: @foreground;
+  background: alpha(@red, 0.9);
+  padding: 0;
+  min-width: 26px;
 }
 
 /* ── Clock ── */
 #clock {
-    padding: 0 16px;
-    font-size: 12.5px;
-    letter-spacing: 0.5px;
-    background: alpha(@foreground, 0.05);
-    border-color: alpha(@foreground, 0.08);
+  padding: 0 16px;
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
+  background: alpha(@foreground, 0.05);
+  border-color: alpha(@foreground, 0.08);
 }
 
 /* ── Notification ── */
 #custom-notification {
-    font-size: 16px;
-    padding: 0 10px;
-}
-
-/* ── Tray ── */
-#tray {
-    padding: 0 8px;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
-#tray > .needs-attention {
-    -gtk-icon-effect: highlight;
+  font-size: 16px;
+  padding: 0 10px;
 }
 
 /* ── Network / Bluetooth / PulseAudio / Battery ── */
 #network {
-    font-size: 14px;
-    padding: 0 12px;
-    min-width: 28px;
+  font-size: 14px;
+  padding: 0 12px;
+  min-width: 28px;
 }
 
 #bluetooth {
-    font-size: 14px;
-    padding: 0 12px;
-    min-width: 28px;
+  font-size: 14px;
+  padding: 0 12px;
+  min-width: 28px;
 }
 
 #pulseaudio {
-    font-size: 14px;
-    padding: 0 12px;
-    min-width: 28px;
+  font-size: 14px;
+  padding: 0 12px;
+  min-width: 28px;
 }
 
 #battery {
-    font-size: 14px;
-    padding: 0 12px;
-    min-width: 28px;
+  font-size: 14px;
+  padding: 0 12px;
+  min-width: 28px;
 }
 
-
-
 @keyframes glass-pulse {
-    from {
-        box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),
-                    0 0 6px alpha(@red, 0.2);
-    }
-    to {
-        box-shadow: inset 0 1px 0 alpha(@foreground, 0.05),
-                    0 0 16px alpha(@red, 0.35);
-    }
+  from {
+    box-shadow:
+      inset 0 1px 0 alpha(@foreground, 0.05),
+      0 0 6px alpha(@red, 0.2);
+  }
+  to {
+    box-shadow:
+      inset 0 1px 0 alpha(@foreground, 0.05),
+      0 0 16px alpha(@red, 0.35);
+  }
 }
 
 /* ── Taskbar ── */
 #taskbar button {
-    padding: 0 5px;
-    margin: 4px 2px;
-    border-radius: 10px;
-    background: alpha(@foreground, 0.06);
-    border: 1px solid alpha(@foreground, 0.08);
-    transition: all 0.2s ease;
+  padding: 0 5px;
+  margin: 4px 2px;
+  border-radius: 10px;
+  background: alpha(@foreground, 0.06);
+  border: 1px solid alpha(@foreground, 0.08);
+  transition: all 0.2s ease;
 }
 
 #taskbar button:hover {
-    background: alpha(@foreground, 0.12);
-    border-color: alpha(@foreground, 0.16);
+  background: alpha(@foreground, 0.12);
+  border-color: alpha(@foreground, 0.16);
 }
 
 #taskbar button.active {
-    background: alpha(@foreground, 0.15);
-    border-color: alpha(@foreground, 0.20);
-    box-shadow: 0 0 8px alpha(@foreground, 0.06);
+  background: alpha(@foreground, 0.15);
+  border-color: alpha(@foreground, 0.2);
+  box-shadow: 0 0 8px alpha(@foreground, 0.06);
 }
 
 /* ── Power Menu Group ── */
 #group-power {
-    background: alpha(@foreground, 0.04);
-    border: 1px solid alpha(@foreground, 0.08);
-    border-radius: 12px;
-    margin: 4px 6px 4px 3px;
-    padding: 0 2px;
-    box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
+  background: alpha(@foreground, 0.04);
+  border: 1px solid alpha(@foreground, 0.08);
+  border-radius: 12px;
+  margin: 4px 6px 4px 3px;
+  padding: 0 2px;
+  box-shadow: inset 0 1px 0 alpha(@foreground, 0.04);
 }
 
-#custom-power{
-    font-size: 14px;
-    padding: 0 8px 0 7px;
-    margin: 2px;
+#custom-power {
+  font-size: 14px;
+  min-width: 14px;
+  padding: 0 9px 0 7px;
+  margin: 2px;
 }
 
 #custom-reboot,
 #custom-logout,
 #custom-lock {
-    font-size: 14px;
-    padding: 0 10px;
-    margin: 2px;
+  font-size: 14px;
+  padding: 0 10px;
+  margin: 2px;
 }
