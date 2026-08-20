@@ -43,3 +43,13 @@ map("x", "<A-S-Up>", ":t'<-1<CR>gv", { desc = "Copiar seleção para cima", sile
 map("n", "<C-a>", "ggVG", { desc = "Selecionar tudo", silent = true })
 map("i", "<C-a>", "<Esc>ggVG", { desc = "Selecionar tudo", silent = true })
 map("v", "<C-a>", "<Esc>ggVG", { desc = "Selecionar tudo", silent = true })
+
+-- Navegação entre janelas (Explorador <-> Código)
+-- 1. Usando a tecla Tab para ficar alternando
+map("n", "<Tab>", "<C-w>w", { desc = "Pular para a próxima janela", silent = true })
+
+-- 2. Usando Ctrl + Setas para ir na direção exata
+map("n", "<C-Left>", "<C-w>h", { desc = "Ir para a janela da Esquerda", silent = true })
+map("n", "<C-Right>", "<C-w>l", { desc = "Ir para a janela da Direita", silent = true })
+map("n", "<C-Up>", "<C-w>k", { desc = "Ir para a janela de Cima", silent = true })
+map("n", "<C-Down>", "<C-w>j", { desc = "Ir para a janela de Baixo", silent = true })
