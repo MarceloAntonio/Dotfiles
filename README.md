@@ -18,7 +18,7 @@ These dotfiles use a monochromatic theme, except for the editor which uses Catpp
 | Wallpaper      | awww          |
 | Login Manager  | SDDM          |
 | Screen Lock    | Hyprlock      |
-| Editor         | Code - OSS / LazyVim |
+| Editor         | Code - OSS / Neovim |
 | Fetch          | Fastfetch     |
 
 ---
@@ -39,7 +39,16 @@ The modifier key is `SUPER` (Windows key).
 | Change wallpaper  | `SUPER + W`           |
 | Theme changer     | `SUPER + T`           |
 | Screenshot        | `SUPER + SHIFT + S`   |
+| Lock screen       | `SUPER + L`           |
 | Exit / shutdown   | `SUPER + M`           |
+
+---
+
+## Features
+
+- **Theme Changer:** Runs entirely through Rofi (`SUPER + T`). Instantly changes your Hyprland wallpaper, SDDM background, and Fastfetch logo. 
+- **Dynamic Lockscreen:** Hyprlock features a custom "Liquid Glass" aesthetic matching Waybar, fully synced with the current wallpaper, and includes interactive power buttons (Shutdown, Reboot, Logout).
+- **Waybar:** Dynamic OS logo based on your distribution, using a custom script.
 
 ---
 
@@ -61,11 +70,6 @@ The modifier key is `SUPER` (Windows key).
 > **Note:** The script backs up your existing configs to `~/BKP.config` before applying changes. It installs dependencies via `pacman` and `yay`, applies the SDDM theme, sets up Code - OSS, and sets ZSH as your default shell.
 ---
 
-## Theme Changer
-
-You can change your Hyprland wallpaper, SDDM background, and Fastfetch icon using the built in Theme Changer. It runs entirely through Rofi.
-
----
 ## Wallpapers
 To see the available wallpapers, click [here](./Wallpapers/WALLPAPERS.md).
 
