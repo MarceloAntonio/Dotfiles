@@ -14,7 +14,7 @@
     "custom/arch": {
         "exec": "~/.config/waybar/scripts/distro-icon.sh",
         "format": "{}",
-        "interval": 0,
+        "interval": "once",
         "tooltip": false,
         "on-click": "~/.config/hypr/scripts/binds.sh",
         "on-click-right": "rofi -show drun"
