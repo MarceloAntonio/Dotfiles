@@ -61,15 +61,25 @@ apply_sddm() {
     local name=$(basename "$img")
 
     [ -f "$SDDM_CONF" ] || { notify-send "Erro" "SDDM config não encontrado!" -u critical; return 1; }
+    [ -d "$SDDM_BG_DIR" ] || { notify-send "Erro" "Diretório de backgrounds do SDDM não encontrado!" -u critical; return 1; }
 
-    pkexec cp "$img" "$SDDM_BG_DIR/$name"
+    # Executa cópia, permissão 644 e atualização do astronaut.conf em uma única chamada pkexec
+    if pkexec bash -c '
+        img="$1"
+        bg_dir="$2"
+        name="$3"
+        conf="$4"
 
-    local tmp="/tmp/_sddm_tmp.conf"
-    sed "s|^Background[[:space:]]*=.*|Background=Backgrounds/$name|" "$SDDM_CONF" > "$tmp"
-    pkexec cp "$tmp" "$SDDM_CONF"
-    rm -f "$tmp"
-
-    notify-send "SDDM ✓" "Background: $name" -i "$img"
+        cp "$img" "$bg_dir/$name" || exit 1
+        chmod 644 "$bg_dir/$name" || exit 1
+        safe_name="${name//&/\\&}"
+        sed -i "s|^Background[[:space:]]*=.*|Background=\"Backgrounds/$safe_name\"|" "$conf" || exit 1
+    ' _ "$img" "$SDDM_BG_DIR" "$name" "$SDDM_CONF"; then
+        notify-send "SDDM ✓" "Background: $name" -i "$img"
+    else
+        notify-send "Erro SDDM" "Falha ao aplicar wallpaper no SDDM (autenticação cancelada ou erro)." -u critical
+        return 1
+    fi
 }
 
 # ── Main ───────────────────────────────────────────────
@@ -88,15 +98,15 @@ case "$MENU" in
             apply_fastfetch "$DIR/$CHOICE"
         fi
         ;;
-    *Wallpaper*)
-        DIR="$WALL_DIR"
-        CHOICE=$(list_images "$DIR" | rofi_pick "  Wallpaper")
-        [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_wallpaper "$DIR/$CHOICE"
-        ;;
     *SDDM*)
         DIR="$WALL_DIR"
         CHOICE=$(list_images "$DIR" | rofi_pick "  SDDM")
         [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_sddm "$DIR/$CHOICE"
+        ;;
+    *Wallpaper*)
+        DIR="$WALL_DIR"
+        CHOICE=$(list_images "$DIR" | rofi_pick "  Wallpaper")
+        [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_wallpaper "$DIR/$CHOICE"
         ;;
     *Kitty*)
         DIR="$HOME/.config/kitty"
