@@ -66,9 +66,13 @@ else
   alias ls='ls --color=auto'
 fi
 
+if command -v bat &>/dev/null; then
+  alias cat='bat'
+fi
+
+
 # Atalhos
 alias reload='source ~/.zshrc && echo "zshrc recarregado ✓"'
-
 
 
 # ── Fastfetch ────────────────────────────────
