@@ -25,7 +25,6 @@ done 2>/dev/null &
 BACKUP_DIR="$HOME/BKP.config"
 CONFIG_DIR="$HOME/.config"
 DOTFILES_DIR="$(pwd)"
-INSTALL_DIR="/tmp/yay"
 
 # ========================
 # COLORS
@@ -62,45 +61,34 @@ run_step() {
 
 # ========================
 # PACKAGES
+# Agrupados por categoria: se um pacote de um grupo falhar
+# (nome errado, saiu do repo, etc), só aquele grupo é afetado —
+# o resto da instalação continua normalmente.
 # ========================
-PACMAN_DEPS=(
-  # Hyprland & Wayland
-  hyprland hyprlock awww
-  xdg-desktop-portal-hyprland
-  polkit-kde-agent
-  qt5-wayland qt6-wayland
+HYPRLAND_WAYLAND=(hyprland hyprlock awww xdg-desktop-portal-hyprland polkit-kde-agent qt5-wayland qt6-wayland)
+TERMINAL_SHELL=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting)
+BAR_NOTIFICATIONS=(waybar swaync)
+LAUNCHER_CLIPBOARD=(rofi-wayland cliphist wl-clipboard)
+APPS=(firefox thunar pavucontrol)
+SCREENSHOT_MEDIA=(grim slurp brightnessctl playerctl pipewire pipewire-pulse wireplumber)
+NETWORK_BLUETOOTH=(network-manager-applet blueman)
+FONTS_THEMES=(ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk)
+DEV_TOOLS=(neovim git base-devel nodejs npm ripgrep fd unzip)
+UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf)
+SYSTEM_OPTIMIZATION=(intel-ucode sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw intel-media-driver libva-utils vpl-gpu-rt intel-compute-runtime opencl-mesa vulkan-intel clinfo)
 
-  # Terminal & Shell
-  kitty zsh zsh-autosuggestions zsh-syntax-highlighting
-
-  # Barra & Notificações
-  waybar swaync
-
-  # Launcher & Clipboard
-  rofi-wayland cliphist wl-clipboard
-
-  # Apps
-  firefox nautilus pavucontrol code
-
-  # Screenshot & Mídia
-  grim slurp brightnessctl playerctl
-  pipewire pipewire-pulse wireplumber
-
-  # Rede & Bluetooth
-  network-manager-applet blueman
-
-  # Fontes & Temas
-  ttf-jetbrains-mono-nerd inter-font
-  breeze-icons breeze-gtk
-
-  # Neovim & Ferramentas de Dev
-  neovim git base-devel
-  nodejs npm ripgrep fd unzip
-
-  # Utilitários
-  fastfetch eza starship
-  python python-pip imagemagick
-  libnotify
+PACMAN_GROUPS=(
+  HYPRLAND_WAYLAND
+  TERMINAL_SHELL
+  BAR_NOTIFICATIONS
+  LAUNCHER_CLIPBOARD
+  APPS
+  SCREENSHOT_MEDIA
+  NETWORK_BLUETOOTH
+  FONTS_THEMES
+  DEV_TOOLS
+  UTILITIES
+  SYSTEM_OPTIMIZATION
 )
 
 echo -e "${CYAN}"
@@ -110,9 +98,18 @@ echo "========================================"
 echo -e "${RESET}"
 
 # ========================
-# 1. PACMAN
+# 1. SYSTEM UPDATE
 # ========================
-run_step "Installing pacman packages" sudo pacman -S --needed --noconfirm "${PACMAN_DEPS[@]}"
+run_step "Updating system (pacman -Syu)" sudo pacman -Syu --noconfirm
+
+# ========================
+# 2. PACMAN (por grupo)
+# ========================
+for group_name in "${PACMAN_GROUPS[@]}"; do
+  declare -n group_ref="$group_name"
+  run_step "Installing group: $group_name" sudo pacman -S --needed --noconfirm "${group_ref[@]}"
+  unset -n group_ref
+done
 
 # ========================
 # 3. MANUAL INSTALLS (ZSH Plugins & Cursors)
@@ -130,6 +127,9 @@ run_step "Installing McMojave-cursors" bash -c "
     cd /tmp/McMojave-cursors
     ./install.sh
     rm -rf /tmp/McMojave-cursors
+    if [ -d ~/.icons/McMojave-cursors ]; then
+        mv ~/.icons/McMojave-cursors ~/.icons/mcmojave-cursors
+    fi
 "
 
 # ========================
@@ -213,37 +213,9 @@ run_step "Applying themes" bash -c "
 Inherits=mcmojave-cursors
 EOF
 
-    mkdir -p ~/.config/gtk-3.0
-    cat > ~/.config/gtk-3.0/settings.ini <<EOF
-[Settings]
-gtk-theme-name=Adwaita
-gtk-icon-theme-name=WhiteSur-dark
-gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=mcmojave-cursors
-gtk-cursor-theme-size=24
-gtk-toolbar-style=GTK_TOOLBAR_ICONS
-gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
-gtk-button-images=0
-gtk-menu-images=0
-gtk-enable-event-sounds=1
-gtk-enable-input-feedback-sounds=0
-gtk-xft-antialias=1
-gtk-xft-hinting=1
-gtk-xft-hintstyle=hintslight
-gtk-xft-rgba=rgb
-gtk-application-prefer-dark-theme=1
-EOF
-
-    mkdir -p ~/.config/gtk-4.0
-    cat > ~/.config/gtk-4.0/settings.ini <<EOF
-[Settings]
-gtk-theme-name=Adwaita
-gtk-icon-theme-name=WhiteSur-dark
-gtk-font-name=Inter Display 11
-gtk-cursor-theme-name=mcmojave-cursors
-gtk-cursor-theme-size=24
-gtk-application-prefer-dark-theme=1
-EOF
+    # gtk-3.0/settings.ini e gtk-4.0/settings.ini já vêm do seu
+    # repo de dotfiles (passo 5&6, Backup & Dotfiles) — não são
+    # regerados aqui pra não sobrescrever o que já está versionado.
 
     # Added '|| true' to prevent failures if run outside a graphical interface (TTY)
     gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors' || true
@@ -283,15 +255,7 @@ run_step "Copying wallpapers" bash -c "
 run_step "Pre-installing Neovim plugins (lazy.nvim)" bash -c "nvim --headless '+Lazy! sync' +qa"
 
 # ========================
-# 11. CODE OSS
-# ========================
-run_step "Installing Code OSS extensions" bash -c '
-    code --install-extension esbenp.prettier-vscode
-    code --install-extension Catppuccin.catppuccin-vsc-pack
-'
-
-# ========================
-# 12. ZSH DEFAULT
+# 11. ZSH DEFAULT
 # ========================
 run_step "Setting ZSH as default shell" bash -c "
     if [ \"\$SHELL\" != \"\$(which zsh)\" ]; then
