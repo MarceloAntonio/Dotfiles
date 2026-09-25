@@ -73,7 +73,7 @@ fi
 
 # Atalhos
 alias reload='source ~/.zshrc && echo "zshrc recarregado ✓"'
-
+alias code='codium'
 
 # ── Fastfetch ────────────────────────────────
 [[ $- == *i* ]] && fastfetch

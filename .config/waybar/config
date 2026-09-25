@@ -156,7 +156,21 @@
     },
 
     "clock": {
-        "format": "{:%d/%m/%Y : %H:%M} ",
-        "tooltip-format": "<tt>{calendar}</tt>"
+        "format": "{:%H:%M}",
+        "format-alt": "{:%d/%m/%Y  %H:%M}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "format": {
+                "today": "<u>{}</u>"
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     }
 }
