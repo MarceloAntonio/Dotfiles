@@ -24,7 +24,7 @@ done 2>/dev/null &
 
 BACKUP_DIR="$HOME/BKP.config"
 CONFIG_DIR="$HOME/.config"
-DOTFILES_DIR="$(pwd)"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ========================
 # COLORS
@@ -45,7 +45,6 @@ warn() { echo -e "${YELLOW}⚠ $1${RESET}"; }
 error() { echo -e "${RED}✖ $1${RESET}"; }
 progress() {
   echo -e "${CYAN}➜ $1...${RESET}"
-  sleep 0.5
 }
 
 run_step() {
@@ -68,7 +67,7 @@ run_step() {
 HYPRLAND_WAYLAND=(hyprland hyprlock awww xdg-desktop-portal-hyprland polkit-kde-agent qt5-wayland qt6-wayland)
 TERMINAL_SHELL=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting)
 BAR_NOTIFICATIONS=(waybar swaync)
-LAUNCHER_CLIPBOARD=(rofi-wayland cliphist wl-clipboard)
+LAUNCHER_CLIPBOARD=(rofi cliphist wl-clipboard)
 APPS=(firefox thunar pavucontrol)
 SCREENSHOT_MEDIA=(grim slurp brightnessctl playerctl pipewire pipewire-pulse wireplumber)
 NETWORK_BLUETOOTH=(network-manager-applet blueman)
@@ -128,6 +127,7 @@ run_step "Installing McMojave-cursors" bash -c "
     ./install.sh
     rm -rf /tmp/McMojave-cursors
     if [ -d ~/.icons/McMojave-cursors ]; then
+        rm -rf ~/.icons/mcmojave-cursors
         mv ~/.icons/McMojave-cursors ~/.icons/mcmojave-cursors
     fi
 "
@@ -229,13 +229,7 @@ EOF
 # ========================
 # 8. THEME CHANGER
 # ========================
-run_step "Installing Theme Changer" bash -c "
-    # Grant execution permissions to the script
-    chmod +x scripts/Install_theme_changer.sh
-    
-    # Run the script
-    ./scripts/Install_theme_changer.sh
-"
+run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/Install_theme_changer.sh"
 
 # ========================
 # 9. WALLPAPER
@@ -245,6 +239,8 @@ run_step "Copying wallpapers" bash -c "
         DEST=\$HOME/Pictures/Wallpaper
         mkdir -p \$DEST
         cp -a $DOTFILES_DIR/Wallpapers/* \$DEST/
+        mkdir -p \$HOME/.config/hypr/hyprlock
+        [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/wallpaper_16.png \$HOME/.config/hypr/hyprlock/wallpaper
     fi
 "
 
