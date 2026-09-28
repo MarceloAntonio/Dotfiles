@@ -1,54 +1,66 @@
+-- Atalhos estilo VSCode
+-- Obs: Ctrl+Shift+<tecla> é capturado pelo kitty (kitty_mod), por isso não aparece aqui
 local map = vim.keymap.set
 
--- Copiar (Ctrl + c)
-map("n", "<C-c>", '"+yy', { desc = "Copiar linha", silent = true })
-map("v", "<C-c>", '"+y', { desc = "Copiar seleção", silent = true })
+-- Arquivo
+map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Salvar" })
+map("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "Buscar Arquivos" })
+map("n", "<C-f>", "/", { desc = "Buscar no Arquivo" })
+map("n", "<C-b>", "<cmd>Neotree toggle<cr>", { desc = "Explorador de Arquivos" })
 
--- Colar (Ctrl + v)
-map({ "n", "v" }, "<C-v>", '"+p', { desc = "Colar", silent = true })
-map("i", "<C-v>", "<C-r><C-p>+", { desc = "Colar", silent = true })
-map("c", "<C-v>", "<C-r>+", { desc = "Colar", silent = true })
+-- Copiar / Colar / Cortar
+map("n", "<C-c>", '"+yy', { desc = "Copiar linha" })
+map("v", "<C-c>", '"+y', { desc = "Copiar seleção" })
+map({ "n", "v" }, "<C-v>", '"+p', { desc = "Colar" })
+map("i", "<C-v>", "<C-r><C-p>+", { desc = "Colar" })
+map("c", "<C-v>", "<C-r>+", { desc = "Colar" })
+map("n", "<C-x>", '"+dd', { desc = "Cortar linha" })
+map("v", "<C-x>", '"+d', { desc = "Cortar seleção" })
 
--- Cortar (Ctrl + x)
-map("n", "<C-x>", '"+dd', { desc = "Cortar linha", silent = true })
-map("v", "<C-x>", '"+d', { desc = "Cortar seleção", silent = true })
+-- Desfazer / Refazer
+map("n", "<C-z>", "u", { desc = "Desfazer" })
+map("i", "<C-z>", "<C-o>u", { desc = "Desfazer" })
+map("v", "<C-z>", "<Esc>u", { desc = "Desfazer" })
+map("n", "<C-y>", "<C-r>", { desc = "Refazer" })
+map("i", "<C-y>", "<C-o><C-r>", { desc = "Refazer" })
+map("v", "<C-y>", "<Esc><C-r>", { desc = "Refazer" })
 
--- Desfazer (Ctrl + z)
-map("n", "<C-z>", "u", { desc = "Desfazer", silent = true })
-map("i", "<C-z>", "<C-o>u", { desc = "Desfazer", silent = true })
-map("v", "<C-z>", "<Esc>u", { desc = "Desfazer", silent = true })
+-- Selecionar tudo
+map("n", "<C-a>", "ggVG", { desc = "Selecionar tudo" })
+map({ "i", "v" }, "<C-a>", "<Esc>ggVG", { desc = "Selecionar tudo" })
 
--- Refazer (Ctrl + y ou Ctrl + Shift + z)
-map("n", "<C-y>", "<C-r>", { desc = "Refazer", silent = true })
-map("i", "<C-y>", "<C-o><C-r>", { desc = "Refazer", silent = true })
-map("v", "<C-y>", "<Esc><C-r>", { desc = "Refazer", silent = true })
-map("n", "<C-S-z>", "<C-r>", { desc = "Refazer", silent = true })
-map("i", "<C-S-z>", "<C-o><C-r>", { desc = "Refazer", silent = true })
-map("v", "<C-S-z>", "<Esc><C-r>", { desc = "Refazer", silent = true })
+-- Mover linha (Alt + ↑/↓)
+map("n", "<A-Up>", "<cmd>m .-2<cr>==", { desc = "Mover linha para cima" })
+map("n", "<A-Down>", "<cmd>m .+1<cr>==", { desc = "Mover linha para baixo" })
+map("i", "<A-Up>", "<Esc><cmd>m .-2<cr>==gi", { desc = "Mover linha para cima" })
+map("i", "<A-Down>", "<Esc><cmd>m .+1<cr>==gi", { desc = "Mover linha para baixo" })
+map("x", "<A-Up>", ":m '<-2<cr>gv=gv", { desc = "Mover seleção para cima" })
+map("x", "<A-Down>", ":m '>+1<cr>gv=gv", { desc = "Mover seleção para baixo" })
 
--- Copiar linha para baixo / cima (Shift + Alt + Down / Up)
-map("n", "<A-S-Down>", "<cmd>t.<CR>", { desc = "Copiar linha para baixo", silent = true })
-map("i", "<A-S-Down>", "<Esc><cmd>t.<CR>gi", { desc = "Copiar linha para baixo", silent = true })
-map("x", "<A-S-Down>", ":t'><CR>gv", { desc = "Copiar seleção para baixo", silent = true })
+-- Duplicar linha (Shift + Alt + ↑/↓)
+map("n", "<A-S-Down>", "<cmd>t.<cr>", { desc = "Duplicar linha para baixo" })
+map("n", "<A-S-Up>", "<cmd>t -1<cr>", { desc = "Duplicar linha para cima" })
+map("i", "<A-S-Down>", "<Esc><cmd>t.<cr>gi", { desc = "Duplicar linha para baixo" })
+map("i", "<A-S-Up>", "<Esc><cmd>t -1<cr>gi", { desc = "Duplicar linha para cima" })
+map("x", "<A-S-Down>", ":t'><cr>gv", { desc = "Duplicar seleção para baixo" })
+map("x", "<A-S-Up>", ":t'<-1<cr>gv", { desc = "Duplicar seleção para cima" })
 
-map("n", "<A-S-Up>", "<cmd>t -1<CR>", { desc = "Copiar linha para cima", silent = true })
-map("i", "<A-S-Up>", "<Esc><cmd>t -1<CR>gi", { desc = "Copiar linha para cima", silent = true })
-map("x", "<A-S-Up>", ":t'<-1<CR>gv", { desc = "Copiar seleção para cima", silent = true })
+-- Comentar (Ctrl + /); <C-_> é como terminais antigos enviam Ctrl+/
+for _, key in ipairs({ "<C-/>", "<C-_>" }) do
+  map("n", key, "gcc", { remap = true, desc = "Comentar linha" })
+  map("x", key, "gc", { remap = true, desc = "Comentar seleção" })
+  map("i", key, "<C-o>gcc", { remap = true, desc = "Comentar linha" })
+end
 
--- Selecionar tudo (Ctrl + a)
-map("n", "<C-a>", "ggVG", { desc = "Selecionar tudo", silent = true })
-map("i", "<C-a>", "<Esc>ggVG", { desc = "Selecionar tudo", silent = true })
-map("v", "<C-a>", "<Esc>ggVG", { desc = "Selecionar tudo", silent = true })
+-- Apagar palavra (Ctrl + Backspace)
+map("i", "<C-BS>", "<C-w>", { desc = "Apagar palavra" })
 
--- Navegação entre janelas (Explorador <-> Código)
--- 1. Usando a tecla Tab para ficar alternando
-map("n", "<Tab>", "<C-w>w", { desc = "Pular para a próxima janela", silent = true })
-
--- 2. Usando Ctrl + Setas para ir na direção exata
-map("n", "<C-Left>", "<C-w>h", { desc = "Ir para a janela da Esquerda", silent = true })
-map("n", "<C-Right>", "<C-w>l", { desc = "Ir para a janela da Direita", silent = true })
-map("n", "<C-Up>", "<C-w>k", { desc = "Ir para a janela de Cima", silent = true })
-map("n", "<C-Down>", "<C-w>j", { desc = "Ir para a janela de Baixo", silent = true })
+-- Janelas: Tab alterna, Ctrl + setas vai na direção
+map("n", "<Tab>", "<C-w>w", { desc = "Próxima janela" })
+map("n", "<C-Left>", "<C-w>h", { desc = "Janela da esquerda" })
+map("n", "<C-Right>", "<C-w>l", { desc = "Janela da direita" })
+map("n", "<C-Up>", "<C-w>k", { desc = "Janela de cima" })
+map("n", "<C-Down>", "<C-w>j", { desc = "Janela de baixo" })
 
 -- Autocompletar: Enter aceita a sugestão, Ctrl+Espaço abre na hora
 map("i", "<CR>", function() return vim.fn.pumvisible() == 1 and "<C-y>" or "<CR>" end, { expr = true })

@@ -12,6 +12,11 @@ o.expandtab = true
 o.smartindent = true
 
 o.autowriteall = true
+
+-- Shift + setas seleciona (digitar substitui a seleção), seta sem Shift cancela
+o.keymodel = "startsel,stopsel"
+o.selectmode = "key"
+o.selection = "exclusive" -- seleção termina antes do cursor, como no VSCode
 o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 
 -- Autocompletar nativo (0.12): LSP primeiro, depois palavras dos buffers

@@ -16,6 +16,7 @@ return {
           ["<C-LeftMouse>"] = "select",
           ["<C-Space>"] = "select",
           ["<Tab>"] = function() vim.cmd("wincmd w") end, -- padrão do neo-tree é "select"
+          ["<C-b>"] = "close_window", -- padrão do neo-tree é rolar o preview
         },
       },
       filesystem = {

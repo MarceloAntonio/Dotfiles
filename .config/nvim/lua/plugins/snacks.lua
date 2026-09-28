@@ -1,11 +1,14 @@
+local term = { win = { height = 15, wo = { winbar = "" } } }
+
 return {
   {
     "folke/snacks.nvim",
     lazy = false, -- dashboard precisa carregar na abertura
     priority = 1000,
-    -- Terminal: <C-\> abre/fecha embaixo; 2<C-\> abre o terminal 2; Esc Esc volta ao modo normal
+    -- Terminal: <C-\> ou <C-`> abre/fecha embaixo; 2<C-\> abre o terminal 2; Esc Esc volta ao modo normal
     keys = {
-      { "<C-\\>", function() Snacks.terminal.toggle(nil, { win = { height = 15, wo = { winbar = "" } } }) end, mode = { "n", "t" }, desc = "Terminal" },
+      { "<C-\\>", function() Snacks.terminal.toggle(nil, term) end, mode = { "n", "t" }, desc = "Terminal" },
+      { "<C-`>", function() Snacks.terminal.toggle(nil, term) end, mode = { "n", "t" }, desc = "Terminal" },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       { "<leader>tf", function() Snacks.terminal.toggle(nil, { count = 99, win = { position = "float" } }) end, desc = "Terminal Flutuante" },
     },

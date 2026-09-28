@@ -1,5 +1,6 @@
 return {
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
+  { "echasnovski/mini.pairs", event = "InsertEnter", opts = {} },
 
   -- Linhas alteradas/adicionadas/removidas na lateral
   {
@@ -54,14 +55,17 @@ return {
       -- K (hover) já é padrão do nvim
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
-          local map = function(keys, func, desc)
-            vim.keymap.set("n", keys, func, { buffer = args.buf, desc = "LSP: " .. desc })
+          local map = function(mode, keys, func, desc)
+            vim.keymap.set(mode, keys, func, { buffer = args.buf, desc = "LSP: " .. desc })
           end
-          map("gd", require("telescope.builtin").lsp_definitions, "Ir para Definição")
-          map("gr", require("telescope.builtin").lsp_references, "Ir para Referências")
-          map("<leader>rn", vim.lsp.buf.rename, "Renomear Variável")
-          map("<leader>ca", vim.lsp.buf.code_action, "Code Action")
-          map("<leader>fm", vim.lsp.buf.format, "Formatar Arquivo")
+          local tb = require("telescope.builtin")
+          map({ "n", "i" }, "<F12>", tb.lsp_definitions, "Ir para Definição")
+          map({ "n", "i" }, "<S-F12>", tb.lsp_references, "Ir para Referências")
+          map({ "n", "i" }, "<F2>", vim.lsp.buf.rename, "Renomear Símbolo")
+          map({ "n", "i", "v" }, "<C-.>", vim.lsp.buf.code_action, "Quick Fix")
+          map({ "n", "i" }, "<S-A-f>", vim.lsp.buf.format, "Formatar Documento")
+          map("n", "gd", tb.lsp_definitions, "Ir para Definição")
+          map("n", "gr", tb.lsp_references, "Ir para Referências")
         end,
       })
 
