@@ -10,7 +10,6 @@ readonly THEME_NAME="sddm-astronaut-theme"
 readonly THEMES_DIR="/usr/share/sddm/themes"
 readonly PATH_TO_GIT_CLONE="/tmp/$THEME_NAME"
 readonly METADATA="$THEMES_DIR/$THEME_NAME/metadata.desktop"
-readonly DATE=$(date +%s)
 
 info() { echo -e "\e[32m[INFO]\e[0m $*"; }
 warn() { echo -e "\e[33m[WARN]\e[0m $*"; }
@@ -54,14 +53,14 @@ install_theme() {
     local dst="$THEMES_DIR/$THEME_NAME"
 
     info "Installing theme files..."
-    [[ -d "$dst" ]] && sudo mv "$dst" "${dst}_$DATE"
+    sudo rm -rf "$dst"
     sudo mkdir -p "$dst"
     sudo cp -r "$src"/* "$dst"/
 
     if [[ -d "$dst/Fonts" ]]; then
         info "Installing theme fonts..."
         sudo cp -r "$dst/Fonts"/* /usr/share/fonts/
-        fc-cache -f
+        sudo fc-cache -f
     fi
 
     info "Configuring sddm.conf..."
@@ -103,6 +102,7 @@ main() {
     install_theme
     select_variant
     enable_sddm
+    rm -rf "$PATH_TO_GIT_CLONE"
     info "SDDM Astronaut Theme installation finished!"
 }
 
