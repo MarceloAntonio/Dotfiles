@@ -1,6 +1,6 @@
 # ~/dotfiles
 
-These dotfiles use a monochromatic theme, except for the editor which uses Catppuccin Mocha. The compositor is Hyprland. An installation script is included. Wallpapers are available in the Wallpapers folder.
+These dotfiles use a monochromatic theme, except for the editor which uses Catppuccin Mocha. The compositor is Hyprland. An installation script is included. Wallpapers are in a separate repo: [wallpapers_dotfile](https://github.com/MarceloAntonio/wallpapers_dotfile) (the installer downloads them).
 
 ---
 
@@ -71,7 +71,7 @@ The modifier key is `SUPER` (Windows key).
 ---
 
 ## Wallpapers
-To see the available wallpapers, click [here](./Wallpapers/WALLPAPERS.md).
+To see the available wallpapers, click [here](https://github.com/MarceloAntonio/wallpapers_dotfile).
 
 ---
 

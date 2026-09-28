@@ -234,14 +234,15 @@ run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/Install_theme_ch
 # ========================
 # 9. WALLPAPER
 # ========================
-run_step "Copying wallpapers" bash -c "
-    if [ -d $DOTFILES_DIR/Wallpapers ]; then
-        DEST=\$HOME/Pictures/Wallpaper
-        mkdir -p \$DEST
-        cp -a $DOTFILES_DIR/Wallpapers/* \$DEST/
-        mkdir -p \$HOME/.config/hypr/hyprlock
-        [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/wallpaper_16.png \$HOME/.config/hypr/hyprlock/wallpaper
-    fi
+# Wallpapers ficam em outro repo: https://github.com/MarceloAntonio/wallpapers_dotfile
+WALLPAPERS_URL="https://github.com/MarceloAntonio/wallpapers_dotfile/archive/refs/tags/wallpapers.tar.gz"
+run_step "Downloading wallpapers" bash -c "
+    set -e
+    DEST=\$HOME/Pictures/Wallpaper
+    mkdir -p \$DEST
+    curl -fL $WALLPAPERS_URL | tar xz -C \$DEST --strip-components=1 --exclude=README.md
+    mkdir -p \$HOME/.config/hypr/hyprlock
+    [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/wallpaper_16.png \$HOME/.config/hypr/hyprlock/wallpaper
 "
 
 # ========================
