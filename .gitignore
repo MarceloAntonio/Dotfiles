@@ -1,0 +1,4 @@
+# Estado local (não versionar)
+.config/hypr/.current_wallpaper
+.config/hypr/hyprlock/
+__pycache__/

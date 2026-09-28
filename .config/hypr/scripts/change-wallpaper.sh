@@ -40,6 +40,7 @@ if [ -n "$CHOICE" ]; then
         --transition-bezier ".4,0,.2,1"
 
     # Atualiza o link para o Hyprlock
+    mkdir -p "$HOME/.config/hypr/hyprlock"
     ln -sf "$FULL_PATH" "$HOME/.config/hypr/hyprlock/wallpaper" 2>/dev/null
 
     notify-send "Wallpaper Alterado" "$CHOICE" -i "$FULL_PATH"

@@ -14,6 +14,7 @@ Uso:
 import argparse
 import filecmp
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -38,21 +39,9 @@ def colored(text: str, color: str) -> str:
 HOME = Path.home()
 DOTFILES_DIR = HOME / "dotfiles"
 
-# Mapeamento: origem → destino no dotfiles
-# Adicione novas configs aqui conforme necessário
-MAPPINGS = {
-    # Pastas de .config → dotfiles/.config
-    ".config": {
-        "source_base": HOME / ".config",
-        "dest_base": DOTFILES_DIR / ".config",
-    },
-    # Arquivos avulsos na home → dotfiles/
-    "home_files": {
-        "source_base": HOME,
-        "dest_base": DOTFILES_DIR,
-        "files": [".zshrc"],
-    },
-}
+# Pastas de ~/.config já rastreadas em dotfiles/.config são sincronizadas automaticamente.
+# Arquivos avulsos da home → dotfiles/ (adicione aqui)
+HOME_FILES = [".zshrc"]
 
 
 def get_tracked_configs() -> list[Path]:
@@ -63,29 +52,37 @@ def get_tracked_configs() -> list[Path]:
     return sorted(p for p in config_dest.iterdir())
 
 
+def differs(src: Path, dst: Path) -> bool:
+    """Symlinks são comparados pelo alvo, não pelo conteúdo (evita versionar a imagem do wallpaper)."""
+    if src.is_symlink() or dst.is_symlink():
+        return not (src.is_symlink() and dst.is_symlink() and src.readlink() == dst.readlink())
+    return not filecmp.cmp(src, dst, shallow=False)
+
+
 def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
     """Compara recursivamente e retorna lista de (src, dst) que diferem."""
     changed = []
 
     if src.is_file() and dst.is_file():
-        if not filecmp.cmp(src, dst, shallow=False):
+        if differs(src, dst):
             changed.append((src, dst))
         return changed
 
     if src.is_dir() and dst.is_dir():
         # Percorre todos os arquivos no destino (dotfiles) para ver se mudaram na origem
         for dst_file in sorted(dst.rglob("*")):
-            if dst_file.is_dir():
+            if dst_file.is_dir() and not dst_file.is_symlink():
                 continue
             rel = dst_file.relative_to(dst)
             src_file = src / rel
             if src_file.exists():
-                if not filecmp.cmp(src_file, dst_file, shallow=False):
+                if differs(src_file, dst_file):
                     changed.append((src_file, dst_file))
 
         # Verifica arquivos novos na origem que não existem no destino
         for src_file in sorted(src.rglob("*")):
-            if src_file.is_dir():
+            # is_file() pula pastas, symlinks quebrados, sockets e fifos
+            if not src_file.is_file():
                 continue
             rel = src_file.relative_to(src)
             dst_file = dst / rel
@@ -100,26 +97,28 @@ def find_all_changes() -> list[tuple[Path, Path]]:
     all_changes = []
 
     # 1. Pastas em .config
-    config_src = MAPPINGS[".config"]["source_base"]
-    config_dst = MAPPINGS[".config"]["dest_base"]
-
     for tracked in get_tracked_configs():
-        name = tracked.name
-        src = config_src / name
+        src = HOME / ".config" / tracked.name
         if src.exists():
-            changes = compare_files(src, tracked)
-            all_changes.extend(changes)
+            all_changes.extend(compare_files(src, tracked))
 
     # 2. Arquivos avulsos na home
-    home_info = MAPPINGS["home_files"]
-    for fname in home_info["files"]:
-        src = home_info["source_base"] / fname
-        dst = home_info["dest_base"] / fname
+    for fname in HOME_FILES:
+        src, dst = HOME / fname, DOTFILES_DIR / fname
         if src.exists() and dst.exists():
-            changes = compare_files(src, dst)
-            all_changes.extend(changes)
+            all_changes.extend(compare_files(src, dst))
 
-    return all_changes
+    return drop_gitignored(all_changes)
+
+
+def drop_gitignored(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]:
+    """Remove o que o .gitignore do dotfiles ignora (estado local, caches)."""
+    rels = [str(dst.relative_to(DOTFILES_DIR)) for _, dst in changes]
+    ignored = set(subprocess.run(
+        ["git", "-C", str(DOTFILES_DIR), "check-ignore", "--stdin"],
+        input="\n".join(rels), capture_output=True, text=True,
+    ).stdout.splitlines())
+    return [c for c, rel in zip(changes, rels) if rel not in ignored]
 
 
 def copy_files(changes: list[tuple[Path, Path]], dry_run: bool = False) -> int:
@@ -133,7 +132,8 @@ def copy_files(changes: list[tuple[Path, Path]], dry_run: bool = False) -> int:
             print(f"  {colored('→', Colors.CYAN)} {colored(str(rel_src), Colors.DIM)} → {colored(str(rel_dst), Colors.YELLOW)}")
         else:
             dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, dst)
+            dst.unlink(missing_ok=True)  # copy2 não sobrescreve symlink
+            shutil.copy2(src, dst, follow_symlinks=False)
             print(f"  {colored('✓', Colors.GREEN)} {colored(str(rel_dst), Colors.YELLOW)}")
         count += 1
 
@@ -255,25 +255,19 @@ def main():
         print()
         sys.exit(0)
 
-    if args.auto or args.dry:
-        # Mostrar mudanças
-        print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças:\n")
-    
-        for src, dst in changes:
-            rel = dst.relative_to(DOTFILES_DIR)
-            print(f"    {colored('•', Colors.CYAN)} {rel}")
-    
+    print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças encontrados.\n")
+
+    if args.dry:
+        print(colored("  [Dry Run] Arquivos que seriam copiados:\n", Colors.YELLOW))
+        copy_files(changes, dry_run=True)
         print()
-    
-        if args.dry:
-            print(colored("  [Dry Run] Arquivos que seriam copiados:\n", Colors.YELLOW))
-            copy_files(changes, dry_run=True)
-            print()
-            sys.exit(0)
-    else:
-        # Modo interativo com seleção
-        print(f"\n  {colored(str(len(changes)), Colors.BOLD + Colors.YELLOW)} arquivo(s) com diferenças encontrados.")
-        
+        sys.exit(0)
+
+    if not args.auto:
+        if not sys.stdin.isatty():
+            print(colored("  ✗ Modo interativo precisa de um terminal. Use --auto ou --dry.", Colors.RED))
+            sys.exit(1)
+
         changes = interactive_selection(changes)
         
         if not changes:

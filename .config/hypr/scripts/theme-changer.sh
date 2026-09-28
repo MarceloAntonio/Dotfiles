@@ -36,7 +36,7 @@ apply_fastfetch() {
 
     [ -f "$FASTFETCH_CONFIG" ] || { notify-send "Erro" "Config do fastfetch não encontrado!" -u critical; return 1; }
 
-    sed -i "s|\"source\"[[:space:]]*:[[:space:]]*\"[^\"]*\"|\"source\": \"$img\"|" "$FASTFETCH_CONFIG"
+    sed -i "s|\"source\"[[:space:]]*:[[:space:]]*\"[^\"]*\"|\"source\": \"${img//&/\\&}\"|" "$FASTFETCH_CONFIG"
     notify-send "Fastfetch ✓" "Logo: $name" -i "$img"
 }
 
@@ -52,6 +52,7 @@ apply_wallpaper() {
         --transition-fps 60 \
         --transition-bezier ".4,0,.2,1"
 
+    mkdir -p "$HOME/.config/hypr/hyprlock"
     ln -sf "$img" "$HOME/.config/hypr/hyprlock/wallpaper" 2>/dev/null
     notify-send "Wallpaper ✓" "$name" -i "$img"
 }
