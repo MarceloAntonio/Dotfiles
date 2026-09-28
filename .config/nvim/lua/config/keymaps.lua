@@ -1,7 +1,3 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-
 local map = vim.keymap.set
 
 -- Copiar (Ctrl + c)
@@ -53,3 +49,7 @@ map("n", "<C-Left>", "<C-w>h", { desc = "Ir para a janela da Esquerda", silent =
 map("n", "<C-Right>", "<C-w>l", { desc = "Ir para a janela da Direita", silent = true })
 map("n", "<C-Up>", "<C-w>k", { desc = "Ir para a janela de Cima", silent = true })
 map("n", "<C-Down>", "<C-w>j", { desc = "Ir para a janela de Baixo", silent = true })
+
+-- Autocompletar: Enter aceita a sugestão, Ctrl+Espaço abre na hora
+map("i", "<CR>", function() return vim.fn.pumvisible() == 1 and "<C-y>" or "<CR>" end, { expr = true })
+map("i", "<C-Space>", "<C-x><C-o>", { desc = "Sugestões do LSP" })
