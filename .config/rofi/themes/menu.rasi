@@ -1,0 +1,85 @@
+@theme "/dev/null"
+
+configuration {
+    show-icons: false;
+}
+
+* {
+    font:               "Inter 11";
+    background-color:   transparent;
+    text-color:         #FFFFFF;
+
+    glass-bg:           rgba( 19,  19,  19, 0.60 );
+    glass-bg-element:   rgba(255, 255, 255, 0.04 );
+    glass-bg-selected:  rgba(255, 255, 255, 0.12 );
+    glass-border:       rgba(255, 255, 255, 0.10 );
+    glass-border-hover: rgba(255, 255, 255, 0.22 );
+}
+
+window {
+    width:            440px;
+    padding:          14px;
+    border:           1px solid;
+    border-color:     @glass-border;
+    border-radius:    18px;
+    background-color: @glass-bg;
+    transparency:     "real";
+}
+
+mainbox {
+    children: [ message, listview ];
+    spacing:  12px;
+}
+
+message {
+    padding: 2px 6px 0px;
+    border:  0;
+}
+
+textbox {
+    font:             "Inter SemiBold 13";
+    text-color:       #FFFFFF;
+    markup:           true;
+    horizontal-align: 0;
+}
+
+listview {
+    lines:        4;
+    columns:      1;
+    spacing:      6px;
+    dynamic:      true;
+    fixed-height: false;
+    scrollbar:    false;
+    cycle:        true;
+    border:       0;
+}
+
+element {
+    padding:          12px 14px;
+    border:           1px solid;
+    border-color:     transparent;
+    border-radius:    12px;
+    background-color: @glass-bg-element;
+}
+
+element normal.normal {
+    background-color: @glass-bg-element;
+    text-color:       #FFFFFF;
+}
+
+element alternate.normal {
+    background-color: @glass-bg-element;
+    text-color:       #FFFFFF;
+}
+
+element selected.normal {
+    background-color: @glass-bg-selected;
+    border-color:     @glass-border-hover;
+    text-color:       #FFFFFF;
+}
+
+element-text {
+    markup:         true;
+    vertical-align: 0.5;
+    text-color:     inherit;
+}

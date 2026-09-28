@@ -9,5 +9,5 @@ for b in json.load(sys.stdin):
     if not b["description"]:
         continue
     keys = " + ".join([name for bit, name in mods if b["modmask"] & bit] + [names.get(b["key"], b["key"])])
-    print("<span font_family=\"monospace\">{:<24} ➔ {}</span>".format(html.escape(keys), html.escape(b["description"])))
-' | rofi -dmenu -i -markup-rows -p "Keybinds" -theme-str 'listview { lines: 15; } window { width: 700px; }'
+    print("<span font_family=\"JetBrainsMono Nerd Font\" weight=\"bold\">{:<22}</span>  <span alpha=\"60%\">{}</span>".format(html.escape(keys), html.escape(b["description"])))
+' | rofi -dmenu -i -no-show-icons -markup-rows -theme-str 'listview { lines: 12; } window { width: 640px; } entry { placeholder: "Buscar atalho..."; }'

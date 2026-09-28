@@ -25,7 +25,7 @@ configuration {
 #window {
     border:           1px solid;
     border-color:     @glass-border;
-    border-radius:    16px;
+    border-radius:    18px;
     transparency:     "real";
     background-color: @glass-bg;
     padding:          16px;
@@ -38,13 +38,23 @@ configuration {
 }
 
 #inputbar {
-    children:         [ entry ];
+    children:         [ textbox-search, entry ];
     spacing:          0;
     padding:          12px 16px;
     border:           1px solid;
     border-color:     @glass-border;
     border-radius:    12px;
     background-color: @glass-bg-element;
+}
+
+textbox-search {
+    str:              "󰍉";
+    font:             "JetBrainsMono Nerd Font 14";
+    expand:           false;
+    margin:           0 10px 0 0;
+    vertical-align:   0.5;
+    text-color:       @text-muted;
+    background-color: transparent;
 }
 
 #prompt {
@@ -82,7 +92,8 @@ configuration {
     border:           1px solid;
     border-color:     transparent;
     border-radius:    10px;
-    padding:          6px 10px;
+    padding:          8px 12px;
+    spacing:          12px;
     background-color: @glass-bg-element;
     transition:       200;
 }
@@ -115,7 +126,7 @@ configuration {
 }
 
 element-icon {
-    size:             32px;
+    size:             28px;
     vertical-align:   0.5;
 
 }

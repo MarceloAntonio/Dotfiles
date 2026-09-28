@@ -6,11 +6,45 @@
     "margin-left": 10,
     "margin-right": 10,
     "spacing": 0,
-
-    "modules-left": ["custom/arch", "hyprland/workspaces", "wlr/taskbar"],
-    "modules-center": ["clock"],
-    "modules-right": ["network", "bluetooth", "pulseaudio", "battery", "custom/notification", "group/power"],
-
+    "modules-left": [
+        "custom/arch",
+        "hyprland/workspaces",
+        "wlr/taskbar"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "group/status",
+        "custom/notification",
+        "group/power"
+    ],
+    "group/status": {
+        "orientation": "inherit",
+        "modules": [
+            "network",
+            "bluetooth",
+            "group/audio",
+            "battery"
+        ]
+    },
+    "group/audio": {
+        "orientation": "inherit",
+        "drawer": {
+            "click-to-reveal": true,
+            "transition-duration": 300,
+            "children-class": "audio-slider"
+        },
+        "modules": [
+            "pulseaudio",
+            "pulseaudio/slider"
+        ]
+    },
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
+    },
     "custom/arch": {
         "exec": "~/.config/waybar/scripts/distro-icon.sh",
         "format": "{}",
@@ -19,7 +53,6 @@
         "on-click": "~/.config/hypr/scripts/binds.sh",
         "on-click-right": "rofi -show drun"
     },
-
     "wlr/taskbar": {
         "format": "{icon}",
         "icon-size": 18,
@@ -31,7 +64,6 @@
             "firefoxdeveloperedition": "firefox-developer-edition"
         }
     },
-
     "custom/notification": {
         "tooltip": true,
         "tooltip-format": "Notificações",
@@ -53,7 +85,6 @@
         "on-click-right": "swaync-client -d -sw",
         "escape": true
     },
-
     "group/power": {
         "orientation": "inherit",
         "drawer": {
@@ -68,92 +99,87 @@
             "custom/logout"
         ]
     },
-
     "custom/power": {
         "format": "󰤆",
         "tooltip": true,
         "tooltip-format": "Desligar",
-        "on-click": "~/.config/waybar/scripts/confirm.sh Desligar? systemctl poweroff"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Desligar systemctl poweroff"
     },
-
     "custom/reboot": {
         "format": "󰜉",
         "tooltip": true,
         "tooltip-format": "Reiniciar",
-        "on-click": "~/.config/waybar/scripts/confirm.sh Reiniciar? systemctl reboot"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Reiniciar systemctl reboot"
     },
-
     "custom/lock": {
         "format": "󰍁",
         "tooltip": true,
         "tooltip-format": "Bloquear",
         "on-click": "hyprlock"
     },
-
     "custom/logout": {
         "format": "󰗼",
         "tooltip": true,
         "tooltip-format": "Sair",
-        "on-click": "~/.config/waybar/scripts/confirm.sh Sair? hyprctl dispatch 'hl.dsp.exit()'"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Sair hyprctl dispatch 'hl.dsp.exit()'"
     },
-
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "warp-on-scroll": false,
         "cursor": true,
         "format": "{name}",
-        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = {name} })'" 
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = {name} })'"
     },
-
-
-
     "network": {
-        "format-wifi": " ",
-        "format-ethernet": "󰈀  {ipaddr}",
-        "format-disconnected": "󰤮 ",
         "tooltip-format": "{ipaddr} via {gwaddr}",
         "on-click": "pulsar toggle --tab wifi",
-        "on-click-right": "nmcli radio wifi toggle"
+        "on-click-right": "nmcli radio wifi toggle",
+        "format-wifi": "",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "format-disconnected": "󰤮"
     },
-
     "bluetooth": {
-        "format": "󰂯",
-        "format-disabled": "󰂲",
-        "format-connected": "󰂱",
+        "format": "<span size='large'>󰂯</span>",
+        "format-disabled": "<span size='large'>󰂲</span>",
+        "format-connected": "<span size='large'>󰂱</span>",
         "on-click": "pulsar toggle --tab bluetooth",
         "on-click-right": "rfkill toggle bluetooth"
     },
-
     "battery": {
         "states": {
             "good": 85,
             "warning": 30,
             "critical": 15
         },
+        "tooltip-format": "{time}",
         "format": "{icon} {capacity}%",
         "format-full": "{icon} {capacity}%",
         "format-plugged": " {capacity}%",
         "format-charging": " {capacity}%",
         "format-alt": "{icon} {capacity}%",
-        "format-icons": [" ", " ", " ", " ", " "],
-        "tooltip-format": "{time}"
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
-
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "  {volume}%",
-        "format-bluetooth": " {volume}%",
-        "format-bluetooth-muted": "  {volume}%",
-        "format-icons": {
-            "headphone": " ",
-            "headset": " ",
-            "default": [" "]
-        },
         "scroll-step": 5,
-        "on-click": "pavucontrol"
+        "format": "{icon} {volume}%",
+        "format-muted": " {volume}%",
+        "format-bluetooth": " {volume}%",
+        "format-bluetooth-muted": " {volume}%",
+        "format-icons": {
+            "headphone": "",
+            "headset": "",
+            "default": [
+                ""
+            ]
+        }
     },
-
     "clock": {
         "format": "{:%H:%M}",
         "format-alt": "{:%d/%m/%Y  %H:%M}",
