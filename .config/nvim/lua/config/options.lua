@@ -18,3 +18,6 @@ o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blink
 o.autocomplete = true
 o.complete = "o,.,w,b"
 o.completeopt = "menuone,noinsert,popup,fuzzy"
+
+-- Mostra o texto do erro no fim da linha (desligado por padrão desde o 0.11)
+vim.diagnostic.config({ virtual_text = true })

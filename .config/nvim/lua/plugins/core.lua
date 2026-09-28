@@ -1,6 +1,18 @@
 return {
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
+  -- Linhas alteradas/adicionadas/removidas na lateral
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "BufReadPre",
+    opts = {},
+    keys = {
+      { "<leader>gb", "<cmd>Gitsigns blame_line<cr>", desc = "Git: Blame da Linha" },
+      { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Git: Ver Alteração" },
+      { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Git: Desfazer Alteração" },
+    },
+  },
+
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -15,7 +27,10 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = function()
-      require("nvim-treesitter").install({ "c", "lua", "vim", "vimdoc", "query", "javascript", "python", "html", "css" })
+      require("nvim-treesitter").install({
+        "c", "lua", "vim", "vimdoc", "query", "bash", "json", "markdown",
+        "python", "javascript", "typescript", "tsx", "html", "css",
+      })
     end,
     config = function()
       vim.api.nvim_create_autocmd("FileType", {
@@ -30,7 +45,7 @@ return {
     config = function()
       require("mason").setup()
       -- mason-lspconfig já dá vim.lsp.enable() em tudo que estiver instalado
-      require("mason-lspconfig").setup({ ensure_installed = { "lua_ls" } })
+      require("mason-lspconfig").setup({ ensure_installed = { "lua_ls", "pyright", "ruff", "ts_ls", "clangd", "html", "cssls" } })
 
       vim.lsp.config("lua_ls", {
         settings = { Lua = { diagnostics = { globals = { "vim" } } } },
