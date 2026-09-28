@@ -1,5 +1,4 @@
 #!/bin/bash
-# Detecta a distro e retorna o ícone correspondente
 
 DISTRO_ID=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
 
@@ -10,5 +9,5 @@ case "$DISTRO_ID" in
   nixos)       echo "" ;;
   manjaro)     echo "" ;;
   fedora)      echo "" ;;
-  *)           echo "" ;; 
+  *)           echo "" ;;
   esac

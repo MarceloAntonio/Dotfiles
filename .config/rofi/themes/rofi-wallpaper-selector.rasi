@@ -1,9 +1,3 @@
-/* ╔══════════════════════════════════════════════════════════════╗
-   ║   L I Q U I D   G L A S S   —   W A L L P A P E R         ║
-   ╚══════════════════════════════════════════════════════════════╝ */
-
-@import "~/.config/colors/colors.rasi"
-
 configuration {
     scroll-method: 0;
     scrollbar: false;
@@ -14,7 +8,6 @@ configuration {
 * {
     font: "Inter SemiBold 11";
 
-    /* ── Liquid Glass tokens ── */
     glass-bg:           rgba( 19,  19,  19, 0.55 );
     glass-bg-element:   rgba(255, 255, 255, 0.04 );
     glass-bg-hover:     rgba(255, 255, 255, 0.10 );
@@ -25,7 +18,6 @@ configuration {
     text-muted:         rgba(255, 255, 255, 0.55);
 }
 
-/* ── Window ── */
 #window {
     border:           1px solid;
     border-color:     @glass-border;
@@ -36,13 +28,11 @@ configuration {
     width:            880px;
 }
 
-/* ── Main box ── */
 #mainbox {
     background-color: transparent;
     spacing:          12px;
 }
 
-/* ── List ── */
 #listview {
     columns:          3;
     lines:            2;
@@ -57,7 +47,6 @@ configuration {
     background-color: transparent;
 }
 
-/* ── Elements ── */
 #element {
     orientation:      vertical;
     border:           1px solid;
@@ -100,7 +89,6 @@ element-text {
     margin:            6px 0 0 0;
 }
 
-/* ── Scrollbar (hidden) ── */
 #scrollbar {
     width:            0px;
     border:           0;
@@ -109,7 +97,6 @@ element-text {
     handle-color:     @glass-border;
 }
 
-/* ── Input bar ── */
 #inputbar {
     children:         [ entry ];
     spacing:          0;

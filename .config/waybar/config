@@ -73,14 +73,14 @@
         "format": "󰤆",
         "tooltip": true,
         "tooltip-format": "Desligar",
-        "on-click": "shutdown now"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Desligar? systemctl poweroff"
     },
 
     "custom/reboot": {
         "format": "󰜉",
         "tooltip": true,
         "tooltip-format": "Reiniciar",
-        "on-click": "reboot"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Reiniciar? systemctl reboot"
     },
 
     "custom/lock": {
@@ -94,7 +94,7 @@
         "format": "󰗼",
         "tooltip": true,
         "tooltip-format": "Sair",
-        "on-click": "hyprctl dispatch exit"
+        "on-click": "~/.config/waybar/scripts/confirm.sh Sair? hyprctl dispatch 'hl.dsp.exit()'"
     },
 
     "hyprland/workspaces": {
@@ -137,8 +137,7 @@
         "format-charging": " {capacity}%",
         "format-alt": "{icon} {capacity}%",
         "format-icons": [" ", " ", " ", " ", " "],
-        "tooltip-format": "{time}",
-        "cursor": false
+        "tooltip-format": "{time}"
     },
 
     "pulseaudio": {

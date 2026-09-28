@@ -31,27 +31,6 @@
   "hide-on-clear": false,
   "hide-on-action": true,
   "text-empty": "Sem Notificações",
-  "script-fail-notify": true,
-  "scripts": {
-    "example-script": {
-      "app-name": "example.app.id",
-      "exec": "echo 'Do something...'",
-      "urgency": "Normal"
-    },
-    "example-action-script": {
-      "app-name": "example.app.id",
-      "exec": "echo 'Do something actionable!'",
-      "urgency": "Normal",
-      "run-on": "action"
-    }
-  },
-  "notification-visibility": {
-    "example-name": {
-      "state": "muted",
-      "urgency": "Normal",
-      "app-name": "example.app.id"
-    }
-  },
   "widgets": [
     "volume",
     "backlight",
@@ -65,11 +44,6 @@
     "notifications": {
       "vexpand": true
     },
-    "inhibitors": {
-      "text": "Inibidores",
-      "button-text": "Limpar Tudo",
-      "clear-all-button": true
-    },
     "title": {
       "text": "Notificações",
       "clear-all-button": true,
@@ -77,10 +51,6 @@
     },
     "dnd": {
       "text": "Não Perturbe"
-    },
-    "label": {
-      "max-lines": 5,
-      "text": "Label Text"
     },
     "mpris": {
       "blacklist": [],
@@ -101,15 +71,15 @@
           "label": " ",
           "type": "toggle",
           "active": true,
-          "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
-          "update-command": "sh -c '[[ $(nmcli radio wifi) == \"enabled\" ]] && echo true || echo false'"
+          "command": "bash -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
+          "update-command": "bash -c '[[ $(nmcli radio wifi) == \"enabled\" ]] && echo true || echo false'"
         },
         {
           "label": "󰂯",
           "type": "toggle",
           "active": true,
-          "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && bluetoothctl power on || bluetoothctl power off'",
-          "update-command": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && echo true || echo false'"
+          "command": "bash -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && bluetoothctl power on || bluetoothctl power off'",
+          "update-command": "bash -c 'bluetoothctl show | grep -q \"Powered: yes\" && echo true || echo false'"
         }
       ]
     }

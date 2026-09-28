@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-# Link (não cópia): edições no script do hypr já valem para o comando e o .desktop
 SRC="$HOME/.config/hypr/scripts/theme-changer.sh"
 DEST="/usr/local/bin/theme-changer"
 DESKTOP="$HOME/.local/share/applications/theme-changer.desktop"
@@ -11,8 +10,6 @@ echo "==> Instalando theme-changer (rofi)..."
 chmod +x "$SRC"
 sudo ln -sf "$SRC" "$DEST"
 echo "    [ok] $DEST -> $SRC"
-
-# Cria .desktop
 mkdir -p "$(dirname "$DESKTOP")"
 cat > "$DESKTOP" << EOF2
 [Desktop Entry]

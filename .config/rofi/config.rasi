@@ -1,9 +1,3 @@
-/* ╔══════════════════════════════════════════════════════════════╗
-   ║        L I Q U I D   G L A S S   —   R O F I               ║
-   ╚══════════════════════════════════════════════════════════════╝ */
-
-@import "~/.config/colors/colors.rasi"
-
 configuration {
     scroll-method: 1;
     scrollbar: false;
@@ -18,7 +12,6 @@ configuration {
 * {
     font: "Inter SemiBold 11";
 
-    /* ── Liquid Glass tokens ── */
     glass-bg:           rgba( 19,  19,  19, 0.55 );
     glass-bg-element:   rgba(255, 255, 255, 0.04 );
     glass-bg-hover:     rgba(255, 255, 255, 0.10 );
@@ -29,7 +22,6 @@ configuration {
     text-muted:         rgba(255, 255, 255, 0.55);
 }
 
-/* ── Window ── */
 #window {
     border:           1px solid;
     border-color:     @glass-border;
@@ -40,13 +32,11 @@ configuration {
     width:            620px;
 }
 
-/* ── Main box ── */
 #mainbox {
     background-color: transparent;
     spacing:          12px;
 }
 
-/* ── Input bar ── */
 #inputbar {
     children:         [ entry ];
     spacing:          0;
@@ -76,10 +66,9 @@ configuration {
     placeholder-color: @text-muted;
     spacing:           0;
     text-color:        @text-primary;
-    
+
 }
 
-/* ── List ── */
 #listview {
     lines:            7;
     fixed-height:     0;
@@ -89,7 +78,6 @@ configuration {
     background-color: transparent;
 }
 
-/* ── Elements ── */
 #element {
     border:           1px solid;
     border-color:     transparent;
@@ -129,7 +117,7 @@ configuration {
 element-icon {
     size:             32px;
     vertical-align:   0.5;
-    
+
 }
 
 element-text {
@@ -137,7 +125,6 @@ element-text {
     text-color:       inherit;
 }
 
-/* ── Scrollbar (hidden) ── */
 #scrollbar {
     width:            0px;
     border:           0;
@@ -146,7 +133,6 @@ element-text {
     handle-color:     @glass-border;
 }
 
-/* ── Message / Error ── */
 #message {
     background-color: transparent;
     border:           0;

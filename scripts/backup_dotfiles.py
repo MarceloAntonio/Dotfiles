@@ -6,9 +6,9 @@ Compara os arquivos em ~/.config (e outros como .zshrc) com os que já existem
 em ~/dotfiles e copia apenas os que mudaram.
 
 Uso:
-    python3 backup_dotfiles.py          # Modo interativo (pede confirmação)
-    python3 backup_dotfiles.py --auto   # Modo automático (sem confirmação)
-    python3 backup_dotfiles.py --dry    # Apenas mostra o que seria feito
+    python3 backup_dotfiles.py
+    python3 backup_dotfiles.py --auto
+    python3 backup_dotfiles.py --dry
 """
 
 import argparse
@@ -17,8 +17,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-# ── Cores para o terminal ──────────────────────────────────────────────────────
 class Colors:
     RESET   = "\033[0m"
     BOLD    = "\033[1m"
@@ -30,19 +28,11 @@ class Colors:
     CYAN    = "\033[96m"
     DIM     = "\033[2m"
 
-
 def colored(text: str, color: str) -> str:
     return f"{color}{text}{Colors.RESET}"
-
-
-# ── Configuração ───────────────────────────────────────────────────────────────
 HOME = Path.home()
 DOTFILES_DIR = HOME / "dotfiles"
-
-# Pastas de ~/.config já rastreadas em dotfiles/.config são sincronizadas automaticamente.
-# Arquivos avulsos da home → dotfiles/ (adicione aqui)
 HOME_FILES = [".zshrc"]
-
 
 def get_tracked_configs() -> list[Path]:
     """Retorna as pastas/arquivos que já existem em dotfiles/.config/."""
@@ -51,13 +41,11 @@ def get_tracked_configs() -> list[Path]:
         return []
     return sorted(p for p in config_dest.iterdir())
 
-
 def differs(src: Path, dst: Path) -> bool:
     """Symlinks são comparados pelo alvo, não pelo conteúdo (evita versionar a imagem do wallpaper)."""
     if src.is_symlink() or dst.is_symlink():
         return not (src.is_symlink() and dst.is_symlink() and src.readlink() == dst.readlink())
     return not filecmp.cmp(src, dst, shallow=False)
-
 
 def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
     """Compara recursivamente e retorna lista de (src, dst) que diferem."""
@@ -69,7 +57,6 @@ def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
         return changed
 
     if src.is_dir() and dst.is_dir():
-        # Percorre todos os arquivos no destino (dotfiles) para ver se mudaram na origem
         for dst_file in sorted(dst.rglob("*")):
             if dst_file.is_dir() and not dst_file.is_symlink():
                 continue
@@ -78,10 +65,7 @@ def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
             if src_file.exists():
                 if differs(src_file, dst_file):
                     changed.append((src_file, dst_file))
-
-        # Verifica arquivos novos na origem que não existem no destino
         for src_file in sorted(src.rglob("*")):
-            # is_file() pula pastas, symlinks quebrados, sockets e fifos
             if not src_file.is_file():
                 continue
             rel = src_file.relative_to(src)
@@ -91,25 +75,19 @@ def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
 
     return changed
 
-
 def find_all_changes() -> list[tuple[Path, Path]]:
     """Encontra todas as diferenças entre configs atuais e dotfiles."""
     all_changes = []
-
-    # 1. Pastas em .config
     for tracked in get_tracked_configs():
         src = HOME / ".config" / tracked.name
         if src.exists():
             all_changes.extend(compare_files(src, tracked))
-
-    # 2. Arquivos avulsos na home
     for fname in HOME_FILES:
         src, dst = HOME / fname, DOTFILES_DIR / fname
         if src.exists() and dst.exists():
             all_changes.extend(compare_files(src, dst))
 
     return drop_gitignored(all_changes)
-
 
 def drop_gitignored(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]:
     """Remove o que o .gitignore do dotfiles ignora (estado local, caches)."""
@@ -119,7 +97,6 @@ def drop_gitignored(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]
         input="\n".join(rels), capture_output=True, text=True,
     ).stdout.splitlines())
     return [c for c, rel in zip(changes, rels) if rel not in ignored]
-
 
 def copy_files(changes: list[tuple[Path, Path]], dry_run: bool = False) -> int:
     """Copia os arquivos alterados. Retorna quantidade de arquivos copiados."""
@@ -132,13 +109,12 @@ def copy_files(changes: list[tuple[Path, Path]], dry_run: bool = False) -> int:
             print(f"  {colored('→', Colors.CYAN)} {colored(str(rel_src), Colors.DIM)} → {colored(str(rel_dst), Colors.YELLOW)}")
         else:
             dst.parent.mkdir(parents=True, exist_ok=True)
-            dst.unlink(missing_ok=True)  # copy2 não sobrescreve symlink
+            dst.unlink(missing_ok=True)
             shutil.copy2(src, dst, follow_symlinks=False)
             print(f"  {colored('✓', Colors.GREEN)} {colored(str(rel_dst), Colors.YELLOW)}")
         count += 1
 
     return count
-
 
 def print_header():
     print()
@@ -146,7 +122,6 @@ def print_header():
     print(colored("  ║     🔄 Backup Automático Dotfiles    ║", Colors.MAGENTA))
     print(colored("  ╚══════════════════════════════════════╝", Colors.MAGENTA))
     print()
-
 
 def interactive_selection(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]:
     import tty
@@ -176,37 +151,28 @@ def interactive_selection(changes: list[tuple[Path, Path]]) -> list[tuple[Path, 
     print("\n  Selecione os arquivos para backup:")
     print(colored("  (Setas/j/k para mover, Espaço para alternar, Enter para confirmar, 'a' todos, 'n' nenhum, 'q' sair)", Colors.DIM))
     print()
-    
-    # Hide cursor
     sys.stdout.write("\033[?25l")
     sys.stdout.flush()
 
     try:
         while True:
-            # Draw the list
             for i, (src, dst) in enumerate(changes):
                 rel = dst.relative_to(DOTFILES_DIR)
                 mark = colored("x", Colors.GREEN) if selected[i] else " "
-                
+
                 if i == cursor_idx:
                     pointer = colored(">", Colors.CYAN)
                     line_color = Colors.BOLD
                 else:
                     pointer = " "
                     line_color = ""
-                
-                # Use clear line escape sequence \033[K
                 line = f"\r\033[K    {pointer} [{mark}] {colored(str(rel), line_color)}"
                 sys.stdout.write(line + "\n")
-            
+
             sys.stdout.flush()
-            
-            # Wait for key
             key = get_key()
-            
-            # Move cursor up to overwrite the list
             sys.stdout.write(f"\033[{len(changes)}A")
-            
+
             if key in ('\x1b[A', 'k'): # Up
                 cursor_idx = max(0, cursor_idx - 1)
             elif key in ('\x1b[B', 'j'): # Down
@@ -225,13 +191,12 @@ def interactive_selection(changes: list[tuple[Path, Path]]) -> list[tuple[Path, 
                 sys.stdout.write("\033[?25h") # Show cursor
                 print(colored("\n  Cancelado.", Colors.DIM))
                 sys.exit(0)
-                
+
     finally:
         sys.stdout.write("\033[?25h")
         sys.stdout.flush()
 
     return [changes[i] for i in range(len(changes)) if selected[i]]
-
 
 def main():
     parser = argparse.ArgumentParser(description="Backup automático dos dotfiles")
@@ -240,13 +205,9 @@ def main():
     args = parser.parse_args()
 
     print_header()
-
-    # Verificar se o diretório dotfiles existe
     if not DOTFILES_DIR.exists():
         print(colored(f"  ✗ Diretório {DOTFILES_DIR} não encontrado!", Colors.RED))
         sys.exit(1)
-
-    # Encontrar mudanças
     print(colored("  Procurando alterações...", Colors.BLUE))
     changes = find_all_changes()
 
@@ -269,19 +230,16 @@ def main():
             sys.exit(1)
 
         changes = interactive_selection(changes)
-        
+
         if not changes:
             print(colored("\n  Nenhum arquivo selecionado. Cancelado.", Colors.DIM))
             print()
             sys.exit(0)
-
-    # Copiar arquivos
     print(colored("  Copiando arquivos...\n", Colors.BLUE))
     count = copy_files(changes)
     print(f"\n  {colored('✓', Colors.GREEN)} {count} arquivo(s) atualizado(s)")
 
     print(f"\n  {colored('✅ Backup concluído!', Colors.GREEN + Colors.BOLD)}\n")
-
 
 if __name__ == "__main__":
     main()

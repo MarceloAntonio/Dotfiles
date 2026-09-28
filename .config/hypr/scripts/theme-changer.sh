@@ -1,21 +1,12 @@
 #!/bin/bash
-#
-# Theme Changer — rofi edition
-# Usa o mesmo tema do wallpaper-selector para tudo
-#
-
-# ── Paths ──────────────────────────────────────────────
 WALL_DIR="$HOME/Pictures/Wallpaper"
 FASTFETCH_ICONS="$HOME/.config/fastfetch/icons"
 FASTFETCH_CONFIG="$HOME/.config/fastfetch/config.jsonc"
-CACHE_FILE="$HOME/.config/hypr/.current_wallpaper"
 
 SDDM_CONF="/usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf"
 SDDM_BG_DIR="/usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds"
 
 ROFI_THEME="$HOME/.config/rofi/themes/rofi-wallpaper-selector.rasi"
-
-# ── Rofi ───────────────────────────────────────────────
 rofi_pick() {
     rofi -dmenu -i -show-icons -p "$1" -config "$ROFI_THEME"
 }
@@ -28,8 +19,6 @@ list_images() {
         -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.bmp" \) \
         -printf "%f\0icon\037%p\n" | sort
 }
-
-# ── Actions ────────────────────────────────────────────
 apply_fastfetch() {
     local img="$1"
     local name=$(basename "$img")
@@ -40,31 +29,12 @@ apply_fastfetch() {
     notify-send "Fastfetch ✓" "Logo: $name" -i "$img"
 }
 
-apply_wallpaper() {
-    local img="$1"
-    local name=$(basename "$img")
-
-    echo "$img" > "$CACHE_FILE"
-
-    awww img "$img" \
-        --transition-type fade \
-        --transition-duration 0.5 \
-        --transition-fps 60 \
-        --transition-bezier ".4,0,.2,1"
-
-    mkdir -p "$HOME/.config/hypr/hyprlock"
-    ln -sf "$img" "$HOME/.config/hypr/hyprlock/wallpaper" 2>/dev/null
-    notify-send "Wallpaper ✓" "$name" -i "$img"
-}
-
 apply_sddm() {
     local img="$1"
     local name=$(basename "$img")
 
     [ -f "$SDDM_CONF" ] || { notify-send "Erro" "SDDM config não encontrado!" -u critical; return 1; }
     [ -d "$SDDM_BG_DIR" ] || { notify-send "Erro" "Diretório de backgrounds do SDDM não encontrado!" -u critical; return 1; }
-
-    # Executa cópia, permissão 644 e atualização do astronaut.conf em uma única chamada pkexec
     if pkexec bash -c '
         img="$1"
         bg_dir="$2"
@@ -82,8 +52,6 @@ apply_sddm() {
         return 1
     fi
 }
-
-# ── Main ───────────────────────────────────────────────
 MENU=$(printf "  Fastfetch Logo\0icon\037utilities-terminal\n  Wallpaper\0icon\037preferences-desktop-wallpaper\n  SDDM Wallpaper\0icon\037system-users\n  Kitty Theme\0icon\037kitty" | rofi -dmenu -i -show-icons -p "  Theme Changer" -theme-str 'listview { lines: 1; columns: 4; }' -config "$ROFI_THEME")
 
 [ -z "$MENU" ] && exit 0
@@ -105,9 +73,7 @@ case "$MENU" in
         [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_sddm "$DIR/$CHOICE"
         ;;
     *Wallpaper*)
-        DIR="$WALL_DIR"
-        CHOICE=$(list_images "$DIR" | rofi_pick "  Wallpaper")
-        [ -n "$CHOICE" ] && [ -f "$DIR/$CHOICE" ] && apply_wallpaper "$DIR/$CHOICE"
+        exec "$HOME/.config/hypr/scripts/change-wallpaper.sh"
         ;;
     *Kitty*)
         DIR="$HOME/.config/kitty"

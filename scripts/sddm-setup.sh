@@ -1,10 +1,6 @@
 #!/bin/bash
 
 set -euo pipefail
-
-# ========================
-# CONFIG
-# ========================
 readonly THEME_REPO="https://github.com/Keyitdev/sddm-astronaut-theme.git"
 readonly THEME_NAME="sddm-astronaut-theme"
 readonly THEMES_DIR="/usr/share/sddm/themes"
@@ -14,25 +10,15 @@ readonly METADATA="$THEMES_DIR/$THEME_NAME/metadata.desktop"
 info() { echo -e "\e[32m[INFO]\e[0m $*"; }
 warn() { echo -e "\e[33m[WARN]\e[0m $*"; }
 error() { echo -e "\e[31m[ERROR]\e[0m $*" >&2; }
-
-# ========================
-# INIT SYSTEM DETECTION
-# ========================
 INIT_SYS="unknown"
 if [ -d /run/systemd/system ]; then INIT_SYS="systemd"
 elif command -v rc-update >/dev/null 2>&1; then INIT_SYS="openrc"
 elif command -v sv >/dev/null 2>&1; then INIT_SYS="runit"
 elif command -v dinitctl >/dev/null 2>&1; then INIT_SYS="dinit"
 fi
-
-# ========================
-# STEPS
-# ========================
 install_deps() {
     info "Installing SDDM and Qt6 dependencies..."
     sudo pacman -S --needed --noconfirm sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg
-    
-    # Install init integration package (if not systemd)
     if [[ "$INIT_SYS" == "openrc" ]]; then
         sudo pacman -S --needed --noconfirm sddm-openrc
     elif [[ "$INIT_SYS" == "runit" ]]; then
@@ -78,7 +64,7 @@ select_variant() {
 
 enable_sddm() {
     info "Enabling SDDM service for init system: $INIT_SYS"
-    
+
     if [[ "$INIT_SYS" == "systemd" ]]; then
         sudo systemctl disable display-manager.service 2>/dev/null || true
         sudo systemctl enable sddm.service
@@ -92,10 +78,6 @@ enable_sddm() {
         warn "Init system not recognized automatically. Please enable SDDM manually."
     fi
 }
-
-# ========================
-# MAIN EXECUTION
-# ========================
 main() {
     install_deps
     clone_repo
