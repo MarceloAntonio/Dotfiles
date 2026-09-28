@@ -72,7 +72,7 @@ APPS=(firefox thunar pavucontrol)
 SCREENSHOT_MEDIA=(grim slurp brightnessctl playerctl pipewire pipewire-pulse wireplumber)
 NETWORK_BLUETOOTH=(network-manager-applet blueman)
 FONTS_THEMES=(ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk)
-DEV_TOOLS=(neovim git base-devel nodejs npm ripgrep fd unzip)
+DEV_TOOLS=(neovim tree-sitter-cli git base-devel nodejs npm ripgrep fd unzip)
 UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf)
 SYSTEM_OPTIMIZATION=(intel-ucode sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw intel-media-driver libva-utils vpl-gpu-rt intel-compute-runtime opencl-mesa vulkan-intel clinfo)
 
