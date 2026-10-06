@@ -200,3 +200,22 @@ tooltip label {
   background: #FFFFFF;
 }
 
+
+#taskbar.empty {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+
+#taskbar button {
+  padding: 0 5px;
+  min-width: 0;
+}
+
+#taskbar button label {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
