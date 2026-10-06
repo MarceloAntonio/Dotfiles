@@ -18,7 +18,7 @@ These dotfiles use a monochromatic theme, except for the editor which uses Catpp
 | Wallpaper      | awww          |
 | Login Manager  | SDDM          |
 | Screen Lock    | Hyprlock      |
-| Editor         | Code - OSS / Neovim |
+| Editor         | VSCodium / Neovim |
 | Fetch          | Fastfetch     |
 
 ---
@@ -67,7 +67,7 @@ The modifier key is `SUPER` (Windows key).
    ./install.sh
    ```
 
-> **Note:** The script backs up your existing configs to `~/BKP.config` before applying changes. It installs dependencies via `pacman` and `yay`, applies the SDDM theme, sets up Code - OSS, and sets ZSH as your default shell.
+> **Note:** The script backs up your existing configs to `~/BKP.config` before applying changes. It installs dependencies via `pacman` (no AUR helper needed), detects Intel or AMD to pick the right drivers, optionally applies the SDDM theme, and sets ZSH as your default shell. VSCodium is not installed by the script; get it from the AUR (`vscodium-bin`) if you want it.
 ---
 
 ## Wallpapers

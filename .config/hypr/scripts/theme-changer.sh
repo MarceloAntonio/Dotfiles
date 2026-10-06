@@ -71,7 +71,7 @@ set_fastfetch() {
 }
 
 set_kitty() {
-    ln -sf "$KITTY_DIR/$1.conf" "$KITTY_DIR/current-theme.conf"
+    ln -sfn "$1.conf" "$KITTY_DIR/current-theme.conf"
     killall -USR1 kitty 2>/dev/null
     notify-send "Tema do kitty" "$1"
 }

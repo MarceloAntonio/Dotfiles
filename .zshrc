@@ -57,10 +57,16 @@ if command -v bat &>/dev/null; then
   alias cat='bat'
 fi
 alias reload='source ~/.zshrc && echo "zshrc recarregado ✓"'
-alias code='codium'
+command -v codium &>/dev/null && alias code='codium'
 alias vim='nvim'
 [[ $- == *i* ]] && fastfetch
 
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/.spicetify"
 
 eval "$(starship init zsh)"
+
+# Flutter / Android
+export PATH="$HOME/flutter/bin:$PATH"
+export CHROME_EXECUTABLE=/usr/bin/chromium
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"

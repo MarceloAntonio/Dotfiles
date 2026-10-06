@@ -36,8 +36,10 @@ run_step() {
     success "$DESC"
   else
     error "$DESC failed"
+    FAILED+=("$DESC")
   fi
 }
+FAILED=()
 HYPRLAND_WAYLAND=(hyprland hyprlock awww xdg-desktop-portal-hyprland polkit-kde-agent qt5-wayland qt6-wayland)
 TERMINAL_SHELL=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
 BAR_NOTIFICATIONS=(waybar swaync)
@@ -48,7 +50,12 @@ NETWORK_BLUETOOTH=(network-manager-applet blueman bluez-utils)
 FONTS_THEMES=(ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk)
 DEV_TOOLS=(neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
 UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf)
-SYSTEM_OPTIMIZATION=(intel-ucode sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw intel-media-driver libva-utils vpl-gpu-rt intel-compute-runtime opencl-mesa vulkan-intel clinfo)
+SYSTEM_OPTIMIZATION=(sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw libva-utils opencl-mesa clinfo)
+if grep -q GenuineIntel /proc/cpuinfo; then
+  SYSTEM_OPTIMIZATION+=(intel-ucode intel-media-driver vpl-gpu-rt intel-compute-runtime vulkan-intel)
+elif grep -q AuthenticAMD /proc/cpuinfo; then
+  SYSTEM_OPTIMIZATION+=(amd-ucode vulkan-radeon)
+fi
 
 PACMAN_GROUPS=(
   HYPRLAND_WAYLAND
@@ -165,6 +172,7 @@ run_step "Downloading wallpapers" bash -c "
     curl -fL $WALLPAPERS_URL | tar xz -C \$DEST --strip-components=1 --exclude=README.md
     mkdir -p \$HOME/.config/hypr/hyprlock
     [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/wallpaper_16.png \$HOME/.config/hypr/hyprlock/wallpaper
+    [ -s \$HOME/.config/hypr/.current_wallpaper ] || echo \$DEST/wallpaper_16.png > \$HOME/.config/hypr/.current_wallpaper
 "
 
 run_step "Pre-installing Neovim plugins (lazy.nvim)" bash -c "nvim --headless '+Lazy! sync' +qa"
@@ -174,6 +182,15 @@ run_step "Setting ZSH as default shell" bash -c "
     fi
 "
 
+if ((${#FAILED[@]})); then
+  echo -e "${RED}"
+  echo "========================================"
+  echo "   ✖ INSTALLATION FINISHED WITH ERRORS"
+  echo "========================================"
+  echo -e "${RESET}"
+  for step in "${FAILED[@]}"; do error "$step"; done
+  exit 1
+fi
 echo -e "${GREEN}"
 echo "========================================"
 echo "   ✔ INSTALLATION COMPLETED"
