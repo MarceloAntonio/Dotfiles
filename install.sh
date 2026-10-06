@@ -163,7 +163,7 @@ EOF
     gsettings set org.gnome.desktop.interface font-name 'Inter Display 11' || true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
 "
-run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/Install_theme_changer.sh"
+run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/install-theme-changer.sh"
 WALLPAPERS_URL="https://github.com/MarceloAntonio/wallpapers_dotfile/archive/refs/tags/wallpapers.tar.gz"
 run_step "Downloading wallpapers" bash -c "
     set -e
