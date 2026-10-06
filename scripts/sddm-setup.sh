@@ -50,8 +50,8 @@ install_theme() {
     fi
 
     info "Configuring sddm.conf..."
-    echo -e "[Theme]\nCurrent=$THEME_NAME" | sudo tee /etc/sddm.conf >/dev/null
     sudo mkdir -p /etc/sddm.conf.d
+    echo -e "[Theme]\nCurrent=$THEME_NAME" | sudo tee /etc/sddm.conf.d/theme.conf >/dev/null
     echo -e "[General]\nInputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf >/dev/null
 }
 

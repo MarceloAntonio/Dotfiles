@@ -1,14 +1,26 @@
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+export CHROME_EXECUTABLE=/usr/bin/chromium
+export ANDROID_HOME="$HOME/Android/Sdk"
+typeset -U path
+path=(
+  $HOME/.local/bin
+  $HOME/.cargo/bin
+  $HOME/flutter/bin
+  $ANDROID_HOME/cmdline-tools/latest/bin
+  $ANDROID_HOME/platform-tools
+  $ANDROID_HOME/emulator
+  $path
+  $HOME/.spicetify
+)
 
-setopt HIST_IGNORE_DUPS
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_SAVE_NO_DUPS
 setopt SHARE_HISTORY
-setopt INC_APPEND_HISTORY
 autoload -Uz compinit && compinit
 
 setopt MENU_COMPLETE
@@ -22,9 +34,8 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*:descriptions' format '%F{cyan}── %d%f'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 setopt AUTO_CD
-setopt CORRECT
 setopt NO_BEEP
 setopt EXTENDED_GLOB
 bindkey '^[[3~' delete-char
@@ -61,12 +72,4 @@ command -v codium &>/dev/null && alias code='codium'
 alias vim='nvim'
 [[ $- == *i* ]] && fastfetch
 
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH:$HOME/.spicetify"
-
 eval "$(starship init zsh)"
-
-# Flutter / Android
-export PATH="$HOME/flutter/bin:$PATH"
-export CHROME_EXECUTABLE=/usr/bin/chromium
-export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
