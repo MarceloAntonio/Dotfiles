@@ -171,8 +171,8 @@ run_step "Downloading wallpapers" bash -c "
     mkdir -p \$DEST
     curl -fL $WALLPAPERS_URL | tar xz -C \$DEST --strip-components=1 --exclude=README.md
     mkdir -p \$HOME/.config/hypr/hyprlock
-    [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/wallpaper_16.png \$HOME/.config/hypr/hyprlock/wallpaper
-    [ -s \$HOME/.config/hypr/.current_wallpaper ] || echo \$DEST/wallpaper_16.png > \$HOME/.config/hypr/.current_wallpaper
+    [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/landscape-dusk-sky.png \$HOME/.config/hypr/hyprlock/wallpaper
+    [ -s \$HOME/.config/hypr/.current_wallpaper ] || echo \$DEST/landscape-dusk-sky.png > \$HOME/.config/hypr/.current_wallpaper
 "
 
 run_step "Pre-installing Neovim plugins (lazy.nvim)" bash -c "nvim --headless '+Lazy! sync' +qa"
