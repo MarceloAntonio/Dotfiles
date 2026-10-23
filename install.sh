@@ -49,7 +49,7 @@ SCREENSHOT_MEDIA=(grim slurp brightnessctl playerctl pipewire pipewire-pulse wir
 NETWORK_BLUETOOTH=(network-manager-applet blueman bluez-utils)
 FONTS_THEMES=(ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk)
 DEV_TOOLS=(neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
-UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf)
+UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf 7zip)
 SYSTEM_OPTIMIZATION=(sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw libva-utils opencl-mesa clinfo)
 if grep -q GenuineIntel /proc/cpuinfo; then
   SYSTEM_OPTIMIZATION+=(intel-ucode intel-media-driver vpl-gpu-rt intel-compute-runtime vulkan-intel)
@@ -99,6 +99,18 @@ run_step "Installing Pulsar (Binary)" bash -c "
     cd /tmp/pulsar &&
     makepkg -si --noconfirm &&
     rm -rf /tmp/pulsar
+"
+run_step "Installing SF Pro Display font" bash -c "
+    set -e
+    cd /tmp
+    curl -fsSL -o SF-Pro.dmg 'https://devimages-cdn.apple.com/design/resources/download/SF-Pro.dmg'
+    mkdir -p sf-extract && cd sf-extract && 7z x ../SF-Pro.dmg -y >/dev/null
+    mkdir -p sf-pkg && cd sf-pkg && 7z x ../SFProFonts.pkg -y >/dev/null
+    mkdir -p sf-payload && cd sf-payload && gunzip < ../SFProFontsPackage.pkg/Payload | cpio -id 2>/dev/null
+    mkdir -p \$HOME/.local/share/fonts/sf-pro-display
+    cp Library/Fonts/SF-Pro-Display-*.otf \$HOME/.local/share/fonts/sf-pro-display/
+    fc-cache -f
+    rm -rf /tmp/SF-Pro.dmg /tmp/sf-extract
 "
 run_step "Enabling services (bluetooth, energia, earlyoom, firewall, zram)" bash -c "
     set -e
@@ -160,7 +172,7 @@ EOF
     gsettings set org.gnome.desktop.interface cursor-size 24 || true
     gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark' || true
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
-    gsettings set org.gnome.desktop.interface font-name 'Inter Display 11' || true
+    gsettings set org.gnome.desktop.interface font-name 'SF Pro Display 11' || true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
 "
 run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/install-theme-changer.sh"

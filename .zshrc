@@ -1,10 +1,10 @@
 export CHROME_EXECUTABLE=/usr/bin/chromium
-export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_HOME="$HOME/.local/share/android-sdk"
 typeset -U path
 path=(
   $HOME/.local/bin
   $HOME/.cargo/bin
-  $HOME/flutter/bin
+  $HOME/.local/share/flutter/bin
   $ANDROID_HOME/cmdline-tools/latest/bin
   $ANDROID_HOME/platform-tools
   $ANDROID_HOME/emulator
