@@ -102,6 +102,7 @@ run_step "Installing Pulsar (Binary)" bash -c "
 "
 run_step "Installing SF Pro Display font" bash -c "
     set -e
+    rm -rf /tmp/SF-Pro.dmg /tmp/sf-extract
     cd /tmp
     curl -fsSL -o SF-Pro.dmg 'https://devimages-cdn.apple.com/design/resources/download/SF-Pro.dmg'
     mkdir -p sf-extract && cd sf-extract && 7z x ../SF-Pro.dmg -y >/dev/null
@@ -111,6 +112,10 @@ run_step "Installing SF Pro Display font" bash -c "
     cp Library/Fonts/SF-Pro-Display-*.otf \$HOME/.local/share/fonts/sf-pro-display/
     fc-cache -f
     rm -rf /tmp/SF-Pro.dmg /tmp/sf-extract
+"
+run_step "Ensuring en_US.UTF-8 locale" bash -c "
+    sudo sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+    sudo locale-gen
 "
 run_step "Enabling services (bluetooth, energia, earlyoom, firewall, zram)" bash -c "
     set -e
