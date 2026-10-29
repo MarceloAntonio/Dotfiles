@@ -19,10 +19,10 @@
   "timeout": 10,
   "timeout-low": 5,
   "timeout-critical": 0,
-  "fit-to-screen": true,
+  "fit-to-screen": false,
   "relative-timestamps": true,
   "control-center-width": 420,
-  "control-center-height": 700,
+  "control-center-height": -1,
   "notification-window-width": 420,
   "keyboard-shortcuts": true,
   "notification-grouping": true,
@@ -34,7 +34,6 @@
   "widgets": [
     "volume",
     "backlight",
-    "buttons-grid",
     "mpris",
     "title",
     "dnd",
@@ -42,7 +41,7 @@
   ],
   "widget-config": {
     "notifications": {
-      "vexpand": true
+      "vexpand": false
     },
     "title": {
       "text": "Notificações",
@@ -63,25 +62,6 @@
     },
     "backlight": {
       "label": "󰃠 "
-    },
-    "buttons-grid": {
-      "buttons-per-row": 2,
-      "actions": [
-        {
-          "label": " ",
-          "type": "toggle",
-          "active": true,
-          "command": "bash -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
-          "update-command": "bash -c '[[ $(nmcli radio wifi) == \"enabled\" ]] && echo true || echo false'"
-        },
-        {
-          "label": "󰂯",
-          "type": "toggle",
-          "active": true,
-          "command": "bash -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && bluetoothctl power on || bluetoothctl power off'",
-          "update-command": "bash -c 'bluetoothctl show | grep -q \"Powered: yes\" && echo true || echo false'"
-        }
-      ]
     }
   }
 }

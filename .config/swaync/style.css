@@ -92,7 +92,7 @@ blankwindow {
 }
 
 .notification-row .notification-background {
-  padding: 4px 10px;
+  padding: 4px 8px;
 }
 
 .notification-row .notification-background .notification {
@@ -594,4 +594,63 @@ blankwindow {
 .widget-inhibitors > button:hover {
   background: var(--glass-bg-hover);
   border-color: var(--glass-border-hover);
+}
+
+/* --- ajustes --- */
+
+/* foco do teclado destacava a linha inteira (faixa atrás do card) */
+.notification-row:focus,
+.notification-group:focus {
+  background: none;
+}
+
+.notification-row:focus .notification {
+  border-color: var(--glass-border-hover);
+}
+
+/* player com a mesma margem dos outros cards */
+.widget-mpris .widget-mpris-player {
+  margin: 0;
+}
+
+/* título + não perturbe viram um card só */
+.widget-title {
+  margin-bottom: 0;
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none;
+}
+
+.widget-dnd {
+  margin-top: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* lista sem caixa própria */
+.widget-notifications {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.control-center .control-center-list-placeholder {
+  margin: 24px 0;
+}
+
+/* "Now" na mesma linha do título */
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* GTK 4.24 informa ao Hyprland onde borrar (ext-background-effect);
+   sem backdrop-filter a região fica vazia e o layerrule é ignorado */
+.control-center,
+.floating-notifications .notification {
+  backdrop-filter: var(--cc-bg-blur);
 }
