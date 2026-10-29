@@ -40,7 +40,7 @@ The modifier key is `SUPER` (Windows key).
 | Theme changer     | `SUPER + T`           |
 | Screenshot        | `SUPER + SHIFT + S`   |
 | Lock screen       | `SUPER + L`           |
-| Exit / shutdown   | `SUPER + M`           |
+| Toggle fullscreen | `SUPER + M`           |
 
 ---
 
