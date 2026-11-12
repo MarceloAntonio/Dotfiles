@@ -43,11 +43,17 @@ Scope {
         stdout: StdioCollector { onStreamFinished: theme.receive(text) }
     }
     Process { id: writer; stdout: StdioCollector { onStreamFinished: theme.receive(text) } }
+    Process {
+        id: kittyUpdater
+        running: true
+        command: ["python", Quickshell.shellDir + "/kitty_adaptive.py", "--refresh"]
+    }
     FileView {
         path: Quickshell.env("HOME") + "/.config/hypr/.current_wallpaper"
         watchChanges: true
         onFileChanged: {
             if (theme.adaptive && !reader.running && !writer.running) reader.running = true;
+            if (!kittyUpdater.running) kittyUpdater.running = true;
         }
     }
     IpcHandler {

@@ -9,6 +9,8 @@ import subprocess
 import sys
 import tempfile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from kitty_adaptive import generate as generate_kitty_adaptive, refresh as refresh_kitty_adaptive
 
 HOME = Path.home()
 WALLPAPERS = HOME / "Pictures/Wallpaper"
@@ -61,6 +63,7 @@ def logo_source(text):
 
 
 def catalog():
+    generate_kitty_adaptive()
     wallpapers = images(WALLPAPERS)
     wall_current = read(WALL_CACHE).strip()
     sddm_match = re.search(r'^Background\s*=\s*"?([^"\n]+)"?\s*$', read(SDDM), re.M)
@@ -173,6 +176,7 @@ def apply(category, selection):
         run(["awww", "img", selection, "--transition-type", "fade", "--transition-duration", "0.5", "--transition-fps", "60", "--transition-bezier", ".4,0,.2,1"])
         atomic_write(WALL_CACHE, selection + "\n")
         atomic_link(LOCK_WALL, selection)
+        refresh_kitty_adaptive()
     elif category == "fastfetch":
         text = FASTFETCH.read_text()
         _, start, end = logo_source(text)
