@@ -40,13 +40,14 @@ PanelWindow {
     }
     Rectangle {
         id: surface
-        anchors.fill: parent
+        anchors { top: parent.top; right: parent.right }
+        width: panel.width * (0.93 + 0.07 * panel.progress)
+        height: panel.height * (0.93 + 0.07 * panel.progress)
+        clip: true
         radius: 16
         color: Theme.background
         border.color: Theme.border
         opacity: panel.progress
-        transformOrigin: Item.TopRight
-        scale: 0.93 + 0.07 * panel.progress
         FocusScope {
             id: keys
             anchors.fill: parent
