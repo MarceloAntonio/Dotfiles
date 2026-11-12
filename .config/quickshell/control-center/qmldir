@@ -1,0 +1,25 @@
+module ControlCenter
+singleton Notifications 1.0 Notifications.qml
+NotificationCard 1.0 NotificationCard.qml
+NotificationsPage 1.0 NotificationsPage.qml
+NotificationWindow 1.0 NotificationWindow.qml
+singleton Theme 1.0 Theme.qml
+singleton Service 1.0 Service.qml
+ActionButton 1.0 ActionButton.qml
+AudioControls 1.0 AudioControls.qml
+AudioPage 1.0 AudioPage.qml
+BluetoothPage 1.0 BluetoothPage.qml
+Card 1.0 Card.qml
+ControlWindow 1.0 ControlWindow.qml
+GlassSlider 1.0 GlassSlider.qml
+GlassText 1.0 GlassText.qml
+MediaCard 1.0 MediaCard.qml
+OsdWindow 1.0 OsdWindow.qml
+Overview 1.0 Overview.qml
+PowerPage 1.0 PowerPage.qml
+SliderRow 1.0 SliderRow.qml
+WifiPage 1.0 WifiPage.qml
+
+PlaybackButton 1.0 PlaybackButton.qml
+
+PowerMenu 1.0 PowerMenu.qml

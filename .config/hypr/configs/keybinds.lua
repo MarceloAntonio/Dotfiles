@@ -29,6 +29,7 @@ bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'), "
 bind(mod .. " + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/theme-changer.sh wallpaper"), "Trocar wallpaper")
 bind(mod .. " + T", hl.dsp.exec_cmd("~/.config/hypr/scripts/theme-changer.sh"), "Trocar tema")
 bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"), "Bloquear tela")
+bind(mod .. " + C", hl.dsp.exec_cmd("qs -c control-center ipc call control toggle geral"), "Central de controle")
 for i = 1, 10 do
   local key = i % 10
   bind(mod .. " + " .. key, hl.dsp.focus({ workspace = i }), i == 1 and "Ir para workspace" or nil)
@@ -38,12 +39,12 @@ end
 bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }), "Trocar workspace")
 bind(mod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 local media = {
-  XF86AudioRaiseVolume = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
-  XF86AudioLowerVolume = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
-  XF86AudioMute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-  XF86AudioMicMute = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
-  XF86MonBrightnessUp = "brightnessctl -e4 -n2 set 5%+",
-  XF86MonBrightnessDown = "brightnessctl -e4 -n2 set 5%-",
+  XF86AudioRaiseVolume = "~/.config/hypr/scripts/qs-media.sh volume-up",
+  XF86AudioLowerVolume = "~/.config/hypr/scripts/qs-media.sh volume-down",
+  XF86AudioMute = "~/.config/hypr/scripts/qs-media.sh mute",
+  XF86AudioMicMute = "~/.config/hypr/scripts/qs-media.sh mic-mute",
+  XF86MonBrightnessUp = "~/.config/hypr/scripts/qs-media.sh brightness-up",
+  XF86MonBrightnessDown = "~/.config/hypr/scripts/qs-media.sh brightness-down",
   XF86AudioNext = "playerctl next",
   XF86AudioPause = "playerctl play-pause",
   XF86AudioPlay = "playerctl play-pause",

@@ -1,0 +1,4 @@
+module Personalize
+singleton Settings 1.0 Settings.qml
+PersonalizeWindow 1.0 PersonalizeWindow.qml
+Preview 1.0 Preview.qml

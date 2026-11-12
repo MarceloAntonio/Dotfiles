@@ -1,0 +1,3 @@
+module ShellWidgets
+HoverTip 1.0 HoverTip.qml
+GlassScrollBar 1.0 GlassScrollBar.qml

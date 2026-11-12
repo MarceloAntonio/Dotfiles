@@ -153,3 +153,5 @@ element-text {
     text-color:       @text-muted;
     background-color: transparent;
 }
+
+@import "themes/shell-palette.rasi"

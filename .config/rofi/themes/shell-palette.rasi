@@ -1,0 +1,1 @@
+* { glass-bg: rgba(18,25,36,0.33); glass-bg-element: rgba(255,255,255,0.04); glass-bg-hover: rgba(255,255,255,0.10); glass-bg-selected: rgba(255,255,255,0.12); glass-border: transparent; glass-border-hover: transparent; text-primary: #FFFFFF; text-muted: rgba(255,255,255,0.60); }

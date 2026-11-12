@@ -1,0 +1,6 @@
+module DesktopBar
+singleton BarState 1.0 BarState.qml
+BarWindow 1.0 BarWindow.qml
+BarButton 1.0 BarButton.qml
+Pill 1.0 Pill.qml
+CalendarWindow 1.0 CalendarWindow.qml

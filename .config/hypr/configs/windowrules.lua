@@ -31,37 +31,17 @@ hl.window_rule({
 })
 
 hl.layer_rule({
-    name = "blur-waybar",
-    match = { namespace = "^waybar$" },
-    blur = true,
-    blur_popups = true,
-    ignore_alpha = 0.02,
-})
-
-hl.layer_rule({
-    name = "blur-swaync-cc",
-    match = { namespace = "^swaync-control-center$" },
-    blur = true,
-    ignore_alpha = 0.02,
-})
-
-hl.layer_rule({
-    name = "blur-swaync-notif",
-    match = { namespace = "^swaync-notification-window$" },
-    blur = true,
-    ignore_alpha = 0.02,
-})
-
-hl.layer_rule({
     name = "blur-rofi",
     match = { namespace = "^rofi$" },
+    animation = "popin 92%",
+    no_anim = false,
     blur = true,
     ignore_alpha = 0.02,
 })
 
 hl.layer_rule({
-    name = "blur-pulsar",
-    match = { namespace = "^pulsar$" },
+    name = "blur-quickshell-controls",
+    match = { namespace = "^qs-(bar|calendar|control-center|osd|notifications|personalize|commands|power|monitors|workspace-overview)$" },
     blur = true,
     ignore_alpha = 0.02,
 })
