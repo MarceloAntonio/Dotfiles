@@ -28,7 +28,7 @@ bind(mod .. " + mouse:273", hl.dsp.window.resize(), "Redimensionar janela", { mo
 bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'), "Screenshot de área")
 bind(mod .. " + W", hl.dsp.exec_cmd("~/.config/hypr/scripts/theme-changer.sh wallpaper"), "Trocar wallpaper")
 bind(mod .. " + T", hl.dsp.exec_cmd("~/.config/hypr/scripts/theme-changer.sh"), "Trocar tema")
-bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"), "Bloquear tela")
+bind(mod .. " + L", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.local/bin/rice-lock"), "Bloquear tela")
 bind(mod .. " + C", hl.dsp.exec_cmd("qs -c control-center ipc call control toggle geral"), "Central de controle")
 for i = 1, 10 do
   local key = i % 10

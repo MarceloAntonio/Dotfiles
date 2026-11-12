@@ -68,7 +68,7 @@ PanelWindow {
                             Layout.fillWidth: true; Layout.fillHeight: true
                             text: modelData.label
                             onClicked: {
-                                if (modelData.action === "bloquear") { panel.close(); Quickshell.execDetached(["hyprlock"]); }
+                                if (modelData.action === "bloquear") { panel.close(); Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/rice-lock"]); }
                                 else panel.confirmation = modelData.action;
                             }
                         }

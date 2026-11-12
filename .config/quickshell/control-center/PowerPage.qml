@@ -40,7 +40,7 @@ ColumnLayout {
     ActionButton {
         Layout.fillWidth: true
         text: "󰌾   Bloquear tela"
-        onClicked: { Service.close(); Quickshell.execDetached(["hyprlock"]); }
+        onClicked: { Service.close(); Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/rice-lock"]); }
     }
     Repeater {
         model: [ { label: "󰗼   Sair da sessão", action: "sair" }, { label: "󰜉   Reiniciar", action: "reiniciar" }, { label: "󰐥   Desligar", action: "desligar" } ]

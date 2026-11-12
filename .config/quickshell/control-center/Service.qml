@@ -131,7 +131,7 @@ Scope {
         // Called only after the user confirms an action in the panel.
         close();
         if (action === "sair") Hyprland.dispatch("hl.dsp.exit()");
-        else if (action === "suspender") Quickshell.execDetached(["systemctl", "suspend"]);
+        else if (action === "suspender") Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/rice-lock", "--suspend"]);
         else if (action === "reiniciar") Quickshell.execDetached(["systemctl", "reboot"]);
         else if (action === "desligar") Quickshell.execDetached(["systemctl", "poweroff"]);
     }
