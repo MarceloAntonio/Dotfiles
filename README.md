@@ -1,81 +1,69 @@
-# ~/dotfiles
+# Dotfiles · Hyprland + Quickshell
 
-These dotfiles use a monochromatic theme, except for the editor which uses Catppuccin Mocha. The compositor is Hyprland. An installation script is included. Wallpapers are in a separate repo: [wallpapers_dotfile](https://github.com/MarceloAntonio/wallpapers_dotfile) (the installer downloads them).
+Rice para Arch Linux com Hyprland, interface de vidro e três temas: **Claro**, **Escuro** e **Adaptativo**. O Quickshell reúne a barra, central de controle, notificações, calendário, player e configurador de monitores. O bloqueador de tela também usa Quickshell, em um processo separado.
 
----
+| Componente | Implementação |
+| --- | --- |
+| Compositor | Hyprland com configuração Lua |
+| Barra, central e notificações | Quickshell |
+| Bloqueio de sessão | Quickshell + PAM; Hyprlock como alternativa |
+| Terminal | Kitty, com tema Adaptativo opcional |
+| Aplicativos e clipboard | Rofi + cliphist |
+| Wallpaper | awww |
+| Login | SDDM, com tema Astronaut opcional |
+| Arquivos / navegador / editor | Nautilus / Firefox / Neovim |
+| Informações do sistema | Fastfetch |
 
-## The Stack
+A barra usa ícones WhiteSur, indicadores deslizantes e painéis conectados aos botões. O tema Adaptativo extrai cores do wallpaper e sincroniza a interface e o Rofi. No Kitty, a opção Adaptativo gera também as 16 cores ANSI que aparecem nas bolinhas do Fastfetch.
 
-| Component      | Tool          |
-| :------------- | :------------ |
-| OS             | Arch Linux    |
-| Window Manager | Hyprland      |
-| Status Bar     | Waybar        |
-| Terminal       | Kitty         |
-| Launcher       | Rofi          |
-| Browser        | Firefox       |
-| File Manager   | Nautilus      |
-| Wallpaper      | awww          |
-| Login Manager  | SDDM          |
-| Screen Lock    | Hyprlock      |
-| Editor         | VSCodium / Neovim |
-| Fetch          | Fastfetch     |
+## Uso rápido
 
----
+`Super` é a tecla Windows.
 
-## Keybindings
+| Ação | Atalho |
+| --- | --- |
+| Terminal / aplicativos | `Super + Enter` / `Super + Espaço` |
+| Navegador / arquivos | `Super + B` / `Super + E` |
+| Central de controle | `Super + C` |
+| Personalização / wallpapers | `Super + T` / `Super + W` |
+| Configurar monitores | `Super + Shift + D` |
+| Bloquear a sessão | `Super + L` |
+| Screenshot de área para o clipboard | `Super + Shift + S` |
+| Fechar janela / alternar flutuante | `Super + Q` / `Super + Z` |
+| Ir para workspace / mover janela | `Super + 1…0` / `Super + Shift + 1…0` |
 
-The modifier key is `SUPER` (Windows key).
+Na barra, clique no relógio para abrir o calendário e na música para expandir o player. Clique direito nos números dos workspaces para ver a disposição das janelas. No volume, a roda do mouse ajusta em passos de 5%. O ícone da distro abre a busca de atalhos; clique direito abre os aplicativos no Rofi.
 
-| Action            | Shortcut              |
-| :---------------- | :-------------------- |
-| Open terminal     | `SUPER + Enter`       |
-| Open launcher     | `SUPER + Space`       |
-| Open browser      | `SUPER + B`           |
-| Open file manager | `SUPER + E`           |
-| Close window      | `SUPER + Q`           |
-| Toggle floating   | `SUPER + Z`           |
-| Toggle split      | `SUPER + J`           |
-| Change wallpaper  | `SUPER + W`           |
-| Theme changer     | `SUPER + T`           |
-| Screenshot        | `SUPER + SHIFT + S`   |
-| Lock screen       | `SUPER + L`           |
-| Toggle fullscreen | `SUPER + M`           |
+## Instalação
 
----
+Estas configurações exigem **Hyprland com suporte a Lua** e aos comandos usados pelo configurador de monitores, além de **Quickshell 0.3.2 ou compatível**. Elas não são uma configuração para versões antigas do Hyprland baseadas somente em `hyprland.conf`.
 
-## Features
+```sh
+git clone https://github.com/MarceloAntonio/Dotfiles.git
+cd Dotfiles
+./install.sh --dry-run
+./install.sh
+```
 
-- **Theme Changer:** Runs entirely through Rofi (`SUPER + T`). Instantly changes your Hyprland wallpaper, SDDM background, and Fastfetch logo. 
-- **Dynamic Lockscreen:** Hyprlock features a custom "Liquid Glass" aesthetic matching Waybar, fully synced with the current wallpaper, and includes interactive power buttons (Shutdown, Reboot, Logout).
-- **Waybar:** Dynamic OS logo based on your distribution, using a custom script.
+Execute como usuário normal: o instalador solicita `sudo` quando precisa instalar pacotes ou configurar serviços do sistema. Leia o [guia de instalação e migração](docs/migracao.md) antes de aplicar em uma sessão existente. Wallpapers ficam no repositório separado [wallpapers_dotfile](https://github.com/MarceloAntonio/wallpapers_dotfile).
 
----
+O instalador usa pacotes do Arch e instala as configurações e comandos deste repositório. Waybar, SwayNC e Pulsar deixaram de fazer parte da interface. Hyprlock continua disponível como alternativa de bloqueio e fornece a política PAM usada pelo bloqueador novo.
 
-## Installation
+## O que está incluído
 
-1. **Clone the repository**
+- **Central:** áudio por aplicativo, escolha de saída/entrada, Wi-Fi, Bluetooth, brilho, bateria e perfis de energia.
+- **Notificações:** popups, histórico da sessão, ações ao clicar e Não perturbe.
+- **Calendário e música:** navegação por teclado, capa, controles, player horizontal e barras que reagem ao áudio.
+- **Personalização:** wallpaper, fundo do SDDM, logo do Fastfetch e temas do Kitty; duplo clique aplica.
+- **Monitores:** posição por arraste, resolução, Hz, escala e preferência principal; prévia de 20 segundos com reversão automática.
+- **Bloqueio:** wallpaper, relógio, campo de senha discreto, autenticação PAM e integração com suspensão.
 
-   ```bash
-   git clone https://github.com/MarceloAntonio/Dotfiles
-   cd Dotfiles
-   ```
+O configurador de monitores tem testes isolados de validação e reversão. O bloqueador foi carregado em prévia e com bloqueio desativado para validação; autenticação real, suspensão/retomada e conexão de monitores durante o bloqueio precisam de verificação interativa na máquina de destino.
 
-2. **Run the installer**
+Mais detalhes em [uso da interface](docs/uso.md), [arquitetura e diagnóstico](docs/arquitetura.md) e [instalação e migração](docs/migracao.md).
 
-   ```bash
-   ./install.sh
-   ```
-
-> **Note:** The script backs up your existing configs to `~/BKP.config` before applying changes. It installs dependencies via `pacman` (no AUR helper needed), detects Intel or AMD to pick the right drivers, optionally applies the SDDM theme, and sets ZSH as your default shell. VSCodium is not installed by the script; get it from the AUR (`vscodium-bin`) if you want it.
----
-
-## Wallpapers
-To see the available wallpapers, click [here](https://github.com/MarceloAntonio/wallpapers_dotfile).
-
----
-
-## References
+## Referências
 
 - [ViegPhunt/Dotfile](https://github.com/ViegPhunt/Dotfile)
-- [Keyitdev/sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme)
+- [SDDM Astronaut Theme](https://github.com/Keyitdev/sddm-astronaut-theme)
+- [WhiteSur Icon Theme](https://github.com/vinceliuice/WhiteSur-icon-theme)
