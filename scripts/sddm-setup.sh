@@ -4,7 +4,9 @@ set -euo pipefail
 readonly THEME_REPO="https://github.com/Keyitdev/sddm-astronaut-theme.git"
 readonly THEME_NAME="sddm-astronaut-theme"
 readonly THEMES_DIR="/usr/share/sddm/themes"
-readonly PATH_TO_GIT_CLONE="/tmp/$THEME_NAME"
+CLONE_ROOT=$(mktemp -d -t dotfiles-sddm.XXXXXXXX)
+readonly PATH_TO_GIT_CLONE="$CLONE_ROOT/theme"
+trap 'rm -rf -- "$CLONE_ROOT"' EXIT
 readonly METADATA="$THEMES_DIR/$THEME_NAME/metadata.desktop"
 
 info() { echo -e "\e[32m[INFO]\e[0m $*"; }
@@ -30,7 +32,6 @@ install_deps() {
 
 clone_repo() {
     info "Cloning repository to $PATH_TO_GIT_CLONE..."
-    [[ -d "$PATH_TO_GIT_CLONE" ]] && rm -rf "$PATH_TO_GIT_CLONE"
     git clone -b master --depth 1 "$THEME_REPO" "$PATH_TO_GIT_CLONE"
 }
 
@@ -39,7 +40,9 @@ install_theme() {
     local dst="$THEMES_DIR/$THEME_NAME"
 
     info "Installing theme files..."
-    sudo rm -rf "$dst"
+    if [[ -e "$dst" ]]; then
+        sudo mv "$dst" "$dst.backup-$(date +%Y%m%d-%H%M%S)-$$"
+    fi
     sudo mkdir -p "$dst"
     sudo cp -r "$src"/* "$dst"/
 
@@ -51,6 +54,11 @@ install_theme() {
 
     info "Configuring sddm.conf..."
     sudo mkdir -p /etc/sddm.conf.d
+    for config in theme.conf virtualkbd.conf; do
+        if [[ -e "/etc/sddm.conf.d/$config" ]]; then
+            sudo cp -a "/etc/sddm.conf.d/$config" "/etc/sddm.conf.d/$config.backup-$(date +%Y%m%d-%H%M%S)-$$"
+        fi
+    done
     echo -e "[Theme]\nCurrent=$THEME_NAME" | sudo tee /etc/sddm.conf.d/theme.conf >/dev/null
     echo -e "[General]\nInputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf >/dev/null
 }
@@ -84,7 +92,6 @@ main() {
     install_theme
     select_variant
     enable_sddm
-    rm -rf "$PATH_TO_GIT_CLONE"
     info "SDDM Astronaut Theme installation finished!"
 }
 

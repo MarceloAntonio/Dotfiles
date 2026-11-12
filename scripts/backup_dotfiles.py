@@ -1,120 +1,202 @@
 #!/usr/bin/env python3
-"""
-Backup automático dos dotfiles.
+"""Sincroniza configurações públicas do HOME com este repositório.
 
-Compara os arquivos em ~/.config (e outros como .zshrc) com os que já existem
-em ~/dotfiles e copia apenas os que mudaram.
-
-Uso:
-    python3 backup_dotfiles.py
-    python3 backup_dotfiles.py --auto
-    python3 backup_dotfiles.py --dry
+Uso: python3 scripts/backup_dotfiles.py [--auto | --dry]
+O repositório é localizado pelo script, independentemente do nome ou cwd.
 """
 
 import argparse
-import filecmp
+from pathlib import Path
+import posixpath
+import re
 import shutil
 import subprocess
 import sys
-from pathlib import Path
+
+
 class Colors:
-    RESET   = "\033[0m"
-    BOLD    = "\033[1m"
-    RED     = "\033[91m"
-    GREEN   = "\033[92m"
-    YELLOW  = "\033[93m"
-    BLUE    = "\033[94m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    RED = "\033[91m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    BLUE = "\033[94m"
     MAGENTA = "\033[95m"
-    CYAN    = "\033[96m"
-    DIM     = "\033[2m"
+    CYAN = "\033[96m"
+    DIM = "\033[2m"
+
 
 def colored(text: str, color: str) -> str:
     return f"{color}{text}{Colors.RESET}"
-HOME = Path.home()
-DOTFILES_DIR = HOME / "dotfiles"
-HOME_FILES = [".zshrc"]
 
-def get_tracked_configs() -> list[Path]:
-    """Retorna as pastas/arquivos que já existem em dotfiles/.config/."""
-    config_dest = DOTFILES_DIR / ".config"
-    if not config_dest.exists():
-        return []
-    return sorted(p for p in config_dest.iterdir())
+
+HOME = Path.home()
+DOTFILES_DIR = Path(__file__).resolve().parents[1]
+HOME_FILES = [".zshrc"]
+LOCAL_FILES = {
+    ".local/bin/rice-lock",
+    ".local/bin/rice-monitors",
+    ".local/share/applications/rice-monitors.desktop",
+    ".local/share/dbus-1/services/org.erikreider.swaync.service",
+    ".config/systemd/user/rice-lock-bridge.service",
+}
+OWNED_DIRS = (
+    ".config/quickshell/control-center",
+    ".config/quickshell/session-lock",
+)
+EXCLUDED_FILES = {
+    # Bootstrap palettes are generated at install/runtime; repository docs are
+    # maintained alongside README.md, not imported from a running session.
+    ".config/kitty/Adaptativo.conf",
+    ".config/rofi/themes/shell-palette.rasi",
+    ".config/quickshell/control-center/README.md",
+    ".config/quickshell/session-lock/README.md",
+    ".config/hypr/.current_wallpaper",
+    ".config/hypr/configs/monitors-managed.lua",
+    ".config/hypr/scripts/binds.sh",
+    ".config/hypr/scripts/lock-music.sh",
+    ".config/hypr/scripts/music.webp",
+    ".config/rofi/themes/menu.rasi",
+    ".config/rofi/themes/rofi-wallpaper-selector.rasi",
+}
+EXCLUDED_DIRS = (
+    ".config/waybar/", ".config/swaync/", ".config/pulsar/",
+    ".config/hypr/hyprlock/", ".local/state/", ".cache/",
+)
+
+
+def allowed(relative: Path) -> bool:
+    value = relative.as_posix()
+    if value in EXCLUDED_FILES or value.startswith(EXCLUDED_DIRS):
+        return False
+    if any(part in {"__pycache__", ".git"} or part.endswith((".wants", ".requires")) for part in relative.parts):
+        return False
+    if ".bak" in relative.name or relative.suffix in {".pyc", ".pyo"}:
+        return False
+    if value.startswith((".local/", ".config/systemd/")):
+        return value in LOCAL_FILES
+    return value.startswith(".config/") or value in HOME_FILES
+
+
+def portable_bytes(src: Path, dst: Path) -> bytes:
+    """Normalize only known machine-specific fields, also before comparison."""
+    raw = src.read_bytes()
+    relative = dst.relative_to(DOTFILES_DIR).as_posix()
+    if not relative.endswith((".desktop", ".rasi", ".lua")):
+        return raw
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw
+    if relative.endswith(".desktop"):
+        text = text.replace(str(HOME) + "/.local/bin/", "@HOME@/.local/bin/")
+    if relative.startswith(".config/rofi/") and relative.endswith(".rasi"):
+        parent = posixpath.dirname(relative.removeprefix(".config/rofi/")) or "."
+        text = text.replace(str(HOME) + "/.config/rofi/themes/shell-palette.rasi",
+                            posixpath.relpath("themes/shell-palette.rasi", parent))
+    if relative == ".config/hypr/configs/windowrules.lua":
+        text = re.sub(r'hl\.layer_rule\(\{\s*name\s*=\s*"(?:blur-waybar|blur-swaync-cc|blur-swaync-notif|blur-pulsar)".*?\n\}\)\n\n?', "", text, flags=re.S)
+        def namespaces(match):
+            names = match[1].split("|")
+            for name in ("commands", "power", "monitors", "workspace-overview"):
+                if name not in names:
+                    names.append(name)
+            return 'namespace = "^qs-(' + "|".join(names) + ')$"'
+        text = re.sub(r'namespace\s*=\s*"\^qs-\(([^)]+)\)\$"', namespaces, text)
+    if relative == ".config/hypr/configs/autostart.lua":
+        text = "".join(line for line in text.splitlines(keepends=True)
+                       if not re.search(r'''hl\.exec_cmd\(["'](?:nm-applet|waybar|swaync|pulsar)(?:\s|["'])''', line))
+    return text.encode("utf-8")
+
+
+def safe_symlink(src: Path, dst: Path) -> bool:
+    target = src.readlink()
+    return not target.is_absolute() and (dst.parent / target).resolve().is_relative_to(DOTFILES_DIR)
+
 
 def differs(src: Path, dst: Path) -> bool:
-    """Symlinks são comparados pelo alvo, não pelo conteúdo (evita versionar a imagem do wallpaper)."""
-    if src.is_symlink() or dst.is_symlink():
-        return not (src.is_symlink() and dst.is_symlink() and src.readlink() == dst.readlink())
-    return not filecmp.cmp(src, dst, shallow=False)
+    if src.is_symlink():
+        if not safe_symlink(src, dst):
+            return False
+        return not (dst.is_symlink() and src.readlink() == dst.readlink())
+    if dst.is_symlink() or not dst.exists():
+        return True
+    return (portable_bytes(src, dst) != dst.read_bytes()
+            or bool(src.stat().st_mode & 0o111) != bool(dst.stat().st_mode & 0o111))
+
+
+def get_tracked_configs() -> list[Path]:
+    root = DOTFILES_DIR / ".config"
+    return sorted(root.iterdir()) if root.is_dir() else []
+
 
 def compare_files(src: Path, dst: Path) -> list[tuple[Path, Path]]:
-    """Compara recursivamente e retorna lista de (src, dst) que diferem."""
+    """Compare known repository files without discovering unrelated HOME files."""
+    if src.is_symlink() or src.is_file():
+        return [(src, dst)] if allowed(dst.relative_to(DOTFILES_DIR)) and differs(src, dst) else []
     changed = []
-
-    if src.is_file() and dst.is_file():
-        if differs(src, dst):
-            changed.append((src, dst))
-        return changed
-
     if src.is_dir() and dst.is_dir():
-        for dst_file in sorted(dst.rglob("*")):
-            if dst_file.is_dir() and not dst_file.is_symlink():
-                continue
-            rel = dst_file.relative_to(dst)
-            src_file = src / rel
-            if src_file.exists():
-                if differs(src_file, dst_file):
-                    changed.append((src_file, dst_file))
-        for src_file in sorted(src.rglob("*")):
-            if not src_file.is_file():
-                continue
-            rel = src_file.relative_to(src)
-            dst_file = dst / rel
-            if not dst_file.exists():
-                changed.append((src_file, dst_file))
-
+        for target in sorted(dst.rglob("*")):
+            if target.is_file() or target.is_symlink():
+                source = src / target.relative_to(dst)
+                if source.is_file() or source.is_symlink():
+                    changed.extend(compare_files(source, target))
     return changed
 
-def find_all_changes() -> list[tuple[Path, Path]]:
-    """Encontra todas as diferenças entre configs atuais e dotfiles."""
-    all_changes = []
-    for tracked in get_tracked_configs():
-        src = HOME / ".config" / tracked.name
-        if src.exists():
-            all_changes.extend(compare_files(src, tracked))
-    for fname in HOME_FILES:
-        src, dst = HOME / fname, DOTFILES_DIR / fname
-        if src.exists() and dst.exists():
-            all_changes.extend(compare_files(src, dst))
 
-    return drop_gitignored(all_changes)
+def find_all_changes() -> list[tuple[Path, Path]]:
+    candidates = {Path(name) for name in HOME_FILES + sorted(LOCAL_FILES)}
+    config = DOTFILES_DIR / ".config"
+    if config.is_dir():
+        candidates.update(p.relative_to(DOTFILES_DIR) for p in config.rglob("*") if p.is_file() or p.is_symlink())
+    # New native shell components are welcome; caches, logs and arbitrary data
+    # are excluded. Other applications must first be added to the repository.
+    for name in OWNED_DIRS:
+        source = HOME / name
+        if source.is_dir():
+            candidates.update(p.relative_to(HOME) for p in source.rglob("*")
+                              if (p.is_file() or p.is_symlink())
+                              and (p.suffix in {".qml", ".py", ".md"} or p.name == "qmldir"))
+    changed = []
+    for relative in sorted(candidates):
+        if not allowed(relative):
+            continue
+        src, dst = HOME / relative, DOTFILES_DIR / relative
+        if (src.is_file() or src.is_symlink()) and differs(src, dst):
+            changed.append((src, dst))
+    return drop_gitignored(changed)
+
 
 def drop_gitignored(changes: list[tuple[Path, Path]]) -> list[tuple[Path, Path]]:
-    """Remove o que o .gitignore do dotfiles ignora (estado local, caches)."""
-    rels = [str(dst.relative_to(DOTFILES_DIR)) for _, dst in changes]
-    ignored = set(subprocess.run(
-        ["git", "-C", str(DOTFILES_DIR), "check-ignore", "--stdin"],
-        input="\n".join(rels), capture_output=True, text=True,
-    ).stdout.splitlines())
-    return [c for c, rel in zip(changes, rels) if rel not in ignored]
+    if not changes:
+        return []
+    relatives = [str(dst.relative_to(DOTFILES_DIR)) for _, dst in changes]
+    result = subprocess.run(["git", "-C", str(DOTFILES_DIR), "check-ignore", "--no-index", "-z", "--stdin"],
+                            input="\0".join(relatives) + "\0", capture_output=True, text=True)
+    ignored = set(result.stdout.split("\0"))
+    return [change for change, relative in zip(changes, relatives) if relative not in ignored]
+
 
 def copy_files(changes: list[tuple[Path, Path]], dry_run: bool = False) -> int:
-    """Copia os arquivos alterados. Retorna quantidade de arquivos copiados."""
     count = 0
     for src, dst in changes:
-        rel_src = src.relative_to(HOME)
-        rel_dst = dst.relative_to(DOTFILES_DIR)
-
+        relative = dst.relative_to(DOTFILES_DIR)
+        # Recheck the boundary if callers provide their own change list.
+        if not allowed(relative) or (src.is_symlink() and not safe_symlink(src, dst)):
+            continue
         if dry_run:
-            print(f"  {colored('→', Colors.CYAN)} {colored(str(rel_src), Colors.DIM)} → {colored(str(rel_dst), Colors.YELLOW)}")
+            print(f"  {colored('→', Colors.CYAN)} {colored(str(src.relative_to(HOME)), Colors.DIM)} → {colored(str(relative), Colors.YELLOW)}")
         else:
+            normalized = None if src.is_symlink() else portable_bytes(src, dst)
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.unlink(missing_ok=True)
             shutil.copy2(src, dst, follow_symlinks=False)
-            print(f"  {colored('✓', Colors.GREEN)} {colored(str(rel_dst), Colors.YELLOW)}")
+            if normalized is not None and normalized != dst.read_bytes():
+                dst.write_bytes(normalized)
+            print(f"  {colored('✓', Colors.GREEN)} {colored(str(relative), Colors.YELLOW)}")
         count += 1
-
     return count
+
 
 def print_header():
     print()

@@ -1,216 +1,173 @@
-#!/bin/bash
-if [[ $EUID -eq 0 ]]; then
-  echo -e "\033[1;31m✖ Do not run this script as root (sudo). The script will prompt for your password when needed.\033[0m"
+#!/usr/bin/env bash
+# Arch Linux / Hyprland Lua desktop installer.
+set -Eeuo pipefail
+
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DRY_RUN=false
+INSTALL_ASSETS=true
+INSTALL_WALLPAPERS=true
+INSTALL_NVIM=true
+INSTALL_SDDM=false
+SET_SHELL=false
+
+usage() {
+  cat <<'HELP'
+Uso: ./install.sh [opções]
+
+Instala o rice Hyprland + Quickshell no Arch Linux. Execute como usuário comum.
+
+  --dry-run          Mostra o plano e os pacotes, sem sudo nem alterações
+  --skip-assets      Não baixa ícones, cursores e a fonte SF Pro
+  --skip-wallpapers  Não baixa a coleção de wallpapers
+  --skip-nvim        Não sincroniza os plugins do Neovim
+  --sddm             Instala e habilita o tema SDDM Astronaut (opcional)
+  --set-shell        Define Zsh como shell padrão (opcional)
+  -h, --help         Mostra esta ajuda
+
+As configurações substituídas recebem backup em
+~/.local/state/dotfiles-backups/<data-hora-pid>/.
+Waybar, SwayNC e Pulsar não são instalados; pacotes existentes não são removidos.
+HELP
+}
+for option in "$@"; do
+  case "$option" in
+    --dry-run) DRY_RUN=true ;;
+    --skip-assets) INSTALL_ASSETS=false ;;
+    --skip-wallpapers) INSTALL_WALLPAPERS=false ;;
+    --skip-nvim) INSTALL_NVIM=false ;;
+    --sddm) INSTALL_SDDM=true ;;
+    --set-shell) SET_SHELL=true ;;
+    -h|--help) usage; exit 0 ;;
+    *) printf 'Opção desconhecida: %s\n' "$option" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+# Quickshell supplies the Qt/PAM, NetworkManager, BlueZ, PipeWire and MPRIS APIs.
+# GTK3/PyGObject resolves the WhiteSur application icons; python-dbus serves
+# Bluetooth pairing and the independent logind lock bridge.
+DESKTOP=(hyprland hyprlock quickshell awww xdg-desktop-portal-hyprland polkit polkit-kde-agent qt6-wayland)
+SHELL_TOOLS=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
+INTEGRATION=(python python-pillow python-gobject python-dbus gtk3 networkmanager nm-connection-editor bluez bluez-utils power-profiles-daemon)
+MEDIA=(pipewire pipewire-audio pipewire-pulse wireplumber brightnessctl playerctl grim slurp rofi cliphist wl-clipboard libnotify imagemagick)
+APPS=(firefox nautilus neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
+APPEARANCE=(desktop-file-utils ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk fontconfig)
+UTILITIES=(fastfetch eza starship bat tmux ncdu zathura zathura-pdf-mupdf 7zip curl cpio procps-ng sof-firmware)
+PACKAGES=("${DESKTOP[@]}" "${SHELL_TOOLS[@]}" "${INTEGRATION[@]}" "${MEDIA[@]}" "${APPS[@]}" "${APPEARANCE[@]}" "${UTILITIES[@]}")
+
+if $DRY_RUN; then
+  printf 'Origem: %s\nDestino: %s\n' "$DOTFILES_DIR" "$HOME"
+  printf 'Pacotes (pacman -Syu --needed):\n  %s\n' "${PACKAGES[*]}"
+  printf 'Etapas: backup por timestamp; copiar .config, .local e .zshrc; gerar caminhos e paletas; habilitar serviços de rede/Bluetooth/áudio/bloqueio.\n'
+  printf 'Assets: %s | wallpapers: %s | plugins Nvim: %s | SDDM: %s | alterar shell: %s\n' "$INSTALL_ASSETS" "$INSTALL_WALLPAPERS" "$INSTALL_NVIM" "$INSTALL_SDDM" "$SET_SHELL"
+  printf 'Não executado: sudo, instalação, downloads, bloqueio, suspensão ou remoção de pacotes.\n'
+  exit 0
+fi
+if ((EUID == 0)); then
+  printf 'Execute sem sudo; o instalador pedirá a senha quando necessário.\n' >&2
   exit 1
 fi
-set -e
-sudo -v
-while true; do
-  sudo -n true
-  sleep 60
-  kill -0 "$$" || exit
-done 2>/dev/null &
+command -v pacman >/dev/null || { printf 'Este instalador requer Arch Linux/pacman.\n' >&2; exit 1; }
+BACKUP_DIR="$HOME/.local/state/dotfiles-backups/$(date +%Y%m%d-%H%M%S)-$$"
+mkdir -p -- "$BACKUP_DIR"
+trap 'printf "Instalação interrompida na linha %s. Backups: %s\n" "$LINENO" "$BACKUP_DIR" >&2' ERR
+step() { printf '\n➜ %s\n' "$1"; shift; "$@"; }
 
-BACKUP_DIR="$HOME/BKP.config"
-CONFIG_DIR="$HOME/.config"
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RED="\033[1;31m"
-GREEN="\033[1;32m"
-YELLOW="\033[1;33m"
-BLUE="\033[1;34m"
-CYAN="\033[1;36m"
-RESET="\033[0m"
-log() { echo -e "${BLUE}[$1]${RESET} $2"; }
-success() { echo -e "${GREEN}✔ $1${RESET}"; }
-warn() { echo -e "${YELLOW}⚠ $1${RESET}"; }
-error() { echo -e "${RED}✖ $1${RESET}"; }
-progress() {
-  echo -e "${CYAN}➜ $1...${RESET}"
+install_tree() {
+  local source=$1 destination=$2 backup_prefix=$3 file relative target backup
+  [[ -d "$source" ]] || return 0
+  while IFS= read -r -d '' file; do
+    relative=${file#"$source"/}
+    target="$destination/$relative"
+    backup="$BACKUP_DIR/$backup_prefix/$relative"
+    mkdir -p -- "$(dirname -- "$target")"
+    if [[ -e "$target" || -L "$target" ]]; then
+      mkdir -p -- "$(dirname -- "$backup")"
+      mv -- "$target" "$backup"
+    fi
+    cp -a -- "$file" "$target"
+  done < <(find "$source" -type d -name __pycache__ -prune -o \( -type f -o -type l \) ! -name '*.pyc' ! -name '*.bak' -print0)
 }
-
-run_step() {
-  DESC="$1"
-  shift
-  progress "$DESC"
-  if "$@"; then
-    success "$DESC"
+backup_generated() {
+  local relative target
+  for relative in .local/state/quickshell-theme.json .config/hypr/.current_wallpaper .config/hypr/hyprlock/wallpaper; do
+    target="$HOME/$relative"
+    if [[ -e "$target" || -L "$target" ]]; then
+      mkdir -p -- "$(dirname -- "$BACKUP_DIR/$relative")"
+      cp -a -- "$target" "$BACKUP_DIR/$relative"
+    fi
+  done
+}
+install_configs() {
+  install_tree "$DOTFILES_DIR/.config" "$HOME/.config" .config
+  install_tree "$DOTFILES_DIR/.local" "$HOME/.local" .local
+  if [[ -f "$DOTFILES_DIR/.zshrc" ]]; then
+    if [[ -e "$HOME/.zshrc" || -L "$HOME/.zshrc" ]]; then mv -- "$HOME/.zshrc" "$BACKUP_DIR/.zshrc"; fi
+    cp -- "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+  fi
+  chmod +x "$HOME/.local/bin/rice-lock" "$HOME/.local/bin/rice-monitors"
+  find "$HOME/.config/hypr/scripts" -maxdepth 1 -type f -name '*.sh' -exec chmod +x {} +
+  # Desktop launchers cannot rely on a login shell to add ~/.local/bin to PATH.
+  python "$DOTFILES_DIR/scripts/prepare-user-config.py"
+}
+install_wallpapers() {
+  local work
+  work=$(mktemp -d -t dotfiles-wallpapers.XXXXXXXX)
+  curl -fL --retry 2 -o "$work/wallpapers.tar.gz" 'https://github.com/MarceloAntonio/wallpapers_dotfile/archive/refs/tags/wallpapers.tar.gz'
+  mkdir -p "$HOME/Pictures/Wallpaper"
+  tar xzf "$work/wallpapers.tar.gz" -C "$HOME/Pictures/Wallpaper" --strip-components=1 --exclude=README.md
+  rm -rf -- "$work"
+}
+configure_locales() {
+  sudo sed -i -E 's/^#[[:space:]]*(pt_BR.UTF-8 UTF-8|en_US.UTF-8 UTF-8)/\1/' /etc/locale.gen
+  sudo locale-gen
+}
+configure_services() {
+  sudo systemctl enable NetworkManager.service bluetooth.service power-profiles-daemon.service
+  if systemctl --user show-environment >/dev/null 2>&1; then
+    systemctl --user daemon-reload
+    systemctl --user enable pipewire.socket pipewire-pulse.socket wireplumber.service rice-lock-bridge.service
+    # Old daemons would compete for org.freedesktop.Notifications.
+    systemctl --user disable --now swaync.service waybar.service 2>/dev/null || true
+    systemctl --user mask swaync.service
+    if [[ -n ${WAYLAND_DISPLAY:-} && -n ${XDG_SESSION_ID:-} ]]; then
+      systemctl --user import-environment WAYLAND_DISPLAY XDG_SESSION_ID
+      [[ -z ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] || systemctl --user import-environment HYPRLAND_INSTANCE_SIGNATURE
+      [[ -z ${XDG_CURRENT_DESKTOP:-} ]] || systemctl --user import-environment XDG_CURRENT_DESKTOP
+      systemctl --user restart rice-lock-bridge.service
+    fi
   else
-    error "$DESC failed"
-    FAILED+=("$DESC")
+    printf 'Sem sessão systemd de usuário ativa; os serviços de usuário serão habilitados no próximo login.\n'
+    mkdir -p "$HOME/.config/systemd/user/graphical-session.target.wants"
+    ln -sfn ../rice-lock-bridge.service "$HOME/.config/systemd/user/graphical-session.target.wants/rice-lock-bridge.service"
   fi
 }
-FAILED=()
-HYPRLAND_WAYLAND=(hyprland hyprlock awww xdg-desktop-portal-hyprland polkit-kde-agent qt5-wayland qt6-wayland)
-TERMINAL_SHELL=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
-BAR_NOTIFICATIONS=(waybar swaync)
-LAUNCHER_CLIPBOARD=(rofi cliphist wl-clipboard)
-APPS=(firefox nautilus pavucontrol)
-SCREENSHOT_MEDIA=(grim slurp brightnessctl playerctl pipewire pipewire-pulse wireplumber)
-NETWORK_BLUETOOTH=(network-manager-applet blueman bluez-utils)
-FONTS_THEMES=(ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk)
-DEV_TOOLS=(neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
-UTILITIES=(fastfetch eza starship python python-pip imagemagick libnotify bat tmux ncdu zathura zathura-pdf-mupdf 7zip)
-SYSTEM_OPTIMIZATION=(sof-firmware power-profiles-daemon zram-generator earlyoom reflector ufw libva-utils opencl-mesa clinfo)
-if grep -q GenuineIntel /proc/cpuinfo; then
-  SYSTEM_OPTIMIZATION+=(intel-ucode intel-media-driver vpl-gpu-rt intel-compute-runtime vulkan-intel)
-elif grep -q AuthenticAMD /proc/cpuinfo; then
-  SYSTEM_OPTIMIZATION+=(amd-ucode vulkan-radeon)
-fi
-
-PACMAN_GROUPS=(
-  HYPRLAND_WAYLAND
-  TERMINAL_SHELL
-  BAR_NOTIFICATIONS
-  LAUNCHER_CLIPBOARD
-  APPS
-  SCREENSHOT_MEDIA
-  NETWORK_BLUETOOTH
-  FONTS_THEMES
-  DEV_TOOLS
-  UTILITIES
-  SYSTEM_OPTIMIZATION
-)
-
-echo -e "${CYAN}"
-echo "========================================"
-echo "    DOTFILES FULL INSTALLER"
-echo "========================================"
-echo -e "${RESET}"
-run_step "Updating system (pacman -Syu)" sudo pacman -Syu --noconfirm
-for group_name in "${PACMAN_GROUPS[@]}"; do
-  declare -n group_ref="$group_name"
-  run_step "Installing group: $group_name" sudo pacman -S --needed --noconfirm "${group_ref[@]}"
-  unset -n group_ref
-done
-run_step "Installing McMojave-cursors" bash -c "
-    rm -rf /tmp/McMojave-cursors
-    git clone https://github.com/vinceliuice/McMojave-cursors /tmp/McMojave-cursors
-    cd /tmp/McMojave-cursors
-    ./install.sh
-    rm -rf /tmp/McMojave-cursors
-    if [ -d ~/.local/share/icons/McMojave-cursors ]; then
-        rm -rf ~/.local/share/icons/mcmojave-cursors
-        mv ~/.local/share/icons/McMojave-cursors ~/.local/share/icons/mcmojave-cursors
-    fi
-"
-run_step "Installing Pulsar (Binary)" bash -c "
-    rm -rf /tmp/pulsar &&
-    git clone https://github.com/MarceloAntonio/pulsar.git /tmp/pulsar &&
-    cd /tmp/pulsar &&
-    makepkg -si --noconfirm &&
-    rm -rf /tmp/pulsar
-"
-run_step "Installing SF Pro Display font" bash -c "
-    set -e
-    rm -rf /tmp/SF-Pro.dmg /tmp/sf-extract
-    cd /tmp
-    curl -fsSL -o SF-Pro.dmg 'https://devimages-cdn.apple.com/design/resources/download/SF-Pro.dmg'
-    mkdir -p sf-extract && cd sf-extract && 7z x ../SF-Pro.dmg -y >/dev/null
-    mkdir -p sf-pkg && cd sf-pkg && 7z x ../SFProFonts.pkg -y >/dev/null
-    mkdir -p sf-payload && cd sf-payload && gunzip < ../SFProFontsPackage.pkg/Payload | cpio -id 2>/dev/null
-    mkdir -p \$HOME/.local/share/fonts/sf-pro-display
-    cp Library/Fonts/SF-Pro-Display-*.otf \$HOME/.local/share/fonts/sf-pro-display/
-    fc-cache -f
-    rm -rf /tmp/SF-Pro.dmg /tmp/sf-extract
-"
-run_step "Ensuring en_US.UTF-8 locale" bash -c "
-    sudo sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-    sudo locale-gen
-"
-run_step "Enabling services (bluetooth, energia, earlyoom, firewall, zram)" bash -c "
-    set -e
-    printf '[zram0]\\ncompression-algorithm = zstd\\n' | sudo tee /etc/systemd/zram-generator.conf >/dev/null
-    sudo systemctl enable NetworkManager bluetooth power-profiles-daemon earlyoom ufw
-    sudo ufw --force enable
-"
-echo -ne "${YELLOW}⚠ Do you want to install the SDDM Astronaut theme and replace the current one? (Y/N): ${RESET}"
-read -r change_sddm
-if [[ "$change_sddm" =~ ^[SsYy]$ ]]; then
-  run_step "Installing SDDM Astronaut Theme" bash "$DOTFILES_DIR/scripts/sddm-setup.sh"
-else
-  success "Mantendo o tema SDDM atual"
-fi
-run_step "Backing up and installing configs" bash -c '
-    mkdir -p "'$BACKUP_DIR'"
-    mkdir -p "'$CONFIG_DIR'"
-
-    if [ -d "'$DOTFILES_DIR'"/.config ]; then
-        cd "'$DOTFILES_DIR'"/.config || exit 1
-        find . -type d | while IFS= read -r dir; do
-            rel_path="${dir#./}"
-            [ -n "$rel_path" ] && mkdir -p "'$CONFIG_DIR'/$rel_path"
-        done
-        find . -type f -o -type l | while IFS= read -r file; do
-            rel_path="${file#./}"
-            target_path="'$CONFIG_DIR'/$rel_path"
-            backup_path="'$BACKUP_DIR'/$rel_path"
-            if [ -e "$target_path" ]; then
-                mkdir -p "$(dirname "$backup_path")"
-                mv "$target_path" "$backup_path" 2>/dev/null
-            fi
-            cp -a "$file" "$target_path"
-        done
-    fi
-'
-
-run_step "Installing .zshrc" bash -c '
-    if [ -f "'$DOTFILES_DIR'/.zshrc" ]; then
-        [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "'$BACKUP_DIR'/"
-        cp "'$DOTFILES_DIR'/.zshrc" "$HOME/"
-    fi
-'
-run_step "Installing WhiteSur Icon Theme" bash -c '
-    rm -rf /tmp/WhiteSur-icon-theme
-    git clone https://github.com/vinceliuice/WhiteSur-icon-theme.git /tmp/WhiteSur-icon-theme
-    cd /tmp/WhiteSur-icon-theme
-    ./install.sh -a
-    rm -rf /tmp/WhiteSur-icon-theme
-'
-
-run_step "Applying themes" bash -c "
-    mkdir -p ~/.icons/default
-    cat > ~/.icons/default/index.theme <<EOF
-[Icon Theme]
-Inherits=mcmojave-cursors
-EOF
-    gsettings set org.gnome.desktop.interface cursor-theme 'mcmojave-cursors' || true
+configure_appearance() {
+  mkdir -p "$HOME/.icons/default"
+  printf '[Icon Theme]\nInherits=mcmojave-cursors\n' > "$HOME/.icons/default/index.theme"
+  if [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
+    gsettings set org.gnome.desktop.interface cursor-theme mcmojave-cursors || true
     gsettings set org.gnome.desktop.interface cursor-size 24 || true
-    gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark' || true
-    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
+    gsettings set org.gnome.desktop.interface icon-theme WhiteSur-dark || true
+    gsettings set org.gnome.desktop.interface gtk-theme Adwaita || true
     gsettings set org.gnome.desktop.interface font-name 'SF Pro Display 11' || true
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
-"
-run_step "Installing Theme Changer" bash "$DOTFILES_DIR/scripts/install-theme-changer.sh"
-WALLPAPERS_URL="https://github.com/MarceloAntonio/wallpapers_dotfile/archive/refs/tags/wallpapers.tar.gz"
-run_step "Downloading wallpapers" bash -c "
-    set -e
-    DEST=\$HOME/Pictures/Wallpaper
-    mkdir -p \$DEST
-    curl -fL $WALLPAPERS_URL | tar xz -C \$DEST --strip-components=1 --exclude=README.md
-    mkdir -p \$HOME/.config/hypr/hyprlock
-    [ -e \$HOME/.config/hypr/hyprlock/wallpaper ] || ln -s \$DEST/landscape-dusk-sky.jpg \$HOME/.config/hypr/hyprlock/wallpaper
-    [ -s \$HOME/.config/hypr/.current_wallpaper ] || echo \$DEST/landscape-dusk-sky.jpg > \$HOME/.config/hypr/.current_wallpaper
-"
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark || true
+  fi
+}
 
-run_step "Pre-installing Neovim plugins (lazy.nvim)" bash -c "nvim --headless '+Lazy! sync' +qa"
-run_step "Setting ZSH as default shell" bash -c "
-    if [ \"\$SHELL\" != \"\$(which zsh)\" ]; then
-        chsh -s \$(which zsh)
-    fi
-"
-
-if ((${#FAILED[@]})); then
-  echo -e "${RED}"
-  echo "========================================"
-  echo "   ✖ INSTALLATION FINISHED WITH ERRORS"
-  echo "========================================"
-  echo -e "${RESET}"
-  for step in "${FAILED[@]}"; do error "$step"; done
-  exit 1
+step 'Atualizando o sistema e instalando dependências' sudo pacman -Syu --needed --noconfirm "${PACKAGES[@]}"
+step 'Preservando estado gerado e wallpaper' backup_generated
+step 'Instalando configurações e comandos locais' install_configs
+if $INSTALL_ASSETS; then step 'Instalando ícones, cursores e SF Pro' bash "$DOTFILES_DIR/scripts/install-assets.sh"; fi
+if $INSTALL_WALLPAPERS; then step 'Baixando wallpapers' install_wallpapers; fi
+step 'Preparando wallpaper e paletas do usuário' python "$DOTFILES_DIR/scripts/prepare-user-config.py" --initialize
+step 'Registrando o seletor de personalização Quickshell' bash "$DOTFILES_DIR/scripts/install-theme-changer.sh"
+step 'Aplicando preferências de aparência' configure_appearance
+[[ -r /etc/pam.d/hyprlock ]] || { printf 'A política PAM /etc/pam.d/hyprlock não foi instalada.\n' >&2; exit 1; }
+step 'Habilitando locales pt_BR e en_US' configure_locales
+step 'Habilitando serviços' configure_services
+if $INSTALL_SDDM; then step 'Instalando SDDM Astronaut' bash "$DOTFILES_DIR/scripts/sddm-setup.sh"; fi
+if $INSTALL_NVIM; then step 'Sincronizando plugins do Neovim' nvim --headless '+Lazy! sync' +qa; fi
+if $SET_SHELL; then
+  if [[ ${SHELL:-} != "$(command -v zsh)" ]]; then step 'Definindo Zsh como shell padrão' chsh -s "$(command -v zsh)"; fi
 fi
-echo -e "${GREEN}"
-echo "========================================"
-echo "   ✔ INSTALLATION COMPLETED"
-echo "========================================"
-echo -e "${RESET}"
-echo -e "${CYAN}Reboot recommended${RESET}"
+printf '\nInstalação concluída. Backup: %s\nEntre novamente na sessão Hyprland para usar toda a configuração.\n' "$BACKUP_DIR"
