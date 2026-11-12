@@ -1,4 +1,5 @@
 import QtQuick
+import "monitors" as Monitors
 import QtQuick.Layouts
 import Quickshell.Networking
 import Quickshell.Services.UPower
@@ -31,6 +32,11 @@ ColumnLayout {
             enabled: !!Service.adapter
             onClicked: Service.section = "bluetooth"
         }
+    }
+    ActionButton {
+        Layout.fillWidth: true
+        text: "󰍹   Monitores  ·  posição, Hz e tela principal"
+        onClicked: Monitors.Settings.open()
     }
     AudioControls { Layout.fillWidth: true }
     Card {

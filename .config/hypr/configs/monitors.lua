@@ -29,3 +29,11 @@ for i = 6, 10 do
         default = (i == 6)
     })
 end
+
+-- Optional layout saved by the Quickshell monitor configurator.
+local managed = os.getenv("HOME") .. "/.config/hypr/configs/monitors-managed.lua"
+local managed_file = io.open(managed, "r")
+if managed_file then
+    managed_file:close()
+    dofile(managed)
+end

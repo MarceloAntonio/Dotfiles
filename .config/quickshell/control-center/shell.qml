@@ -1,9 +1,18 @@
 import Quickshell
 import "personalize" as Personalize
+import "monitors" as Monitors
 import "bar" as DesktopBar
 
 ShellRoot {
     readonly property var notificationService: Notifications
+    Variants {
+        model: Quickshell.screens
+        delegate: Monitors.DisplayWindow {
+            required property var modelData
+            screen: modelData
+            outputName: modelData.name
+        }
+    }
     Variants {
         model: Quickshell.screens
         delegate: PowerMenu {
