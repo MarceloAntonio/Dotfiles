@@ -53,7 +53,10 @@ Card {
                 Layout.preferredHeight: 24
                 GlassText {
                     anchors.centerIn: parent
-                    text: "󰂚"
+                    // ícone por categoria (hint "category" do notify-send -c); sino como padrão
+                    text: ({ "device": "\u{f0553}", "device.audio": "\u{f02cb}",
+                             "device.storage": "\u{f02ca}", "power": "\u{f06a5}" })
+                          [String(card.notification.hints?.category || "")] || "󰂚"
                     font.family: Theme.icons
                     font.pixelSize: 20
                     color: Theme.muted

@@ -50,7 +50,7 @@ SHELL_TOOLS=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-s
 INTEGRATION=(python python-pillow python-gobject python-dbus gtk3 networkmanager nm-connection-editor bluez bluez-utils power-profiles-daemon)
 MEDIA=(pipewire pipewire-audio pipewire-pulse wireplumber brightnessctl playerctl grim slurp rofi cliphist wl-clipboard libnotify imagemagick)
 APPS=(firefox nautilus neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
-APPEARANCE=(desktop-file-utils ttf-jetbrains-mono-nerd inter-font breeze-icons breeze-gtk fontconfig)
+APPEARANCE=(desktop-file-utils ttf-jetbrains-mono-nerd noto-fonts-emoji inter-font breeze-icons breeze-gtk fontconfig)
 UTILITIES=(fastfetch eza starship bat tmux ncdu zathura zathura-pdf-mupdf 7zip curl cpio procps-ng sof-firmware)
 PACKAGES=("${DESKTOP[@]}" "${SHELL_TOOLS[@]}" "${INTEGRATION[@]}" "${MEDIA[@]}" "${APPS[@]}" "${APPEARANCE[@]}" "${UTILITIES[@]}")
 

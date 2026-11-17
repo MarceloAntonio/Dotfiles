@@ -5,6 +5,7 @@ import "bar" as DesktopBar
 
 ShellRoot {
     readonly property var notificationService: Notifications
+    DeviceWatcher {}
     Variants {
         model: Quickshell.screens
         delegate: Monitors.DisplayWindow {

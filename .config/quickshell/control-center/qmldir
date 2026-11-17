@@ -23,3 +23,4 @@ WifiPage 1.0 WifiPage.qml
 PlaybackButton 1.0 PlaybackButton.qml
 
 PowerMenu 1.0 PowerMenu.qml
+DeviceWatcher 1.0 DeviceWatcher.qml

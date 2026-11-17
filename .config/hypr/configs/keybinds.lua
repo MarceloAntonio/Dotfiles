@@ -8,7 +8,7 @@ local function bind(keys, action, desc, opts)
 end
 bind(mod .. " + Return", hl.dsp.exec_cmd("kitty"), "Terminal (kitty)")
 bind(mod .. " + B", hl.dsp.exec_cmd("firefox"), "Navegador (Firefox)")
-bind(mod .. " + E", hl.dsp.exec_cmd("nautilus"), "Arquivos (Nautilus)")
+bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), "Arquivos (Nautilus)")
 bind(mod .. " + space", hl.dsp.exec_cmd("rofi -show drun"), "Menu de aplicativos")
 bind(mod .. " + V",
   hl.dsp.exec_cmd(
