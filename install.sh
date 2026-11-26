@@ -48,7 +48,7 @@ done
 DESKTOP=(hyprland hyprlock quickshell awww xdg-desktop-portal-hyprland polkit polkit-kde-agent qt6-wayland)
 SHELL_TOOLS=(kitty zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
 INTEGRATION=(python python-pillow python-gobject python-dbus gtk3 networkmanager nm-connection-editor bluez bluez-utils power-profiles-daemon)
-MEDIA=(pipewire pipewire-audio pipewire-pulse wireplumber brightnessctl playerctl grim slurp rofi cliphist wl-clipboard libnotify imagemagick)
+MEDIA=(pipewire pipewire-audio pipewire-pulse wireplumber brightnessctl playerctl grim slurp hyprpicker rofi cliphist wl-clipboard libnotify imagemagick)
 APPS=(firefox nautilus neovim tree-sitter-cli git lazygit base-devel nodejs npm ripgrep fd unzip)
 APPEARANCE=(desktop-file-utils ttf-jetbrains-mono-nerd noto-fonts-emoji inter-font breeze-icons breeze-gtk fontconfig)
 UTILITIES=(fastfetch eza starship bat tmux ncdu zathura zathura-pdf-mupdf 7zip curl cpio procps-ng sof-firmware)
@@ -113,13 +113,15 @@ install_wallpapers() {
   local work
   work=$(mktemp -d -t dotfiles-wallpapers.XXXXXXXX)
   curl -fL --retry 2 -o "$work/wallpapers.tar.gz" 'https://github.com/MarceloAntonio/wallpapers_dotfile/archive/refs/tags/wallpapers.tar.gz'
-  mkdir -p "$HOME/Pictures/Wallpaper"
-  tar xzf "$work/wallpapers.tar.gz" -C "$HOME/Pictures/Wallpaper" --strip-components=1 --exclude=README.md
+  mkdir -p "$HOME/Images/Wallpaper"
+  tar xzf "$work/wallpapers.tar.gz" -C "$HOME/Images/Wallpaper" --strip-components=1 --exclude=README.md
   rm -rf -- "$work"
 }
 configure_locales() {
   sudo sed -i -E 's/^#[[:space:]]*(pt_BR.UTF-8 UTF-8|en_US.UTF-8 UTF-8)/\1/' /etc/locale.gen
   sudo locale-gen
+  # Inglês é o padrão; Português fica a um clique em Central → Geral.
+  sudo localectl set-locale LANG=en_US.UTF-8
 }
 configure_services() {
   sudo systemctl enable NetworkManager.service bluetooth.service power-profiles-daemon.service
@@ -163,7 +165,7 @@ step 'Preparando wallpaper e paletas do usuário' python "$DOTFILES_DIR/scripts/
 step 'Registrando o seletor de personalização Quickshell' bash "$DOTFILES_DIR/scripts/install-theme-changer.sh"
 step 'Aplicando preferências de aparência' configure_appearance
 [[ -r /etc/pam.d/hyprlock ]] || { printf 'A política PAM /etc/pam.d/hyprlock não foi instalada.\n' >&2; exit 1; }
-step 'Habilitando locales pt_BR e en_US' configure_locales
+step 'Habilitando locales pt_BR e en_US (padrão: inglês)' configure_locales
 step 'Habilitando serviços' configure_services
 if $INSTALL_SDDM; then step 'Instalando SDDM Astronaut' bash "$DOTFILES_DIR/scripts/sddm-setup.sh"; fi
 if $INSTALL_NVIM; then step 'Sincronizando plugins do Neovim' nvim --headless '+Lazy! sync' +qa; fi

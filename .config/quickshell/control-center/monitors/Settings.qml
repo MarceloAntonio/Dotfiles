@@ -131,19 +131,19 @@ Scope {
     }
     Process {
         id: writer
-        stdout: StdioCollector { onStreamFinished: { try { root.result = JSON.parse(text); } catch(e) { root.result = {ok:false,message:"Resposta inválida do configurador."}; } } }
+        stdout: StdioCollector { onStreamFinished: { try { root.result = JSON.parse(text); } catch(e) { root.result = {ok:false,message:Shell.Theme.tr("Resposta inválida do configurador.", "Invalid response from the configurator.")}; } } }
         onExited: code => {
             const data = root.result;
-            if (code !== 0 || !data?.ok) { root.failed = true; root.message = data?.message || data?.error || "Não foi possível aplicar a configuração."; return; }
-            if (root.operation === "apply") { root.pending = {token:data.token,expiresAt:data.expiresAt}; root.now = Date.now()/1000; root.message = "Confira todas as telas antes de manter."; }
-            else { root.pending = null; root.message = root.operation === "confirm" ? "Configuração salva." : "Configuração anterior restaurada."; Qt.callLater(root.refresh); }
+            if (code !== 0 || !data?.ok) { root.failed = true; root.message = data?.message || data?.error || Shell.Theme.tr("Não foi possível aplicar a configuração.", "Could not apply the setup."); return; }
+            if (root.operation === "apply") { root.pending = {token:data.token,expiresAt:data.expiresAt}; root.now = Date.now()/1000; root.message = Shell.Theme.tr("Confira todas as telas antes de manter.", "Check all displays before keeping."); }
+            else { root.pending = null; root.message = root.operation === "confirm" ? Shell.Theme.tr("Configuração salva.", "Setup saved.") : Shell.Theme.tr("Configuração anterior restaurada.", "Previous setup restored."); Qt.callLater(root.refresh); }
         }
     }
     Timer {
         interval: 250; repeat: true; running: !!root.pending
         onTriggered: {
             root.now = Date.now()/1000;
-            if (!root.secondsLeft && !root.busy) { root.pending = null; root.message = "Tempo esgotado. Restaurando a configuração anterior…"; refreshDelay.restart(); }
+            if (!root.secondsLeft && !root.busy) { root.pending = null; root.message = Shell.Theme.tr("Tempo esgotado. Restaurando a configuração anterior…", "Time's up. Restoring the previous setup…"); refreshDelay.restart(); }
         }
     }
     Connections {
@@ -151,7 +151,7 @@ Scope {
         function onValuesChanged() {
             if (!root.opened || root.pending) return;
             if (!root.busy && !root.dirty) refreshDelay.restart();
-            else root.message = "As telas conectadas mudaram. Atualize a lista antes de testar.";
+            else root.message = Shell.Theme.tr("As telas conectadas mudaram. Atualize a lista antes de testar.", "Connected displays changed. Refresh the list before testing.");
         }
     }
     Timer { id: refreshDelay; interval: 1500; onTriggered: root.refresh() }

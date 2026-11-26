@@ -41,12 +41,12 @@ Card {
             spacing: 4
             GlassText {
                 Layout.fillWidth: true
-                text: Service.player?.trackTitle || "Nada tocando"
+                text: Service.player?.trackTitle || Theme.tr("Nada tocando", "Nothing playing")
                     font.weight: Font.DemiBold
             }
             GlassText {
                 Layout.fillWidth: true
-                text: Service.player ? (Service.player.trackArtist || Service.player.identity) : "Abra seu player para começar"
+                text: Service.player ? (Service.player.trackArtist || Service.player.identity) : Theme.tr("Abra seu player para começar", "Open a player to get started")
                 font.pixelSize: 12
                 color: Theme.muted
             }
@@ -56,14 +56,14 @@ Card {
                     text: "󰒮"; font.family: Theme.icons
                     enabled: Service.player?.canGoPrevious ?? false
                     onClicked: Service.player.previous()
-                    tooltipText: "Anterior"
+                    tooltipText: Theme.tr("Anterior", "Previous")
                 }
                 PlaybackButton {}
                 ActionButton {
                     text: "󰒭"; font.family: Theme.icons
                     enabled: Service.player?.canGoNext ?? false
                     onClicked: Service.player.next()
-                    tooltipText: "Próxima"
+                    tooltipText: Theme.tr("Próxima", "Next")
                 }
             }
         }

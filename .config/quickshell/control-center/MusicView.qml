@@ -26,9 +26,9 @@ Item {
         spacing: 14
         RowLayout {
             Layout.fillWidth: true
-            ActionButton { text: "‹"; font.pixelSize: 25; implicitWidth: 36; onClicked: view.back(); Accessible.name: "Voltar" }
+            ActionButton { text: "‹"; font.pixelSize: 25; implicitWidth: 36; onClicked: view.back(); Accessible.name: Theme.tr("Voltar", "Back") }
             Item { Layout.fillWidth: true }
-            GlassText { text: Service.player?.identity || "Música"; color: Theme.muted; font.pixelSize: 12 }
+            GlassText { text: Service.player?.identity || Theme.tr("Música", "Music"); color: Theme.muted; font.pixelSize: 12 }
         }
         RowLayout {
             Layout.fillWidth: true
@@ -48,8 +48,8 @@ Item {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
             spacing: 12
-        GlassText { Layout.fillWidth: true; text: Service.player?.trackTitle || "Nada tocando"; font.pixelSize: 20; font.weight: Font.DemiBold; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight }
-        GlassText { Layout.fillWidth: true; text: Service.player?.trackArtist || "Abra seu player para começar"; color: Theme.muted; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight }
+        GlassText { Layout.fillWidth: true; text: Service.player?.trackTitle || Theme.tr("Nada tocando", "Nothing playing"); font.pixelSize: 20; font.weight: Font.DemiBold; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight }
+        GlassText { Layout.fillWidth: true; text: Service.player?.trackArtist || Theme.tr("Abra seu player para começar", "Open a player to get started"); color: Theme.muted; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight }
         Row {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredHeight: 56
@@ -71,9 +71,9 @@ Item {
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             spacing: 18
-            ActionButton { text: "󰒮"; font.family: Theme.icons; font.pixelSize: 24; enabled: Service.player?.canGoPrevious ?? false; onClicked: Service.player.previous(); tooltipText: "Anterior" }
+            ActionButton { text: "󰒮"; font.family: Theme.icons; font.pixelSize: 24; enabled: Service.player?.canGoPrevious ?? false; onClicked: Service.player.previous(); tooltipText: Theme.tr("Anterior", "Previous") }
             PlaybackButton { font.pixelSize: 30; implicitWidth: 64; implicitHeight: 54; selected: true }
-            ActionButton { text: "󰒭"; font.family: Theme.icons; font.pixelSize: 24; enabled: Service.player?.canGoNext ?? false; onClicked: Service.player.next(); tooltipText: "Próxima" }
+            ActionButton { text: "󰒭"; font.family: Theme.icons; font.pixelSize: 24; enabled: Service.player?.canGoNext ?? false; onClicked: Service.player.next(); tooltipText: Theme.tr("Próxima", "Next") }
         }
         }
         }

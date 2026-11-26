@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Resolve install-time paths and create user-owned generated shell data."""
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
 HOME = Path.home()
 CONFIG = HOME / '.config'
 LOCAL = HOME / '.local'
+DEFAULT_WALLPAPER = Path(__file__).resolve().parents[1] / 'assets/wallpaper/os-windows-7-arch-linux.jpg'
 
 
 def desktop_home(value):
@@ -32,7 +34,7 @@ def prepare_paths():
 
 
 def initialize():
-    (HOME / 'Pictures/Wallpaper').mkdir(parents=True, exist_ok=True)
+    (HOME / 'Images/Wallpaper').mkdir(parents=True, exist_ok=True)
     cache = CONFIG / 'hypr/.current_wallpaper'
     current = None
     try:
@@ -42,8 +44,10 @@ def initialize():
     except OSError:
         pass
     if current is None:
-        folder = HOME / 'Pictures/Wallpaper'
-        preferred = folder / 'landscape-dusk-sky.jpg'
+        folder = HOME / 'Images/Wallpaper'
+        preferred = folder / DEFAULT_WALLPAPER.name
+        if not preferred.is_file() and DEFAULT_WALLPAPER.is_file():
+            shutil.copy2(DEFAULT_WALLPAPER, preferred)
         if preferred.is_file():
             current = preferred
         elif folder.is_dir():

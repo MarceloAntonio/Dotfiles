@@ -2,6 +2,10 @@
 """Start the isolated locker; --suspend waits for compositor confirmation."""
 import fcntl, json, os, pathlib, subprocess, sys, time
 home = pathlib.Path.home()
+try: _LANG = open('/etc/locale.conf').read().splitlines()
+except OSError: _LANG = []
+EN = any(line.strip().startswith('LANG=en') for line in _LANG)
+def tr(pt, en): return en if EN else pt
 runtime = pathlib.Path(os.environ.get('XDG_RUNTIME_DIR', f'/run/user/{os.getuid()}'))
 
 def secure():
@@ -23,7 +27,7 @@ if '--suspend' in sys.argv or '--ensure-secure' in sys.argv:
             if '--suspend' in sys.argv: subprocess.run(['systemctl','suspend'],check=True)
             raise SystemExit(0)
         time.sleep(.1)
-    print('Não foi possível confirmar o bloqueio. Suspensão cancelada.',file=sys.stderr)
+    print(tr('Não foi possível confirmar o bloqueio. Suspensão cancelada.', 'Could not confirm the lock. Suspend canceled.'),file=sys.stderr)
     raise SystemExit(1)
 
 with (runtime/'rice-lock.launch').open('w') as guard:
@@ -37,5 +41,5 @@ with (runtime/'rice-lock.launch').open('w') as guard:
     if result != 0:
         # Never terminate a potentially acquired Wayland lock. A compositor
         # keeps the session locked if the lock client dies.
-        print('O bloqueador Quickshell terminou com erro; tentando Hyprlock.',file=sys.stderr)
+        print(tr('O bloqueador Quickshell terminou com erro; tentando Hyprlock.', 'The Quickshell locker failed; trying Hyprlock.'),file=sys.stderr)
         raise SystemExit(subprocess.call(['hyprlock']))

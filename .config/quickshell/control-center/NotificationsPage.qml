@@ -5,16 +5,16 @@ ColumnLayout {
     spacing: 12
     RowLayout {
         Layout.fillWidth: true
-        GlassText { Layout.fillWidth: true; text: "Notificações"; font.pixelSize: 18; font.weight: Font.DemiBold }
+        GlassText { Layout.fillWidth: true; text: Theme.tr("Notificações", "Notifications"); font.pixelSize: 18; font.weight: Font.DemiBold }
         ActionButton {
-            text: "Limpar"
+            text: Theme.tr("Limpar", "Clear")
             enabled: Notifications.count > 0
             onClicked: Notifications.clear()
         }
     }
     ActionButton {
         Layout.fillWidth: true
-        text: "Não perturbe  ·  " + (Notifications.dnd ? "Ativado" : "Desativado")
+        text: Theme.tr("Não perturbe  ·  ", "Do Not Disturb  ·  ") + (Notifications.dnd ? Theme.tr("Ativado", "On") : Theme.tr("Desativado", "Off"))
         selected: Notifications.dnd
         onClicked: Notifications.dnd = !Notifications.dnd
     }
@@ -26,7 +26,7 @@ ColumnLayout {
             anchors.centerIn: parent
             spacing: 10
             GlassText { Layout.alignment: Qt.AlignHCenter; text: "󰂜"; font.family: Theme.icons; font.pixelSize: 30; color: Theme.muted }
-            GlassText { text: "Nenhuma notificação por aqui"; color: Theme.muted }
+            GlassText { text: Theme.tr("Nenhuma notificação por aqui", "No notifications here"); color: Theme.muted }
         }
     }
     Repeater {

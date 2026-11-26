@@ -1,5 +1,7 @@
 # Interface Quickshell
 
+**Português** · [English](README.en.md)
+
 Barra, central, notificações, calendário/player, personalização e monitores.
 A aparência acompanha os temas Claro, Escuro e Adaptativo.
 

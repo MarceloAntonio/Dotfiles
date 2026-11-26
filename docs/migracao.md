@@ -1,5 +1,7 @@
 # Instalação e migração
 
+**Português** · [English](migration.md)
+
 ## Ambiente esperado
 
 O instalador é voltado a Arch Linux com `pacman`, systemd e uma sessão Wayland. A configuração usa a API Lua do Hyprland, inclusive `hl.monitor()` e `hyprctl eval`; versões antigas que só aceitam configuração em `.conf` não servem para estes arquivos. O desenvolvimento foi feito com Hyprland 0.57.1 e Quickshell 0.3.2.
@@ -51,7 +53,7 @@ O instalador deixa de instalar Waybar, SwayNC e Pulsar, mas não remove pacotes 
 
 ## Atualizando uma instalação antiga
 
-A barra e os painéis agora pertencem ao Quickshell. Os atalhos de personalização continuam em `Super + T` e `Super + W`, mas abrem a interface QML em vez dos seletores antigos do Rofi. O Rofi permanece para aplicativos e clipboard.
+A barra e os painéis agora pertencem ao Quickshell. O atalho de personalização é `Super + W`; `Super + T` foi removido por fazer o mesmo. Ele abre a interface QML em vez dos seletores antigos do Rofi. O Rofi permanece para aplicativos e clipboard.
 
 O bloqueio passa pelo comando `rice-lock`, que abre uma configuração Quickshell independente e autentica pelo serviço PAM `hyprlock`. O Hyprlock continua instalado e com configuração alternativa disponível. O serviço `rice-lock-bridge` integra pedidos de bloqueio e suspensão à sessão do logind.
 
@@ -62,7 +64,7 @@ Ao terminar a instalação, encerre e abra a sessão do Hyprland para iniciar os
 1. Confira `hyprctl configerrors` e abra a central com `Super + C`.
 2. Escolha Claro, Escuro ou Adaptativo na aba Geral.
 3. Abra Monitores com `Super + Shift + D`, organize as telas e teste a configuração. Ela só é salva ao clicar em **Manter**.
-4. Abra a personalização com `Super + T` para escolher seu wallpaper e tema do Kitty. Não são copiadas fotos ou seleções particulares do computador do autor.
+4. Abra a personalização com `Super + W` para escolher seu wallpaper e tema do Kitty. Não são copiadas fotos ou seleções particulares do computador do autor.
 5. Confira o bloqueador com `rice-lock --preview`. Essa janela é apenas uma prévia; o bloqueio real usa `Super + L`.
 
 O significado de Principal no editor é preferência do rice e tela inicial do cursor. Regras de workspaces e nomes de conectores são configurados em `.config/hypr/configs/monitors.lua`; ajuste o perfil de exemplo ao seu equipamento quando necessário.

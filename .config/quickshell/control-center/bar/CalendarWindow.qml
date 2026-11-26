@@ -108,23 +108,23 @@ PanelWindow {
                         Layout.fillWidth: true
                         spacing: 3
                         Item { Layout.fillWidth: true; Layout.preferredHeight: morphClock.implicitHeight }
-                        Shell.GlassText { Layout.fillWidth: true; text: clock.date.toLocaleDateString(Qt.locale("pt_BR"), "dddd, d 'de' MMMM"); color: Shell.Theme.muted; font.pixelSize: 12 }
+                        Shell.GlassText { Layout.fillWidth: true; text: clock.date.toLocaleDateString(Shell.Theme.locale, Shell.Theme.tr("dddd, d 'de' MMMM", "dddd, MMMM d")); color: Shell.Theme.muted; font.pixelSize: 12 }
                     }
                 }
                 RowLayout {
                     Layout.fillWidth: true
-                    Shell.ActionButton { text: "‹"; implicitWidth: 36; font.pixelSize: 22; onClicked: BarState.moveMonth(-1); tooltipText: "Mês anterior · Page Up" }
+                    Shell.ActionButton { text: "‹"; implicitWidth: 36; font.pixelSize: 22; onClicked: BarState.moveMonth(-1); tooltipText: Shell.Theme.tr("Mês anterior · Page Up", "Previous month · Page Up") }
                     Shell.GlassText {
                         Layout.fillWidth: true
                         text: {
-                            const label = new Date(BarState.year, BarState.month, 1, 12).toLocaleDateString(Qt.locale("pt_BR"), "MMMM yyyy");
+                            const label = new Date(BarState.year, BarState.month, 1, 12).toLocaleDateString(Shell.Theme.locale, "MMMM yyyy");
                             return label.charAt(0).toLocaleUpperCase() + label.slice(1);
                         }
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: 16
                         font.weight: Font.DemiBold
                     }
-                    Shell.ActionButton { text: "›"; implicitWidth: 36; font.pixelSize: 22; onClicked: BarState.moveMonth(1); tooltipText: "Próximo mês · Page Down" }
+                    Shell.ActionButton { text: "›"; implicitWidth: 36; font.pixelSize: 22; onClicked: BarState.moveMonth(1); tooltipText: Shell.Theme.tr("Próximo mês · Page Down", "Next month · Page Down") }
                 }
                 GridLayout {
                     columns: 7
@@ -133,7 +133,7 @@ PanelWindow {
                     uniformCellWidths: true
                     Layout.fillWidth: true
                     Repeater {
-                        model: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+                        model: Shell.Theme.tr(["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
                         delegate: Shell.GlassText {
                             required property string modelData
                             Layout.fillWidth: true
@@ -167,7 +167,7 @@ PanelWindow {
                                 font.weight: dayButton.modelData.today ? Font.Bold : Font.Normal
                                 font.pixelSize: 13
                             }
-                            Accessible.name: modelData.date.toLocaleDateString(Qt.locale("pt_BR"), "dddd, d 'de' MMMM 'de' yyyy")
+                            Accessible.name: modelData.date.toLocaleDateString(Shell.Theme.locale, Shell.Theme.tr("dddd, d 'de' MMMM 'de' yyyy", "dddd, MMMM d, yyyy"))
                         }
                     }
                 }
@@ -176,11 +176,11 @@ PanelWindow {
                     Layout.fillWidth: true
                     Shell.GlassText {
                         Layout.fillWidth: true
-                        text: BarState.selectedDate.toLocaleDateString(Qt.locale("pt_BR"), "dd/MM/yyyy")
+                        text: BarState.selectedDate.toLocaleDateString(Shell.Theme.locale, Shell.Theme.tr("dd/MM/yyyy", "MM/dd/yyyy"))
                         color: Shell.Theme.muted
                         font.pixelSize: 12
                     }
-                    Shell.ActionButton { text: "Hoje"; onClicked: BarState.today(); tooltipText: "Voltar para hoje · Home" }
+                    Shell.ActionButton { text: Shell.Theme.tr("Hoje", "Today"); onClicked: BarState.today(); tooltipText: Shell.Theme.tr("Voltar para hoje · Home", "Back to today · Home") }
                 }
             }
         }

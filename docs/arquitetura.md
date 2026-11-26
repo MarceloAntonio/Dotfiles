@@ -1,5 +1,7 @@
 # Arquitetura e diagnóstico
 
+**Português** · [English](architecture.md)
+
 ## Processos
 
 A configuração `control-center` do Quickshell mantém barra, central, calendário, player, notificações, personalização e monitores. Ela é iniciada pelo autostart do Hyprland e admite recarga de QML.

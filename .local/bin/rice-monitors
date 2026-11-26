@@ -3,6 +3,10 @@
 import subprocess
 import sys
 import time
+try: _LANG = open('/etc/locale.conf').read().splitlines()
+except OSError: _LANG = []
+EN = any(line.strip().startswith('LANG=en') for line in _LANG)
+def tr(pt, en): return en if EN else pt
 subprocess.run(['qs','-c','control-center','--no-duplicate','--daemonize'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 base=['qs','-c','control-center','ipc','call','monitors']
 for _ in range(25):
@@ -10,5 +14,5 @@ for _ in range(25):
     if result.returncode == 0 and '"opened"' in result.stdout:
         raise SystemExit(subprocess.run(base+['open']).returncode)
     time.sleep(.1)
-print('O configurador de monitores não ficou disponível.',file=sys.stderr)
+print(tr('O configurador de monitores não ficou disponível.', 'The monitor configurator did not become available.'),file=sys.stderr)
 raise SystemExit(1)

@@ -55,7 +55,7 @@ PanelWindow {
             ColumnLayout {
                 anchors.fill: parent; anchors.margins: 18; spacing: 10
                 RowLayout {
-                    GlassText { text: panel.confirmation ? "Confirmar ação" : "Energia e sessão"; font.pixelSize: 17; Layout.fillWidth: true }
+                    GlassText { text: panel.confirmation ? Theme.tr("Confirmar ação", "Confirm action") : Theme.tr("Energia e sessão", "Power and session"); font.pixelSize: 17; Layout.fillWidth: true }
                     ActionButton { text: "×"; onClicked: panel.close() }
                 }
                 GridLayout {
@@ -63,7 +63,7 @@ PanelWindow {
                     Layout.fillWidth: true; Layout.fillHeight: true
                     columns: 2; columnSpacing: 8; rowSpacing: 8
                     Repeater {
-                        model: [{label:"󰌾  Bloquear",action:"bloquear"},{label:"󰒲  Suspender",action:"suspender"},{label:"󰜉  Reiniciar",action:"reiniciar"},{label:"󰐥  Desligar",action:"desligar"}]
+                        model: [{label:"󰌾  " + Theme.tr("Bloquear", "Lock"),action:"bloquear"},{label:"󰒲  " + Theme.tr("Suspender", "Suspend"),action:"suspender"},{label:"󰜉  " + Theme.tr("Reiniciar", "Restart"),action:"reiniciar"},{label:"󰐥  " + Theme.tr("Desligar", "Shut down"),action:"desligar"}]
                         delegate: ActionButton {
                             required property var modelData
                             Layout.fillWidth: true; Layout.fillHeight: true
@@ -75,13 +75,13 @@ PanelWindow {
                         }
                     }
                 }
-                ActionButton { visible: !panel.confirmation; Layout.fillWidth: true; text: "󰗼  Sair da sessão"; onClicked: panel.confirmation = "sair" }
-                GlassText { visible: !!panel.confirmation; Layout.fillWidth: true; text: "Deseja " + panel.confirmation + "?"; font.pixelSize: 18 }
+                ActionButton { visible: !panel.confirmation; Layout.fillWidth: true; text: "󰗼  " + Theme.tr("Sair da sessão", "Log out"); onClicked: panel.confirmation = "sair" }
+                GlassText { visible: !!panel.confirmation; Layout.fillWidth: true; text: Theme.tr("Deseja " + panel.confirmation + "?", "Do you want to " + ({ sair: "log out", reiniciar: "restart", desligar: "shut down", suspender: "suspend" })[panel.confirmation] + "?"); font.pixelSize: 18 }
                 Item { visible: !!panel.confirmation; Layout.fillHeight: true }
                 RowLayout {
                     visible: !!panel.confirmation; Layout.fillWidth: true
-                    ActionButton { Layout.fillWidth: true; text: "Cancelar"; onClicked: panel.confirmation = "" }
-                    ActionButton { Layout.fillWidth: true; text: "Confirmar"; selected: true; onClicked: { const action = panel.confirmation; panel.close(); Service.executePower(action); } }
+                    ActionButton { Layout.fillWidth: true; text: Theme.tr("Cancelar", "Cancel"); onClicked: panel.confirmation = "" }
+                    ActionButton { Layout.fillWidth: true; text: Theme.tr("Confirmar", "Confirm"); selected: true; onClicked: { const action = panel.confirmation; panel.close(); Service.executePower(action); } }
                 }
             }
         }

@@ -31,6 +31,24 @@ Scope {
     readonly property color tooltip: dark ? "#b8121924" : "#d04a5260"
     readonly property string font: "SF Pro Display"
     readonly property string icons: "JetBrainsMono Nerd Font Propo"
+    // Idioma = locale do sistema (/etc/locale.conf); "en" para LANG=en_*, senão português.
+    property string lang: "pt"
+    readonly property bool en: lang === "en"
+    readonly property var locale: Qt.locale(en ? "en_US" : "pt_BR")
+    function tr(pt, english) { return en ? english : pt; }
+    function setLanguage(value) {
+        // A interface troca quando /etc/locale.conf muda (após a senha), junto com o reload do Hyprland.
+        if (!["pt", "en"].includes(value) || value === lang || langWriter.running) return;
+        langWriter.exec(["sh", "-c", "localectl set-locale LANG=\"$1\" && hyprctl reload >/dev/null", "_", value === "en" ? "en_US.UTF-8" : "pt_BR.UTF-8"]);
+    }
+    FileView {
+        id: localeFile
+        path: "/etc/locale.conf"
+        watchChanges: true
+        onLoaded: theme.lang = /^LANG=en/m.test(text()) ? "en" : "pt"
+        onFileChanged: reload()
+    }
+    Process { id: langWriter }
     function setMode(value) {
         if (!["light", "dark", "wallpaper"].includes(value)) return;
         mode = value;
@@ -60,5 +78,6 @@ Scope {
         target: "theme"
         function set(mode: string): void { theme.setMode(mode); }
         function status(): string { return theme.mode; }
+        function language(value: string): void { theme.setLanguage(value); }
     }
 }

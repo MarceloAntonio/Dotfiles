@@ -1,10 +1,13 @@
 [Desktop Entry]
 Type=Application
-Name=Monitores
-Comment=Posição, resolução, frequência e monitor principal
+Name=Monitors
+Name[pt_BR]=Monitores
+Comment=Position, resolution, refresh rate and primary monitor
+Comment[pt_BR]=Posição, resolução, frequência e monitor principal
 Exec=@HOME@/.local/bin/rice-monitors
 Icon=preferences-desktop-display
 Terminal=false
 Categories=Settings;HardwareSettings;
-Keywords=monitor;display;tela;resolução;frequência;
+Keywords=monitor;display;screen;resolution;refresh;
+Keywords[pt_BR]=monitor;display;tela;resolução;frequência;
 StartupNotify=false

@@ -113,11 +113,11 @@ Scope {
         if (password !== undefined) network.connectWithPsk(password);
         else if (network.known || network.security === WifiSecurityType.Open || network.security === WifiSecurityType.Owe) network.connect();
         else if ([WifiSecurityType.Wpa2Psk, WifiSecurityType.WpaPsk, WifiSecurityType.Sae].includes(network.security)) passwordNetwork = network;
-        else fail("Esta rede exige configuração avançada. Use o editor de conexões.");
+        else fail(Theme.tr("Esta rede exige configuração avançada. Use o editor de conexões.", "This network needs advanced setup. Use the connection editor."));
     }
     function bluetoothAction(device, action) {
         if (!bluetoothAgent.running) {
-            fail("O serviço de pareamento está indisponível.");
+            fail(Theme.tr("O serviço de pareamento está indisponível.", "The pairing service is unavailable."));
             return;
         }
         error = "";
@@ -162,7 +162,7 @@ Scope {
     }
     Process {
         id: brightnessWrite
-        onExited: (code) => { if (code !== 0) service.fail("Não foi possível alterar o brilho."); }
+        onExited: (code) => { if (code !== 0) service.fail(Theme.tr("Não foi possível alterar o brilho.", "Could not change brightness.")); }
     }
     PwObjectTracker { objects: [service.sink, service.source, ...service.outputs, ...service.inputs, ...(service.opened && service.section === "som" ? service.appStreams : [])].filter(n => n !== null) }
     Connections {
@@ -195,8 +195,8 @@ Scope {
             function onConnectionFailed(reason) {
                 if (reason === ConnectionFailReason.NoSecrets || reason === ConnectionFailReason.WifiAuthTimeout) service.passwordNetwork = modelData;
                 service.fail(reason === ConnectionFailReason.NoSecrets || reason === ConnectionFailReason.WifiAuthTimeout
-                    ? "Não foi possível autenticar. Confira a senha da rede."
-                    : "Falha na conexão: " + ConnectionFailReason.toString(reason));
+                    ? Theme.tr("Não foi possível autenticar. Confira a senha da rede.", "Could not authenticate. Check the network password.")
+                    : Theme.tr("Falha na conexão: ", "Connection failed: ") + ConnectionFailReason.toString(reason));
             }
         }
     }
@@ -206,7 +206,7 @@ Scope {
         running: true
         stdinEnabled: true
         stderr: SplitParser { onRead: data => console.warn("Bluetooth agent:", data) }
-        onExited: (code) => { if (code !== 0) service.fail("O agente Bluetooth não iniciou. Consulte o log do Quickshell."); }
+        onExited: (code) => { if (code !== 0) service.fail(Theme.tr("O agente Bluetooth não iniciou. Consulte o log do Quickshell.", "The Bluetooth agent did not start. Check the Quickshell log.")); }
         stdout: SplitParser {
             onRead: data => {
                 try {

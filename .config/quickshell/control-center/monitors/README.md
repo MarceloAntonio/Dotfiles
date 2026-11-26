@@ -1,5 +1,7 @@
 # Backend do configurador de monitores
 
+**Português** · [English](README.en.md)
+
 Este backend usa `hyprctl eval` com `hl.monitor()` do Hyprland Lua instalado.
 O QML deve executar processos com uma lista de argumentos, sem shell.
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The four existing personalization shortcuts now open Quickshell.
 set -u
+if grep -qs '^LANG=en' /etc/locale.conf; then en=1; else en=; fi
 case "${1:-menu}" in
     0 | wallpaper) category=wallpaper ;;
     1 | sddm) category=sddm ;;
@@ -15,5 +16,9 @@ for ((attempt=0; attempt<40; attempt++)); do
     fi
     sleep 0.05
 done
-notify-send 'Personalizar' 'Não foi possível abrir o seletor do Quickshell.' -u critical
+if [ -n "$en" ]; then
+    notify-send 'Customize' 'Could not open the Quickshell selector.' -u critical
+else
+    notify-send 'Personalizar' 'Não foi possível abrir o seletor do Quickshell.' -u critical
+fi
 exit 1

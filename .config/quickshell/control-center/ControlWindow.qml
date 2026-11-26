@@ -153,27 +153,27 @@ PanelWindow {
                 RowLayout {
                     Layout.fillWidth: true
                     Item { Layout.preferredWidth: 24; Layout.preferredHeight: 36 }
-                    GlassText { text: clock.date.toLocaleDateString(Qt.locale("pt_BR"), "dddd, d 'de' MMMM"); font.pixelSize: 12; color: Theme.muted }
+                    GlassText { text: clock.date.toLocaleDateString(Theme.locale, Theme.tr("dddd, d 'de' MMMM", "dddd, MMMM d")); font.pixelSize: 12; color: Theme.muted }
                     Item { Layout.fillWidth: true }
                     ActionButton {
                         text: "󰂚" + (Notifications.count > 0 ? "  " + Notifications.count : "")
                         font.family: Theme.icons
                         selected: Service.section === "notificacoes"
                         onClicked: Service.section = "notificacoes"
-                        tooltipText: "Notificações"
+                        tooltipText: Theme.tr("Notificações", "Notifications")
                     }
                     ActionButton {
                         text: "×"
                         font.pixelSize: 22
                         onClicked: Service.close()
-                        tooltipText: "Fechar · Esc"
+                        tooltipText: Theme.tr("Fechar · Esc", "Close · Esc")
                     }
                 }
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 5
                     Repeater {
-                        model: [{ name: "geral", label: "Geral" }, { name: "som", label: "Som" }, { name: "wifi", label: "Wi-Fi" }, { name: "bluetooth", label: "Bluetooth" }, { name: "energia", label: "Energia" }]
+                        model: [{ name: "geral", label: Theme.tr("Geral", "General") }, { name: "som", label: Theme.tr("Som", "Sound") }, { name: "wifi", label: "Wi-Fi" }, { name: "bluetooth", label: "Bluetooth" }, { name: "energia", label: Theme.tr("Energia", "Power") }]
                         delegate: ActionButton {
                             required property var modelData
                             Layout.fillWidth: true
@@ -255,7 +255,7 @@ PanelWindow {
                 }
                 GlassText {
                     Layout.alignment: Qt.AlignHCenter
-                    text: "Super + C  ·  Esc para fechar"
+                    text: Theme.tr("Super + C  ·  Esc para fechar", "Super + C  ·  Esc to close")
                     color: "#66ffffff"
                     font.pixelSize: 11
                 }
@@ -274,17 +274,17 @@ PanelWindow {
                     GlassText {
                         Layout.fillWidth: true
                         wrapMode: Text.Wrap
-                        text: Service.passwordNetwork ? "Conectar a " + Service.passwordNetwork.name
-                            : Service.pairing ? "Pareamento Bluetooth" : "Confirmar " + Service.confirmation + "?"
+                        text: Service.passwordNetwork ? Theme.tr("Conectar a ", "Connect to ") + Service.passwordNetwork.name
+                            : Service.pairing ? Theme.tr("Pareamento Bluetooth", "Bluetooth pairing") : Theme.tr("Confirmar " + Service.confirmation + "?", "Confirm " + ({ sair: "log out", reiniciar: "restart", desligar: "shut down", suspender: "suspend" })[Service.confirmation] + "?")
                         font.pixelSize: 22; font.weight: Font.DemiBold
                     }
                     GlassText {
                         Layout.fillWidth: true
                         wrapMode: Text.Wrap
                         color: Theme.muted
-                        text: Service.passwordNetwork ? "Digite a senha da rede Wi-Fi."
-                            : Service.pairing ? Service.pairing.name + (Service.pairing.kind === "confirm" ? "\nO código corresponde ao exibido no dispositivo?" : Service.pairing.kind === "pin" || Service.pairing.kind === "passkey" ? "\nDigite o código solicitado pelo dispositivo." : "")
-                            : "Seus aplicativos podem ter alterações não salvas."
+                        text: Service.passwordNetwork ? Theme.tr("Digite a senha da rede Wi-Fi.", "Enter the Wi-Fi network password.")
+                            : Service.pairing ? Service.pairing.name + (Service.pairing.kind === "confirm" ? Theme.tr("\nO código corresponde ao exibido no dispositivo?", "\nDoes the code match the one shown on the device?") : Service.pairing.kind === "pin" || Service.pairing.kind === "passkey" ? Theme.tr("\nDigite o código solicitado pelo dispositivo.", "\nEnter the code requested by the device.") : "")
+                            : Theme.tr("Seus aplicativos podem ter alterações não salvas.", "Your apps may have unsaved changes.")
                     }
                     GlassText {
                         Layout.fillWidth: true
@@ -299,7 +299,7 @@ PanelWindow {
                         Layout.fillWidth: true
                         visible: !!Service.passwordNetwork || ["pin", "passkey"].includes(Service.pairing?.kind)
                         echoMode: Service.passwordNetwork ? TextInput.Password : TextInput.Normal
-                        placeholderText: Service.passwordNetwork ? "Senha da rede" : "Código"
+                        placeholderText: Service.passwordNetwork ? Theme.tr("Senha da rede", "Network password") : Theme.tr("Código", "Code")
                         color: Theme.text
                         placeholderTextColor: Theme.muted
                         font.family: Theme.font
@@ -317,7 +317,7 @@ PanelWindow {
                         Layout.fillWidth: true
                         ActionButton {
                             Layout.fillWidth: true
-                            text: "Cancelar"
+                            text: Theme.tr("Cancelar", "Cancel")
                             onClicked: {
                                 Service.passwordNetwork = null;
                                 Service.confirmation = "";
@@ -328,7 +328,7 @@ PanelWindow {
                         ActionButton {
                             id: accept
                             Layout.fillWidth: true
-                            text: Service.passwordNetwork ? "Conectar" : Service.pairing ? "Confirmar" : "Sim, " + Service.confirmation
+                            text: Service.passwordNetwork ? Theme.tr("Conectar", "Connect") : Service.pairing ? Theme.tr("Confirmar", "Confirm") : Theme.tr("Sim, " + Service.confirmation, "Yes, " + ({ sair: "log out", reiniciar: "restart", desligar: "shut down", suspender: "suspend" })[Service.confirmation])
                             selected: true
                             enabled: !secret.visible || secret.text.length > 0
                             visible: Service.pairing?.kind !== "display"

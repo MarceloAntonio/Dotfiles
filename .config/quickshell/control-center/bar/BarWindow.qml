@@ -67,13 +67,13 @@ PanelWindow {
                 text: "󰣇"
                 font.family: Shell.Theme.icons
                 font.pixelSize: 18
-                tooltipText: "Atalhos · clique direito para abrir aplicativos"
+                tooltipText: Shell.Theme.tr("Atalhos · clique direito para abrir aplicativos", "Shortcuts · right-click to open apps")
                 onClicked: {
                     BarState.closePanels();
                     BarState.commandsScreen = bar.outputName;
                     BarState.commandsOpened = !BarState.commandsOpened;
                 }
-                onRightClicked: { BarState.closePanels(); Quickshell.execDetached(["rofi", "-show", "drun"]); }
+                onRightClicked: { BarState.closePanels(); Quickshell.execDetached([Quickshell.env("HOME") + "/.config/hypr/scripts/launcher.sh"]); }
             }
         }
         Pill {
@@ -147,7 +147,7 @@ PanelWindow {
             text: Qt.formatDateTime(clock.date, "HH:mm")
             font.weight: Font.DemiBold
             font.letterSpacing: 0.3
-            tooltipText: clock.date.toLocaleDateString(Qt.locale("pt_BR"), "dddd, d 'de' MMMM 'de' yyyy") + "\nClique para abrir o calendário"
+            tooltipText: clock.date.toLocaleDateString(Shell.Theme.locale, Shell.Theme.tr("dddd, d 'de' MMMM 'de' yyyy", "dddd, MMMM d, yyyy")) + Shell.Theme.tr("\nClique para abrir o calendário", "\nClick to open the calendar")
             onClicked: BarState.toggleCalendar(bar.outputName)
         }
     }
@@ -180,7 +180,7 @@ PanelWindow {
                     font.family: Shell.Theme.icons
                     font.pixelSize: 16
                     textColor: Shell.Service.adapter?.enabled ? "#ffffff" : "#66ffffff"
-                    tooltipText: "Bluetooth · " + (Shell.Service.adapter?.enabled ? "Ligado" : "Desligado")
+                    tooltipText: "Bluetooth · " + (Shell.Service.adapter?.enabled ? Shell.Theme.tr("Ligado", "On") : Shell.Theme.tr("Desligado", "Off"))
                     onClicked: BarState.openControl("bluetooth", bar.outputName, bluetoothButton)
                     onRightClicked: if (Shell.Service.adapter) Shell.Service.adapter.enabled = !Shell.Service.adapter.enabled
                 }
@@ -190,7 +190,7 @@ PanelWindow {
                     glyph: BarState.audioIcon
                     text: Math.round(Shell.Service.volume) + "%"
                     textColor: Shell.Service.sink?.audio?.muted ? "#66ffffff" : "#ffffff"
-                    tooltipText: "Som · role para ajustar"
+                    tooltipText: Shell.Theme.tr("Som · role para ajustar", "Sound · scroll to adjust")
                     scrollable: true
                     onClicked: BarState.openControl("som", bar.outputName, soundButton)
                     onScrolled: delta => { if (delta) Shell.Service.setVolume(Shell.Service.volume + (delta > 0 ? 5 : -5), false); }
@@ -203,7 +203,7 @@ PanelWindow {
                     glyph: UPower.onBattery ? ["", "", "", "", ""][Math.min(4, Math.floor(percentage / 20))] : ""
                     text: percentage + "%"
                     urgent: UPower.onBattery && percentage <= 15
-                    tooltipText: (UPower.onBattery ? "Na bateria" : "Conectado à energia") + " · brilho e perfil de energia"
+                    tooltipText: (UPower.onBattery ? Shell.Theme.tr("Na bateria", "On battery") : Shell.Theme.tr("Conectado à energia", "Plugged in")) + Shell.Theme.tr(" · brilho e perfil de energia", " · brightness and power profile")
                     onClicked: BarState.openControl("energia", bar.outputName, batteryButton)
                 }
             }
@@ -220,7 +220,7 @@ PanelWindow {
                 text: "󰒓"
                 font.family: Shell.Theme.icons
                 font.pixelSize: 15
-                tooltipText: "Central de controle · Super + C" + (Shell.Notifications.count ? "\n" + Shell.Notifications.count + " notificações" : "")
+                tooltipText: Shell.Theme.tr("Central de controle · Super + C", "Control center · Super + C") + (Shell.Notifications.count ? "\n" + Shell.Notifications.count + Shell.Theme.tr(" notificações", " notifications") : "")
                 onClicked: BarState.openControl("geral", bar.outputName, controlButton)
                 onRightClicked: {
                     BarState.openControl("energia", bar.outputName, controlButton);
@@ -245,7 +245,7 @@ PanelWindow {
                     verticalAlignment: Text.AlignVCenter
                     renderType: Text.NativeRendering
                 }
-                Accessible.name: "Energia e sessão"
+                Accessible.name: Shell.Theme.tr("Energia e sessão", "Power and session")
                 onClicked: {
                     const wasOpen = Shell.Service.powerOpened && Shell.Service.powerScreen === bar.outputName;
                     BarState.closePanels();

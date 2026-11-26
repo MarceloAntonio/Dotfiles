@@ -11,9 +11,10 @@ import tempfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from kitty_adaptive import generate as generate_kitty_adaptive, refresh as refresh_kitty_adaptive
+from lang import EN, tr
 
 HOME = Path.home()
-WALLPAPERS = HOME / "Pictures/Wallpaper"
+WALLPAPERS = HOME / "Images/Wallpaper"
 WALL_CACHE = HOME / ".config/hypr/.current_wallpaper"
 LOCK_WALL = HOME / ".config/hypr/hyprlock/wallpaper"
 KITTY = HOME / ".config/kitty"
@@ -53,10 +54,10 @@ def logo_source(text):
     # Restrict changes to logo.source, preserving JSONC comments and all modules.
     logo = re.search(r'"logo"\s*:\s*\{[^}]*\}', text, re.S)
     if not logo:
-        raise ValueError("A configuração do Fastfetch não contém a seção logo.")
+        raise ValueError(tr("A configuração do Fastfetch não contém a seção logo.", "The Fastfetch configuration has no logo section."))
     source = re.search(r'"source"\s*:\s*("(?:\\.|[^"\\])*")', logo.group())
     if not source:
-        raise ValueError("A configuração do Fastfetch não contém logo.source.")
+        raise ValueError(tr("A configuração do Fastfetch não contém logo.source.", "The Fastfetch configuration has no logo.source entry."))
     start = logo.start() + source.start(1)
     end = logo.start() + source.end(1)
     return json.loads(source[1]), start, end
@@ -80,15 +81,15 @@ def catalog():
     except (ValueError, json.JSONDecodeError):
         ff_current = ""
     groups = [
-        {"id": "wallpaper", "title": "Wallpaper", "icon": "󰸉", "description": "Fundo do Hyprland e da tela de bloqueio", "current": wall_current, "available": WALLPAPERS.is_dir(), "items": [image_item(p) for p in wallpapers]},
-        {"id": "sddm", "title": "Tela de login", "icon": "󰌾", "description": "Fundo do SDDM · pede autenticação ao aplicar", "current": sddm_current, "available": SDDM.is_file(), "items": sddm_items},
-        {"id": "fastfetch", "title": "Logo do Fastfetch", "icon": "󰆍", "description": "Imagem exibida ao executar o Fastfetch", "current": ff_current, "available": FASTFETCH.is_file(), "items": [{"id": "auto", "name": "Logo da distro", "preview": "", "kind": "distro"}, *[image_item(p) for p in images(FF_ICONS)]]},
-        {"id": "kitty", "title": "Tema do Kitty", "icon": "󰄛", "description": "Paleta de cores do terminal · aplica nas janelas abertas", "current": kitty_current, "available": (KITTY / "kitty.conf").is_file(), "items": [{"id": str(p), "name": p.stem, "preview": "", "kind": "terminal", "palette": palette(p)} for p in themes]},
+        {"id": "wallpaper", "title": "Wallpaper", "icon": "󰸉", "description": tr("Fundo do Hyprland e da tela de bloqueio", "Hyprland and lock screen background"), "current": wall_current, "available": WALLPAPERS.is_dir(), "items": [image_item(p) for p in wallpapers]},
+        {"id": "sddm", "title": tr("Tela de login", "Login screen"), "icon": "󰌾", "description": tr("Fundo do SDDM · pede autenticação ao aplicar", "SDDM background · asks for authentication when applied"), "current": sddm_current, "available": SDDM.is_file(), "items": sddm_items},
+        {"id": "fastfetch", "title": tr("Logo do Fastfetch", "Fastfetch logo"), "icon": "󰆍", "description": tr("Imagem exibida ao executar o Fastfetch", "Image shown when running Fastfetch"), "current": ff_current, "available": FASTFETCH.is_file(), "items": [{"id": "auto", "name": tr("Logo da distro", "Distro logo"), "preview": "", "kind": "distro"}, *[image_item(p) for p in images(FF_ICONS)]]},
+        {"id": "kitty", "title": tr("Tema do Kitty", "Kitty theme"), "icon": "󰄛", "description": tr("Paleta de cores do terminal · aplica nas janelas abertas", "Terminal color palette · applies to open windows"), "current": kitty_current, "available": (KITTY / "kitty.conf").is_file(), "items": [{"id": str(p), "name": p.stem, "preview": "", "kind": "terminal", "palette": palette(p)} for p in themes]},
     ]
     for group in groups:
         group["items"].sort(key=lambda item: item["id"] != group["current"])
         selected = next((item for item in group["items"] if item["id"] == group["current"]), None)
-        group["currentName"] = selected["name"] if selected else Path(group["current"]).stem if group["current"] else "Não definido"
+        group["currentName"] = selected["name"] if selected else Path(group["current"]).stem if group["current"] else tr("Não definido", "Not set")
     return {"groups": groups}
 
 
@@ -122,26 +123,27 @@ def atomic_link(path, target):
 def run(command, timeout=30):
     result = subprocess.run(command, text=True, capture_output=True, timeout=timeout)
     if result.returncode:
-        raise RuntimeError((result.stderr or result.stdout).strip() or "Não foi possível concluir a alteração.")
+        raise RuntimeError((result.stderr or result.stdout).strip() or tr("Não foi possível concluir a alteração.", "Could not complete the change."))
 
 
 # Only this fixed operation runs as root, after the user's Polkit authentication.
-SDDM_CODE = r'''
+# The root process has no lang module, so the language flag and tr() are injected as a preamble.
+SDDM_CODE = 'EN = %r\ndef tr(pt, en): return en if EN else pt\n' % EN + r'''
 import os, pwd, re, shutil, sys, tempfile
 from pathlib import Path
 user = pwd.getpwuid(int(os.environ['PKEXEC_UID']))
 source = Path(sys.argv[1]).resolve(strict=True)
-wallpapers = (Path(user.pw_dir) / 'Pictures/Wallpaper').resolve()
+wallpapers = (Path(user.pw_dir) / 'Images/Wallpaper').resolve()
 if source.parent != wallpapers or source.suffix.lower() not in {'.jpg','.jpeg','.png','.webp','.gif'}:
-    raise ValueError('Escolha uma imagem da pasta de wallpapers.')
+    raise ValueError(tr('Escolha uma imagem da pasta de wallpapers.', 'Choose an image from the wallpapers folder.'))
 if any(c in source.name for c in (chr(10), chr(13), chr(34), chr(92))):
-    raise ValueError('O nome da imagem contém caracteres incompatíveis com o SDDM.')
+    raise ValueError(tr('O nome da imagem contém caracteres incompatíveis com o SDDM.', 'The image name contains characters incompatible with SDDM.'))
 config = Path('/usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf')
 target = config.parent.parent / 'Backgrounds' / source.name
 original = config.read_text()
 updated, count = re.subn(r'^Background\s*=.*$', lambda m: 'Background="Backgrounds/' + source.name + '"', original, count=1, flags=re.M)
 if count != 1:
-    raise ValueError('A configuração do SDDM não contém Background.')
+    raise ValueError(tr('A configuração do SDDM não contém Background.', 'The SDDM configuration has no Background entry.'))
 backup = config.with_suffix('.conf.quickshell.bak')
 if not backup.exists():
     shutil.copy2(config, backup)
@@ -166,12 +168,12 @@ finally:
 def apply(category, selection):
     group = next((g for g in catalog()["groups"] if g["id"] == category), None)
     if not group or not group["available"]:
-        raise ValueError("Esta opção não está disponível nesta máquina.")
+        raise ValueError(tr("Esta opção não está disponível nesta máquina.", "This option is not available on this machine."))
     item = next((i for i in group["items"] if i["id"] == selection), None)
     if not item:
-        raise ValueError("A seleção não existe mais. Atualize a lista e tente novamente.")
+        raise ValueError(tr("A seleção não existe mais. Atualize a lista e tente novamente.", "The selection no longer exists. Refresh the list and try again."))
     if selection == group["current"]:
-        return {"ok": True, "message": "Esta opção já está aplicada."}
+        return {"ok": True, "message": tr("Esta opção já está aplicada.", "This option is already applied.")}
     if category == "wallpaper":
         run(["awww", "img", selection, "--transition-type", "fade", "--transition-duration", "0.5", "--transition-fps", "60", "--transition-bezier", ".4,0,.2,1"])
         atomic_write(WALL_CACHE, selection + "\n")
@@ -194,10 +196,10 @@ def apply(category, selection):
     elif category == "sddm":
         result = subprocess.run(["pkexec", "/usr/bin/python3", "-c", SDDM_CODE, selection], capture_output=True, text=True, timeout=180)
         if result.returncode in (126, 127):
-            raise RuntimeError("Autenticação cancelada ou não autorizada. O fundo do SDDM foi mantido.")
+            raise RuntimeError(tr("Autenticação cancelada ou não autorizada. O fundo do SDDM foi mantido.", "Authentication canceled or not authorized. The SDDM background was kept."))
         if result.returncode:
-            raise RuntimeError(result.stderr.strip().splitlines()[-1] if result.stderr.strip() else "Não foi possível alterar o fundo do SDDM.")
-    return {"ok": True, "message": "Aplicado: " + item["name"]}
+            raise RuntimeError(result.stderr.strip().splitlines()[-1] if result.stderr.strip() else tr("Não foi possível alterar o fundo do SDDM.", "Could not change the SDDM background."))
+    return {"ok": True, "message": tr("Aplicado: ", "Applied: ") + item["name"]}
 
 
 def main():
@@ -207,7 +209,7 @@ def main():
         elif len(sys.argv) == 4 and sys.argv[1] == "apply":
             result = apply(sys.argv[2], sys.argv[3])
         else:
-            raise ValueError("Uso: backend.py catalog | apply categoria seleção")
+            raise ValueError(tr("Uso: backend.py catalog | apply categoria seleção", "Usage: backend.py catalog | apply category selection"))
         print(json.dumps(result, ensure_ascii=False))
     except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as error:
         print(json.dumps({"ok": False, "message": str(error)}, ensure_ascii=False))

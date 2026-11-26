@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 path, command = map(Path, sys.argv[1:])
 quoted = str(command).replace('\\', '\\\\').replace('"', '\\"').replace('`', '\\`').replace('$', '\\$')
-path.write_text('[Desktop Entry]\nName=Personalizar\nComment=Wallpaper, tela de login, Fastfetch e temas do Kitty\nExec="' + quoted + '"\nIcon=preferences-desktop-theme\nTerminal=false\nType=Application\nCategories=Settings;DesktopSettings;\n')
+path.write_text('[Desktop Entry]\nName=Customize\nName[pt_BR]=Personalizar\nComment=Wallpaper, login screen, Fastfetch and Kitty themes\nComment[pt_BR]=Wallpaper, tela de login, Fastfetch e temas do Kitty\nExec="' + quoted + '"\nIcon=preferences-desktop-theme\nTerminal=false\nType=Application\nCategories=Settings;DesktopSettings;\n')
 PY
 if command -v update-desktop-database >/dev/null; then
   update-desktop-database "$HOME/.local/share/applications"

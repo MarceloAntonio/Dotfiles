@@ -5,7 +5,7 @@ import Quickshell.Services.Pipewire
 ColumnLayout {
     spacing: 12
     AudioControls { Layout.fillWidth: true }
-    GlassText { text: "SAÍDA DE ÁUDIO"; color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2 }
+    GlassText { text: Theme.tr("SAÍDA DE ÁUDIO", "AUDIO OUTPUT"); color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2 }
     Repeater {
         model: Service.outputs
         delegate: ActionButton {
@@ -16,8 +16,8 @@ ColumnLayout {
             onClicked: Pipewire.preferredDefaultAudioSink = modelData
         }
     }
-    GlassText { visible: Service.outputs.length === 0; text: "Nenhuma saída disponível"; color: Theme.muted }
-    GlassText { text: "ENTRADA DE ÁUDIO"; color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2; Layout.topMargin: 6 }
+    GlassText { visible: Service.outputs.length === 0; text: Theme.tr("Nenhuma saída disponível", "No output available"); color: Theme.muted }
+    GlassText { text: Theme.tr("ENTRADA DE ÁUDIO", "AUDIO INPUT"); color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2; Layout.topMargin: 6 }
     Repeater {
         model: Service.inputs
         delegate: ActionButton {
@@ -28,8 +28,8 @@ ColumnLayout {
             onClicked: Pipewire.preferredDefaultAudioSource = modelData
         }
     }
-    GlassText { visible: Service.inputs.length === 0; text: "Nenhuma entrada disponível"; color: Theme.muted }
-    GlassText { text: "VOLUME POR APLICATIVO"; color: Theme.muted; font.pixelSize: 11; Layout.topMargin: 6 }
+    GlassText { visible: Service.inputs.length === 0; text: Theme.tr("Nenhuma entrada disponível", "No input available"); color: Theme.muted }
+    GlassText { text: Theme.tr("VOLUME POR APLICATIVO", "APP VOLUME"); color: Theme.muted; font.pixelSize: 11; Layout.topMargin: 6 }
     Repeater {
         model: Service.appStreams
         delegate: Card {
@@ -49,5 +49,5 @@ ColumnLayout {
             }
         }
     }
-    GlassText { visible: Service.appStreams.length === 0; text: "Os aplicativos aparecem quando reproduzem áudio"; color: Theme.muted; wrapMode: Text.Wrap; Layout.fillWidth: true }
+    GlassText { visible: Service.appStreams.length === 0; text: Theme.tr("Os aplicativos aparecem quando reproduzem áudio", "Apps appear here when they play audio"); color: Theme.muted; wrapMode: Text.Wrap; Layout.fillWidth: true }
 }

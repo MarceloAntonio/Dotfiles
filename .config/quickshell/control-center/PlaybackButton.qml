@@ -7,7 +7,7 @@ ActionButton {
     text: playing ? "󰏤" : "󰐊"
     font.family: Theme.icons
     enabled: Service.player?.canTogglePlaying ?? false
-    tooltipText: playing ? "Pausar" : "Reproduzir"
+    tooltipText: playing ? Theme.tr("Pausar", "Pause") : Theme.tr("Reproduzir", "Play")
     scale: (down ? 0.89 : 1) * feedback
     Behavior on scale { NumberAnimation { duration: 130; easing.type: Easing.OutCubic } }
     onClicked: { pulse.restart(); Service.player.togglePlaying(); }

@@ -103,12 +103,12 @@ PanelWindow {
                                     }
                                 }
                             }
-                            Shell.GlassText { anchors.centerIn: parent; visible: preview.windows.length === 0; text: "Vazio"; color: Shell.Theme.muted }
+                            Shell.GlassText { anchors.centerIn: parent; visible: preview.windows.length === 0; text: Shell.Theme.tr("Vazio", "Empty"); color: Shell.Theme.muted }
                         }
                     }
                 }
             }
-            Shell.GlassText { text: "Clique para abrir · Setas e Enter para navegar · Esc para fechar"; color: Shell.Theme.muted; font.pixelSize: 11 }
+            Shell.GlassText { text: Shell.Theme.tr("Clique para abrir · Setas e Enter para navegar · Esc para fechar", "Click to open · Arrow keys and Enter to navigate · Esc to close"); color: Shell.Theme.muted; font.pixelSize: 11 }
         }
     }
 }

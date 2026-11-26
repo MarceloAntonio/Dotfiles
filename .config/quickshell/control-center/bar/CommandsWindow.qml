@@ -67,13 +67,13 @@ PanelWindow {
             opacity: Math.max(0, (panel.progress - 0.25) / 0.75)
             spacing: 14
             RowLayout {
-                Shell.GlassText { text: "󰣇  Comandos do Hyprland"; font.pixelSize: 18; Layout.fillWidth: true }
-                Shell.ActionButton { text: "×"; onClicked: panel.close(); tooltipText: "Fechar · Esc" }
+                Shell.GlassText { text: "󰣇  " + Shell.Theme.tr("Comandos do Hyprland", "Hyprland commands"); font.pixelSize: 18; Layout.fillWidth: true }
+                Shell.ActionButton { text: "×"; onClicked: panel.close(); tooltipText: Shell.Theme.tr("Fechar · Esc", "Close · Esc") }
             }
             TextField {
                 id: search
                 Layout.fillWidth: true
-                placeholderText: "Buscar comando ou atalho…"
+                placeholderText: Shell.Theme.tr("Buscar comando ou atalho…", "Search commands or shortcuts…")
                 color: "white"
                 placeholderTextColor: "#99ffffff"
                 background: Rectangle { radius: 10; color: "#18ffffff"; border.color: Shell.Theme.dark ? "transparent" : ("#26ffffff")}
@@ -101,9 +101,9 @@ PanelWindow {
                         Shell.GlassText { text: panel.keys(modelData); font.pixelSize: 11; color: "#bbffffff" }
                     }
                 }
-                Shell.GlassText { anchors.centerIn: parent; visible: list.count === 0; text: "Nenhum atalho encontrado"; color: "#bbffffff" }
+                Shell.GlassText { anchors.centerIn: parent; visible: list.count === 0; text: Shell.Theme.tr("Nenhum atalho encontrado", "No shortcuts found"); color: "#bbffffff" }
             }
-            Shell.GlassText { text: "Atalhos ativos da sua configuração · Esc para fechar"; font.pixelSize: 11; color: "#99ffffff" }
+            Shell.GlassText { text: Shell.Theme.tr("Atalhos ativos da sua configuração · Esc para fechar", "Active shortcuts from your config · Esc to close"); font.pixelSize: 11; color: "#99ffffff" }
         }
     }
 }

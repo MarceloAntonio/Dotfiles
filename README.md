@@ -1,5 +1,7 @@
 # Dotfiles · Hyprland + Quickshell
 
+**Português** · [English](README.en.md)
+
 Rice para Arch Linux com Hyprland, interface de vidro e três temas: **Claro**, **Escuro** e **Adaptativo**. O Quickshell reúne a barra, central de controle, notificações, calendário, player e configurador de monitores. O bloqueador de tela também usa Quickshell, em um processo separado.
 
 | Componente | Implementação |
@@ -16,6 +18,19 @@ Rice para Arch Linux com Hyprland, interface de vidro e três temas: **Claro**, 
 
 A barra usa ícones WhiteSur, indicadores deslizantes e painéis conectados aos botões. O tema Adaptativo extrai cores do wallpaper e sincroniza a interface e o Rofi. No Kitty, a opção Adaptativo gera também as 16 cores ANSI que aparecem nas bolinhas do Fastfetch.
 
+## Capturas de tela
+
+![Central de controle aberta ao lado do Kitty com Fastfetch](docs/screenshots/central-de-controle.jpg)
+
+| | |
+| --- | --- |
+| ![Launcher de aplicativos no Rofi](docs/screenshots/launcher.jpg) | ![Janela Personalizar com os temas do Kitty](docs/screenshots/personalizar.jpg) |
+| Launcher (`Super + Espaço`) | Personalizar (`Super + W`) |
+
+![Kitty com Fastfetch, Neovim e o player de música](docs/screenshots/terminal-neovim-player.jpg)
+
+O wallpaper padrão, `os-windows-7-arch-linux.jpg`, vem no repositório e é aplicado na primeira instalação.
+
 ## Uso rápido
 
 `Super` é a tecla Windows.
@@ -25,7 +40,7 @@ A barra usa ícones WhiteSur, indicadores deslizantes e painéis conectados aos 
 | Terminal / aplicativos | `Super + Enter` / `Super + Espaço` |
 | Navegador / arquivos | `Super + B` / `Super + E` |
 | Central de controle | `Super + C` |
-| Personalização / wallpapers | `Super + T` / `Super + W` |
+| Personalização (wallpaper, login, Fastfetch, Kitty) | `Super + W` |
 | Configurar monitores | `Super + Shift + D` |
 | Bloquear a sessão | `Super + L` |
 | Screenshot de área para o clipboard | `Super + Shift + S` |
@@ -45,12 +60,13 @@ cd Dotfiles
 ./install.sh
 ```
 
-Execute como usuário normal: o instalador solicita `sudo` quando precisa instalar pacotes ou configurar serviços do sistema. Leia o [guia de instalação e migração](docs/migracao.md) antes de aplicar em uma sessão existente. Wallpapers ficam no repositório separado [wallpapers_dotfile](https://github.com/MarceloAntonio/wallpapers_dotfile).
+Execute como usuário normal: o instalador solicita `sudo` quando precisa instalar pacotes ou configurar serviços do sistema. Leia o [guia de instalação e migração](docs/migracao.md) antes de aplicar em uma sessão existente. O wallpaper padrão vem junto; a coleção completa fica no repositório separado [wallpapers_dotfile](https://github.com/MarceloAntonio/wallpapers_dotfile).
 
 O instalador usa pacotes do Arch e instala as configurações e comandos deste repositório. Waybar, SwayNC e Pulsar deixaram de fazer parte da interface. Hyprlock continua disponível como alternativa de bloqueio e fornece a política PAM usada pelo bloqueador novo.
 
 ## O que está incluído
 
+- **Idioma:** o sistema vem em inglês (`en_US.UTF-8`); troque para Português em Central → Geral. A escolha muda o locale do sistema (`pt_BR.UTF-8` ou `en_US.UTF-8`) e traduz a interface na hora; os outros aplicativos mudam no próximo login.
 - **Central:** áudio por aplicativo, escolha de saída/entrada, Wi-Fi, Bluetooth, brilho, bateria e perfis de energia.
 - **Notificações:** popups, histórico da sessão, ações ao clicar e Não perturbe.
 - **Calendário e música:** navegação por teclado, capa, controles, player horizontal e barras que reagem ao áudio.

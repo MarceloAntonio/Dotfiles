@@ -46,7 +46,7 @@ Scope {
     readonly property string audioIcon: Shell.Service.sink?.audio?.muted ? ""
         : Shell.Service.sink?.name?.startsWith("bluez") ? ""
         : ["headphone", "headset"].includes(Shell.Service.sink?.properties["device.form-factor"]) ? "" : ""
-    readonly property string networkDescription: wired ? "Ethernet · " + wired.name : wifiNetwork ? wifiNetwork.name + " · " + Math.round(wifiNetwork.signalStrength * 100) + "%" : "Rede desconectada"
+    readonly property string networkDescription: wired ? "Ethernet · " + wired.name : wifiNetwork ? wifiNetwork.name + " · " + Math.round(wifiNetwork.signalStrength * 100) + "%" : Shell.Theme.tr("Rede desconectada", "Network disconnected")
     property string ethernetAddress: ""
     onWiredChanged: {
         ethernetAddress = "";
@@ -218,7 +218,7 @@ Scope {
         function today(): void { root.today(); }
         function status(): string {
             return JSON.stringify({opened: root.calendarOpened, screen: root.calendarScreen, month: root.month + 1,
-                year: root.year, selected: root.selectedDate.toLocaleDateString(Qt.locale("pt_BR"), "yyyy-MM-dd"), cells: root.cells(new Date()).length,
+                year: root.year, selected: root.selectedDate.toLocaleDateString(Shell.Theme.locale, "yyyy-MM-dd"), cells: root.cells(new Date()).length,
                 daysInMonth: new Date(root.year, root.month + 1, 0, 12).getDate(),
                 progress: root.calendars[root.calendarScreen]?.progress ?? 0, presented: root.calendars[root.calendarScreen]?.visible ?? false});
         }

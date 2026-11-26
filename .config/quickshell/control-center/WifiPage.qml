@@ -6,9 +6,9 @@ import Quickshell.Networking
 ColumnLayout {
     spacing: 12
     RowLayout {
-        GlassText { Layout.fillWidth: true; text: "Redes Wi-Fi"; font.pixelSize: 18; font.weight: Font.DemiBold }
+        GlassText { Layout.fillWidth: true; text: Theme.tr("Redes Wi-Fi", "Wi-Fi networks"); font.pixelSize: 18; font.weight: Font.DemiBold }
         ActionButton {
-            text: Networking.wifiEnabled ? "Desligar" : "Ligar"
+            text: Networking.wifiEnabled ? Theme.tr("Desligar", "Turn off") : Theme.tr("Ligar", "Turn on")
             enabled: !!Service.wifi && Networking.wifiHardwareEnabled
             selected: Networking.wifiEnabled
             onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
@@ -19,9 +19,9 @@ ColumnLayout {
         color: Theme.muted
         font.pixelSize: 12
         wrapMode: Text.Wrap
-        text: !Service.wifi ? "Nenhum adaptador Wi-Fi encontrado."
-            : !Networking.wifiHardwareEnabled ? "Wi-Fi bloqueado pelo hardware."
-            : Networking.wifiEnabled ? "As redes são atualizadas enquanto este painel está aberto." : "Ative o Wi-Fi para ver as redes."
+        text: !Service.wifi ? Theme.tr("Nenhum adaptador Wi-Fi encontrado.", "No Wi-Fi adapter found.")
+            : !Networking.wifiHardwareEnabled ? Theme.tr("Wi-Fi bloqueado pelo hardware.", "Wi-Fi is blocked by hardware.")
+            : Networking.wifiEnabled ? Theme.tr("As redes são atualizadas enquanto este painel está aberto.", "Networks update while this panel is open.") : Theme.tr("Ative o Wi-Fi para ver as redes.", "Turn on Wi-Fi to see networks.")
     }
     Repeater {
         model: Networking.wifiEnabled ? Service.networks : []
@@ -43,12 +43,12 @@ ColumnLayout {
                     GlassText {
                         Layout.fillWidth: true
                         font.pixelSize: 11; color: Theme.muted
-                        text: (networkCard.modelData.stateChanging ? "Conectando…" : networkCard.modelData.connected ? "Conectada" : networkCard.modelData.known ? "Salva" : networkCard.modelData.security === WifiSecurityType.Open ? "Aberta" : "Protegida")
+                        text: (networkCard.modelData.stateChanging ? Theme.tr("Conectando…", "Connecting…") : networkCard.modelData.connected ? Theme.tr("Conectada", "Connected") : networkCard.modelData.known ? Theme.tr("Salva", "Saved") : networkCard.modelData.security === WifiSecurityType.Open ? Theme.tr("Aberta", "Open") : Theme.tr("Protegida", "Secured"))
                             + "  ·  " + Math.round(networkCard.modelData.signalStrength * 100) + "%"
                     }
                 }
                 ActionButton {
-                    text: networkCard.modelData.stateChanging ? "…" : networkCard.modelData.connected ? "Sair" : "Conectar"
+                    text: networkCard.modelData.stateChanging ? "…" : networkCard.modelData.connected ? Theme.tr("Sair", "Disconnect") : Theme.tr("Conectar", "Connect")
                     enabled: !networkCard.modelData.stateChanging
                     onClicked: {
                         if (networkCard.modelData.connected) Quickshell.execDetached(["nmcli", "device", "disconnect", Service.wifi.name]);
@@ -60,11 +60,11 @@ ColumnLayout {
     }
     GlassText {
         visible: Networking.wifiEnabled && !!Service.wifi && Service.networks.length === 0
-        text: "Procurando redes próximas…"; color: Theme.muted
+        text: Theme.tr("Procurando redes próximas…", "Searching for nearby networks…"); color: Theme.muted
     }
     ActionButton {
         Layout.fillWidth: true
-        text: "Configurações avançadas de rede  ↗"
+        text: Theme.tr("Configurações avançadas de rede  ↗", "Advanced network settings  ↗")
         onClicked: { Service.close(); Quickshell.execDetached(["nm-connection-editor"]); }
     }
 }

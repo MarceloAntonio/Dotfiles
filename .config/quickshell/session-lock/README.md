@@ -1,5 +1,7 @@
 # Bloqueador Quickshell
 
+**Português** · [English](README.en.md)
+
 Processo independente da barra, com `WlSessionLock` e autenticação PAM
 pela política instalada de Hyprlock. A senha nunca é enviada em argumentos
 ou gravada em arquivos. Apenas sucesso do PAM libera a sessão.

@@ -9,6 +9,9 @@ import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lang import tr
+
 
 def emit(kind, **fields):
     print(json.dumps({"type": kind, **fields}, ensure_ascii=False), flush=True)
@@ -33,15 +36,15 @@ class Agent(dbus.service.Object):
             reply, error, kind = self.pending
             self.pending = None
             if not accept:
-                error(Rejected("Pareamento cancelado"))
+                error(Rejected(tr("Pareamento cancelado", "Pairing canceled")))
             elif kind == "pin":
                 if not value or len(value) > 16:
-                    error(Rejected("PIN inválido"))
+                    error(Rejected(tr("PIN inválido", "Invalid PIN")))
                 else:
                     reply(value)
             elif kind == "passkey":
                 if not value.isdigit() or len(value) > 6:
-                    error(Rejected("Código inválido"))
+                    error(Rejected(tr("Código inválido", "Invalid code")))
                 else:
                     reply(dbus.UInt32(int(value)))
             else:
@@ -54,7 +57,7 @@ class Agent(dbus.service.Object):
             props = dbus.Interface(self.bus.get_object("org.bluez", device), "org.freedesktop.DBus.Properties")
             name = str(props.Get("org.bluez.Device1", "Alias"))
         except dbus.DBusException:
-            name = "Dispositivo Bluetooth"
+            name = tr("Dispositivo Bluetooth", "Bluetooth device")
         self.pending = (reply, error, kind)
         self.timeout = GLib.timeout_add_seconds(60, self.expire)
         emit("request", kind=kind, name=name, code=code)
@@ -90,11 +93,11 @@ class Agent(dbus.service.Object):
 
     @dbus.service.method("org.bluez.Agent1", in_signature="os", out_signature="")
     def DisplayPinCode(self, device, pincode):
-        emit("request", kind="display", name="Digite o PIN no dispositivo", code=str(pincode))
+        emit("request", kind="display", name=tr("Digite o PIN no dispositivo", "Enter the PIN on the device"), code=str(pincode))
 
     @dbus.service.method("org.bluez.Agent1", in_signature="ouq", out_signature="")
     def DisplayPasskey(self, device, passkey, entered):
-        emit("request", kind="display", name="Digite o código no dispositivo", code=f"{int(passkey):06d}")
+        emit("request", kind="display", name=tr("Digite o código no dispositivo", "Enter the code on the device"), code=f"{int(passkey):06d}")
 
     @dbus.service.method("org.bluez.Agent1", in_signature="", out_signature="")
     def Cancel(self):
@@ -114,7 +117,7 @@ def register():
         # This session's control center handles incoming pairing requests too.
         manager.RequestDefaultAgent(agent.__dbus_object_path__)
     except dbus.DBusException as exc:
-        emit("error", message="Agente Bluetooth: " + str(exc))
+        emit("error", message=tr("Agente Bluetooth: ", "Bluetooth agent: ") + str(exc))
 
 
 def failed(exc):

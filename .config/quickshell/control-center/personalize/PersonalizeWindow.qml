@@ -101,17 +101,17 @@ PanelWindow {
                     Layout.fillHeight: true
                     spacing: 10
                     Shell.GlassText {
-                        text: "󰏘   Personalizar"
+                        text: "󰏘   " + Shell.Theme.tr("Personalizar", "Customize")
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         Layout.bottomMargin: 16
                     }
-                    Shell.GlassText { text: "Tema da interface"; color: Shell.Theme.muted; font.pixelSize: 12 }
+                    Shell.GlassText { text: Shell.Theme.tr("Tema da interface", "Interface theme"); color: Shell.Theme.muted; font.pixelSize: 12 }
                     RowLayout {
                         Layout.fillWidth: true
-                        Shell.ActionButton { Layout.fillWidth: true; text: "Claro"; selected: Shell.Theme.mode === "light"; onClicked: Shell.Theme.setMode("light") }
-                        Shell.ActionButton { Layout.fillWidth: true; text: "Escuro"; selected: Shell.Theme.mode === "dark"; onClicked: Shell.Theme.setMode("dark") }
-        Shell.ActionButton { text: "Adaptativo"; selected: Shell.Theme.adaptive; onClicked: Shell.Theme.setMode("wallpaper") }
+                        Shell.ActionButton { Layout.fillWidth: true; text: Shell.Theme.tr("Claro", "Light"); selected: Shell.Theme.mode === "light"; onClicked: Shell.Theme.setMode("light") }
+                        Shell.ActionButton { Layout.fillWidth: true; text: Shell.Theme.tr("Escuro", "Dark"); selected: Shell.Theme.mode === "dark"; onClicked: Shell.Theme.setMode("dark") }
+        Shell.ActionButton { text: Shell.Theme.tr("Adaptativo", "Adaptive"); selected: Shell.Theme.adaptive; onClicked: Shell.Theme.setMode("wallpaper") }
                     }
                     Repeater {
                         id: categoryButtons
@@ -153,7 +153,7 @@ PanelWindow {
                     Item { Layout.fillHeight: true }
                     Shell.GlassText {
                         Layout.fillWidth: true
-                        text: "Setas · Navegar\nEnter · Aplicar\nTab · Alternar áreas\nCtrl + F · Pesquisar"
+                        text: Shell.Theme.tr("Setas · Navegar\nEnter · Aplicar\nTab · Alternar áreas\nCtrl + F · Pesquisar", "Arrows · Navigate\nEnter · Apply\nTab · Switch areas\nCtrl + F · Search")
                         font.pixelSize: 11
                         lineHeight: 1.5
                         color: "#70ffffff"
@@ -172,8 +172,8 @@ PanelWindow {
                             Layout.fillWidth: true
                             Layout.minimumWidth: 0
                             spacing: 4
-                            Shell.GlassText { text: Settings.group?.title ?? "Personalizar"; font.pixelSize: 22; font.weight: Font.DemiBold }
-                            Shell.GlassText { Layout.fillWidth: true; text: Settings.group?.description ?? "Carregando…"; font.pixelSize: 12; color: Shell.Theme.muted }
+                            Shell.GlassText { text: Settings.group?.title ?? Shell.Theme.tr("Personalizar", "Customize"); font.pixelSize: 22; font.weight: Font.DemiBold }
+                            Shell.GlassText { Layout.fillWidth: true; text: Settings.group?.description ?? Shell.Theme.tr("Carregando…", "Loading…"); font.pixelSize: 12; color: Shell.Theme.muted }
                         }
                         Shell.ActionButton {
                             text: "󰑐"
@@ -183,7 +183,7 @@ PanelWindow {
                             implicitHeight: 40
                             enabled: !Settings.busy && !Settings.loading
                             onClicked: Settings.refresh()
-                            tooltipText: "Atualizar lista · Ctrl + R"
+                            tooltipText: Shell.Theme.tr("Atualizar lista · Ctrl + R", "Refresh list · Ctrl + R")
                         }
                         Shell.ActionButton {
                             text: "×"
@@ -191,13 +191,13 @@ PanelWindow {
                             implicitWidth: 40
                             implicitHeight: 40
                             onClicked: Settings.close()
-                            tooltipText: "Fechar · Esc"
+                            tooltipText: Shell.Theme.tr("Fechar · Esc", "Close · Esc")
                         }
                     }
                     TextField {
                         id: search
                         Layout.fillWidth: true
-                        placeholderText: "Pesquisar em " + (Settings.group?.title.toLowerCase() ?? "personalização") + "…"
+                        placeholderText: Shell.Theme.tr("Pesquisar em ", "Search in ") + (Settings.group?.title.toLowerCase() ?? Shell.Theme.tr("personalização", "customization")) + "…"
                         color: Shell.Theme.text
                         placeholderTextColor: Shell.Theme.muted
                         font.family: Shell.Theme.font
@@ -288,14 +288,14 @@ PanelWindow {
                                 Widgets.HoverTip {
                                     visible: hover.hovered
                                     delay: 800
-                                    text: tile.modelData.name + (tile.applied ? " · Aplicado" : "")
+                                    text: tile.modelData.name + (tile.applied ? Shell.Theme.tr(" · Aplicado", " · Applied") : "")
                                 }
                             }
                         }
                         Shell.GlassText {
                             anchors.centerIn: parent
                             visible: gallery.count === 0
-                            text: Settings.loading ? "Carregando…" : Settings.query ? "Nenhum resultado para essa busca" : "Nenhuma opção disponível"
+                            text: Settings.loading ? Shell.Theme.tr("Carregando…", "Loading…") : Settings.query ? Shell.Theme.tr("Nenhum resultado para essa busca", "No results for this search") : Shell.Theme.tr("Nenhuma opção disponível", "No options available")
                             color: Shell.Theme.muted
                         }
                     }
@@ -314,10 +314,10 @@ PanelWindow {
                             Layout.fillWidth: true
                             Layout.minimumWidth: 0
                             spacing: 6
-                            Shell.GlassText { Layout.fillWidth: true; text: Settings.selected?.name ?? "Selecione uma opção"; font.weight: Font.DemiBold }
+                            Shell.GlassText { Layout.fillWidth: true; text: Settings.selected?.name ?? Shell.Theme.tr("Selecione uma opção", "Select an option"); font.weight: Font.DemiBold }
                             Shell.GlassText {
                                 Layout.fillWidth: true
-                                text: Settings.message || (Settings.selectedId === Settings.group?.current ? "Aplicado atualmente" : Settings.category === "sddm" ? "Será usado na próxima tela de login" : "Selecione e clique em Aplicar")
+                                text: Settings.message || (Settings.selectedId === Settings.group?.current ? Shell.Theme.tr("Aplicado atualmente", "Currently applied") : Settings.category === "sddm" ? Shell.Theme.tr("Será usado na próxima tela de login", "Will be used on the next login screen") : Shell.Theme.tr("Selecione e clique em Aplicar", "Select and click Apply"))
                                 color: Settings.failed ? Shell.Theme.danger : Shell.Theme.muted
                                 font.pixelSize: 12
                                 wrapMode: Text.Wrap
@@ -325,7 +325,7 @@ PanelWindow {
                             }
                         }
                         Shell.ActionButton {
-                            text: Settings.busy ? "Aplicando…" : Settings.selectedId === Settings.group?.current ? "Aplicado  ✓" : "Aplicar"
+                            text: Settings.busy ? Shell.Theme.tr("Aplicando…", "Applying…") : Settings.selectedId === Settings.group?.current ? Shell.Theme.tr("Aplicado  ✓", "Applied  ✓") : Shell.Theme.tr("Aplicar", "Apply")
                             selected: true
                             enabled: !!Settings.selected && !Settings.busy && Settings.selectedId !== Settings.group?.current
                             implicitHeight: 42

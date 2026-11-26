@@ -55,7 +55,8 @@ Card {
                     anchors.centerIn: parent
                     // ícone por categoria (hint "category" do notify-send -c); sino como padrão
                     text: ({ "device": "\u{f0553}", "device.audio": "\u{f02cb}",
-                             "device.storage": "\u{f02ca}", "power": "\u{f06a5}" })
+                             "device.storage": "\u{f02ca}", "power": "\u{f06a5}", "display": "\u{f0379}",
+                             "battery": "\u{f0083}" })
                           [String(card.notification.hints?.category || "")] || "󰂚"
                     font.family: Theme.icons
                     font.pixelSize: 20
@@ -72,7 +73,7 @@ Card {
             }
             GlassText {
                 Layout.fillWidth: true
-                text: card.notification.appName || "Notificação"
+                text: card.notification.appName || Theme.tr("Notificação", "Notification")
                 font.pixelSize: 12
                 color: Theme.muted
             }
@@ -81,7 +82,7 @@ Card {
                 implicitHeight: 26
                 implicitWidth: 28
                 onClicked: Notifications.dismiss(card.notification)
-                tooltipText: "Dispensar"
+                tooltipText: Theme.tr("Dispensar", "Dismiss")
             }
         }
         GlassText {
@@ -117,7 +118,7 @@ Card {
                 delegate: ActionButton {
                     required property var modelData
                     width: Math.min(implicitWidth, content.width)
-                    text: modelData.text || "Abrir"
+                    text: modelData.text || Theme.tr("Abrir", "Open")
                     onClicked: Notifications.invoke(card.notification, modelData)
                 }
             }
@@ -125,7 +126,7 @@ Card {
         ActionButton {
             visible: card.popup
             Layout.fillWidth: true
-            text: "Ver notificações"
+            text: Theme.tr("Ver notificações", "View notifications")
             onClicked: { Service.open("notificacoes"); card.openHistory(); }
         }
     }

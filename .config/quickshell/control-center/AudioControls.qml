@@ -20,7 +20,7 @@ Card {
         }
         SliderRow {
             Layout.fillWidth: true
-            title: "Microfone"
+            title: Theme.tr("Microfone", "Microphone")
             icon: Service.source?.audio?.muted ? "󰍭" : "󰍬"
             value: Service.micVolume
             muted: Service.source?.audio?.muted ?? false

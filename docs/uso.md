@@ -1,5 +1,7 @@
 # Uso da interface
 
+**Português** · [English](usage.md)
+
 ## Barra e central
 
 A central abre com `Super + C` ou pela engrenagem. Os botões de volume, rede, Bluetooth e bateria abrem a seção correspondente; o destaque acompanha o botão selecionado. `Esc`, o botão de fechar ou um clique fora fecham o painel.
@@ -42,11 +44,15 @@ Escolha o tema em **Geral → Tema da interface** ou em **Personalizar**:
 
 A escolha vale para barra, painéis, calendário, notificações, comandos, OSDs e Rofi. No bloqueador, a escolha é lida na próxima abertura. O configurador de monitores usa um fundo mais opaco para manter a leitura.
 
-`Super + T` abre a personalização; `Super + W` vai direto aos wallpapers. As categorias são:
+### Idioma
+
+Em **Geral → Idioma do sistema**, escolha **Português** ou **English**. O botão roda `localectl set-locale` com `pt_BR.UTF-8` ou `en_US.UTF-8`, pedindo a senha pelo Polkit, e recarrega o Hyprland. A Central, a barra, as notificações, o bloqueador e as descrições dos atalhos leem `/etc/locale.conf` e trocam de idioma na hora. Os outros aplicativos seguem o novo idioma depois de sair e entrar na sessão.
+
+`Super + W` abre a personalização na categoria de wallpapers; a barra lateral leva às outras. As categorias são:
 
 | Categoria | Origem e efeito |
 | --- | --- |
-| Wallpaper | Imagens em `~/Pictures/Wallpaper`, aplicadas pelo awww |
+| Wallpaper | Imagens em `~/Images/Wallpaper`, aplicadas pelo awww |
 | Tela de login | Atualiza o fundo do tema Astronaut, com autenticação Polkit |
 | Fastfetch | Imagens em `~/.config/fastfetch/icons` ou logo automático da distro |
 | Kitty | Temas `.conf` em `~/.config/kitty` e opção Adaptativo |

@@ -77,7 +77,7 @@ Item {
         Text {
             width: parent.width
             text: {
-                const value = clock.date.toLocaleDateString(Qt.locale("pt_BR"), "dddd, d 'de' MMMM");
+                const value = clock.date.toLocaleDateString(Qt.locale(face.controller.en ? "en_US" : "pt_BR"), face.controller.en ? "dddd, MMMM d" : "dddd, d 'de' MMMM");
                 return value.charAt(0).toUpperCase() + value.slice(1);
             }
             font.family: "SF Pro Display"; font.pixelSize: 21; font.weight: Font.Medium
@@ -85,7 +85,7 @@ Item {
         }
         Text {
             width: parent.width
-            text: clock.date.toLocaleTimeString(Qt.locale("pt_BR"), "HH:mm")
+            text: clock.date.toLocaleTimeString(Qt.locale(face.controller.en ? "en_US" : "pt_BR"), "HH:mm")
             font.family: "SF Pro Display"; font.pixelSize: Math.min(116, face.width * 0.15) - 4 * face.interaction; font.weight: Font.DemiBold
             font.letterSpacing: -4
             color: Qt.tint("#eef4ff", Qt.rgba(face.accent.r, face.accent.g, face.accent.b, 0.2))
@@ -121,8 +121,8 @@ Item {
                     Layout.fillWidth: true
                     color: "#f5f7fc"
                     font.family: "SF Pro Display"; font.pixelSize: 12
-                    placeholderText: face.controller.busy ? "Verificando…" : face.controller.prompt === "Senha" ? "" : face.controller.prompt
-                    Accessible.name: "Senha para desbloquear"
+                    placeholderText: face.controller.busy ? face.controller.tr("Verificando…", "Verifying…") : face.controller.prompt === face.controller.tr("Senha", "Password") ? "" : face.controller.prompt
+                    Accessible.name: face.controller.tr("Senha para desbloquear", "Password to unlock")
                     placeholderTextColor: "#99e5eaf2"
                     echoMode: face.controller.responseVisible ? TextInput.Normal : TextInput.Password
                     passwordCharacter: "●"
@@ -147,7 +147,7 @@ Item {
                     background: Rectangle { radius: 14; color: submit.down || submit.hovered ? face.hoverColor : "transparent" }
                     contentItem: Text { text: submit.text; font.pixelSize: 18; color: "#f5f7fc"; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
                     onClicked: face.controller.authenticate(input.text)
-                    Accessible.name: "Desbloquear"
+                    Accessible.name: face.controller.tr("Desbloquear", "Unlock")
                 }
             }
         }
@@ -172,7 +172,7 @@ Item {
     }
     Text {
         anchors { top: parent.top; right: parent.right; topMargin: 22; rightMargin: 28 }
-        text: UPower.displayDevice?.isPresent ? Math.round(UPower.displayDevice.percentage * 100) + "%  ·  " + (UPower.onBattery ? "Na bateria" : "Conectado à energia") : ""
+        text: UPower.displayDevice?.isPresent ? Math.round(UPower.displayDevice.percentage * 100) + "%  ·  " + (UPower.onBattery ? face.controller.tr("Na bateria", "On battery") : face.controller.tr("Conectado à energia", "Plugged in")) : ""
         color: UPower.onBattery && UPower.displayDevice?.percentage < 0.15 ? "#ffb4ab" : "#b3e5eaf2"
         font.family: "SF Pro Display"; font.pixelSize: 11
         opacity: face.entrance * (1 - face.departure)

@@ -19,12 +19,12 @@ ColumnLayout {
             font.family: Theme.icons
             font.pixelSize: 18
             enabled: root.canMute
-            tooltipText: root.muted ? "Ativar " + root.title.toLowerCase() : "Silenciar " + root.title.toLowerCase()
+            tooltipText: root.muted ? Theme.tr("Ativar ", "Unmute ") + root.title.toLowerCase() : Theme.tr("Silenciar ", "Mute ") + root.title.toLowerCase()
             onClicked: root.muteClicked()
         }
         GlassText { text: root.title; Layout.fillWidth: true }
         GlassText {
-            text: root.muted ? "Mudo" : Math.round(root.value) + "%"
+            text: root.muted ? Theme.tr("Mudo", "Muted") : Math.round(root.value) + "%"
             color: Theme.muted
             font.pixelSize: 12
         }

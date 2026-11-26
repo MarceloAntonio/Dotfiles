@@ -76,12 +76,12 @@ PanelWindow {
                     Layout.fillWidth: true
                     ColumnLayout {
                         Layout.fillWidth: true
-                        Shell.GlassText { text: "Monitores"; font.pixelSize: 23; font.weight: Font.DemiBold }
-                        Shell.GlassText { text: "Arraste as telas para organizar sua posição."; color: Shell.Theme.muted; font.pixelSize: 12 }
+                        Shell.GlassText { text: Shell.Theme.tr("Monitores", "Monitors"); font.pixelSize: 23; font.weight: Font.DemiBold }
+                        Shell.GlassText { text: Shell.Theme.tr("Arraste as telas para organizar sua posição.", "Drag the displays to arrange their positions."); color: Shell.Theme.muted; font.pixelSize: 12 }
                     }
                     Item { Layout.fillWidth: true }
-                    Shell.ActionButton { text: "󰑐"; font.family: Shell.Theme.icons; enabled: !Settings.busy && !Settings.pending; onClicked: Settings.refresh(); tooltipText: "Atualizar monitores" }
-                    Shell.ActionButton { text: "×"; enabled: !Settings.pending && !Settings.busy; onClicked: Settings.close(); tooltipText: "Fechar · Esc" }
+                    Shell.ActionButton { text: "󰑐"; font.family: Shell.Theme.icons; enabled: !Settings.busy && !Settings.pending; onClicked: Settings.refresh(); tooltipText: Shell.Theme.tr("Atualizar monitores", "Refresh monitors") }
+                    Shell.ActionButton { text: "×"; enabled: !Settings.pending && !Settings.busy; onClicked: Settings.close(); tooltipText: Shell.Theme.tr("Fechar · Esc", "Close · Esc") }
                 }
                 Rectangle {
                     id: map
@@ -143,7 +143,7 @@ PanelWindow {
                             }
                         }
                     }
-                    Shell.GlassText { anchors.centerIn: parent; visible: !Settings.draft.length; text: Settings.busy ? "Carregando telas…" : "Nenhum monitor encontrado"; color: Shell.Theme.muted }
+                    Shell.GlassText { anchors.centerIn: parent; visible: !Settings.draft.length; text: Settings.busy ? Shell.Theme.tr("Carregando telas…", "Loading displays…") : Shell.Theme.tr("Nenhum monitor encontrado", "No monitors found"); color: Shell.Theme.muted }
                 }
                 Flickable {
                     Layout.fillWidth: true; Layout.fillHeight: true
@@ -163,27 +163,27 @@ PanelWindow {
                                 model: Settings.draft.map(m=>m.name)
                                 currentIndex: model.indexOf(Settings.selectedName)
                                 onActivated: Settings.selectedName = model[index]
-                                Accessible.name: "Monitor selecionado"
+                                Accessible.name: Shell.Theme.tr("Monitor selecionado", "Selected monitor")
                             }
-                            Shell.ActionButton { text: Settings.selectedName === Settings.primary ? "★ Principal" : "Definir como principal"; selected: Settings.selectedName === Settings.primary; enabled: !!Settings.selected; onClicked: Settings.primary = Settings.selectedName }
+                            Shell.ActionButton { text: Settings.selectedName === Settings.primary ? Shell.Theme.tr("★ Principal", "★ Primary") : Shell.Theme.tr("Definir como principal", "Set as primary"); selected: Settings.selectedName === Settings.primary; enabled: !!Settings.selected; onClicked: Settings.primary = Settings.selectedName }
                         }
                         Shell.GlassText { text: Settings.original?.description || ""; color: Shell.Theme.muted; Layout.fillWidth: true; elide: Text.ElideRight }
                         RowLayout {
                             Layout.fillWidth: true; spacing: 12
                             ColumnLayout {
                                 Layout.fillWidth: true
-                                Shell.GlassText { text: "Resolução"; color: Shell.Theme.muted; font.pixelSize: 12 }
-                                Select { Layout.fillWidth: true; model: Settings.resolutions; currentIndex: model.indexOf(Settings.resolution); onActivated: Settings.changeResolution(model[index]); Accessible.name: "Resolução" }
+                                Shell.GlassText { text: Shell.Theme.tr("Resolução", "Resolution"); color: Shell.Theme.muted; font.pixelSize: 12 }
+                                Select { Layout.fillWidth: true; model: Settings.resolutions; currentIndex: model.indexOf(Settings.resolution); onActivated: Settings.changeResolution(model[index]); Accessible.name: Shell.Theme.tr("Resolução", "Resolution") }
                             }
                             ColumnLayout {
                                 Layout.fillWidth: true
-                                Shell.GlassText { text: "Frequência"; color: Shell.Theme.muted; font.pixelSize: 12 }
-                                Select { Layout.fillWidth: true; model: Settings.rates.map(m=>m.refreshRate.toFixed(2)+" Hz"); currentIndex: Settings.rates.findIndex(m=>m.id===Settings.selected?.mode); onActivated: Settings.update({mode:Settings.rates[index].id}); Accessible.name: "Frequência em Hz" }
+                                Shell.GlassText { text: Shell.Theme.tr("Frequência", "Refresh rate"); color: Shell.Theme.muted; font.pixelSize: 12 }
+                                Select { Layout.fillWidth: true; model: Settings.rates.map(m=>m.refreshRate.toFixed(2)+" Hz"); currentIndex: Settings.rates.findIndex(m=>m.id===Settings.selected?.mode); onActivated: Settings.update({mode:Settings.rates[index].id}); Accessible.name: Shell.Theme.tr("Frequência em Hz", "Refresh rate in Hz") }
                             }
                             ColumnLayout {
                                 Layout.preferredWidth: 110
-                                Shell.GlassText { text: "Escala"; color: Shell.Theme.muted; font.pixelSize: 12 }
-                                Select { Layout.fillWidth: true; model: ["100%","125%","150%","175%","200%"]; currentIndex: [1,1.25,1.5,1.75,2].indexOf(Settings.selected?.scale ?? 1); onActivated: Settings.update({scale:[1,1.25,1.5,1.75,2][index]}); Accessible.name: "Escala" }
+                                Shell.GlassText { text: Shell.Theme.tr("Escala", "Scale"); color: Shell.Theme.muted; font.pixelSize: 12 }
+                                Select { Layout.fillWidth: true; model: ["100%","125%","150%","175%","200%"]; currentIndex: [1,1.25,1.5,1.75,2].indexOf(Settings.selected?.scale ?? 1); onActivated: Settings.update({scale:[1,1.25,1.5,1.75,2][index]}); Accessible.name: Shell.Theme.tr("Escala", "Scale") }
                             }
                         }
 
@@ -195,14 +195,14 @@ PanelWindow {
                     radius: 12
                     color: Settings.pending ? Shell.Theme.selected : Shell.Theme.card
                     visible: !!Settings.message || !!Settings.pending
-                    Shell.GlassText { id: statusText; anchors { top: parent.top; left: parent.left; right: parent.right; margins: 11 } wrapMode: Text.Wrap; text: Settings.pending ? "Manter esta configuração? Reversão automática em " + Settings.secondsLeft + " s." : Settings.message; color: Settings.failed ? Shell.Theme.danger : Shell.Theme.text; font.pixelSize: 13 }
+                    Shell.GlassText { id: statusText; anchors { top: parent.top; left: parent.left; right: parent.right; margins: 11 } wrapMode: Text.Wrap; text: Settings.pending ? Shell.Theme.tr("Manter esta configuração? Reversão automática em ", "Keep this setup? Reverting automatically in ") + Settings.secondsLeft + " s." : Settings.message; color: Settings.failed ? Shell.Theme.danger : Shell.Theme.text; font.pixelSize: 13 }
                 }
                 RowLayout {
                     Layout.fillWidth: true
-                    Shell.GlassText { Layout.fillWidth: true; text: Settings.pending ? "Confira a imagem nas telas." : "As alterações só são salvas após sua confirmação."; color: Shell.Theme.muted; font.pixelSize: 11; wrapMode: Text.Wrap }
-                    Shell.ActionButton { visible: !!Settings.pending; text: "Reverter"; enabled: !Settings.busy; onClicked: Settings.revert() }
-                    Shell.ActionButton { visible: !!Settings.pending; text: "Manter"; selected: true; enabled: !Settings.busy && Settings.secondsLeft>0; onClicked: Settings.confirm() }
-                    Shell.ActionButton { visible: !Settings.pending; text: "Testar alterações"; selected: true; enabled: Settings.dirty && !Settings.busy && Settings.draft.length>0; onClicked: Settings.apply() }
+                    Shell.GlassText { Layout.fillWidth: true; text: Settings.pending ? Shell.Theme.tr("Confira a imagem nas telas.", "Check the image on the displays.") : Shell.Theme.tr("As alterações só são salvas após sua confirmação.", "Changes are only saved after you confirm."); color: Shell.Theme.muted; font.pixelSize: 11; wrapMode: Text.Wrap }
+                    Shell.ActionButton { visible: !!Settings.pending; text: Shell.Theme.tr("Reverter", "Revert"); enabled: !Settings.busy; onClicked: Settings.revert() }
+                    Shell.ActionButton { visible: !!Settings.pending; text: Shell.Theme.tr("Manter", "Keep"); selected: true; enabled: !Settings.busy && Settings.secondsLeft>0; onClicked: Settings.confirm() }
+                    Shell.ActionButton { visible: !Settings.pending; text: Shell.Theme.tr("Testar alterações", "Test changes"); selected: true; enabled: Settings.dirty && !Settings.busy && Settings.draft.length>0; onClicked: Settings.apply() }
                 }
             }
         }

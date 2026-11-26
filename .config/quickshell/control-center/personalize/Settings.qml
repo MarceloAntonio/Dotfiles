@@ -48,7 +48,7 @@ Scope {
         if (!selected || busy || selectedId === group.current) return;
         result = null;
         failed = false;
-        message = category === "sddm" ? "Aguardando autenticação…" : "Aplicando…";
+        message = category === "sddm" ? Shell.Theme.tr("Aguardando autenticação…", "Waiting for authentication…") : Shell.Theme.tr("Aplicando…", "Applying…");
         authenticating = category === "sddm";
         applyProcess.exec(["python", Quickshell.shellDir + "/personalize/backend.py", "apply", category, selectedId]);
     }
@@ -58,7 +58,7 @@ Scope {
             onStreamFinished: {
                 try {
                     const data = JSON.parse(text);
-                    if (!data.groups) throw new Error(data.message || "Não foi possível listar suas configurações.");
+                    if (!data.groups) throw new Error(data.message || Shell.Theme.tr("Não foi possível listar suas configurações.", "Could not list your settings."));
                     root.groups = data.groups;
                     if (!root.items.some(i => i.id === root.selectedId)) root.selectedId = root.group?.current || root.items[0]?.id || "";
                 } catch (e) { root.failed = true; root.message = String(e); }
@@ -70,13 +70,13 @@ Scope {
         stdout: StdioCollector {
             onStreamFinished: {
                 try { root.result = JSON.parse(text); }
-                catch (e) { root.result = {ok: false, message: "Não foi possível concluir a alteração."}; }
+                catch (e) { root.result = {ok: false, message: Shell.Theme.tr("Não foi possível concluir a alteração.", "Could not complete the change.")}; }
             }
         }
         onExited: code => {
             root.authenticating = false;
             root.failed = code !== 0 || !root.result?.ok;
-            root.message = root.result?.message || "Não foi possível concluir a alteração.";
+            root.message = root.result?.message || Shell.Theme.tr("Não foi possível concluir a alteração.", "Could not complete the change.");
             Qt.callLater(() => root.refresh());
         }
     }

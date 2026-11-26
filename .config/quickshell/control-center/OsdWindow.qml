@@ -50,8 +50,8 @@ PanelWindow {
                 spacing: 10
                 RowLayout {
                     Layout.fillWidth: true
-                    GlassText { Layout.fillWidth: true; text: osd.brightness ? "Brilho" : osd.microphone ? "Microfone" : "Volume"; font.pixelSize: 12 }
-                    GlassText { text: osd.muted ? "Mudo" : Math.round(osd.level) + "%"; color: Theme.muted; font.pixelSize: 12 }
+                    GlassText { Layout.fillWidth: true; text: osd.brightness ? Theme.tr("Brilho", "Brightness") : osd.microphone ? Theme.tr("Microfone", "Microphone") : "Volume"; font.pixelSize: 12 }
+                    GlassText { text: osd.muted ? Theme.tr("Mudo", "Muted") : Math.round(osd.level) + "%"; color: Theme.muted; font.pixelSize: 12 }
                 }
                 Rectangle {
                     Layout.fillWidth: true
